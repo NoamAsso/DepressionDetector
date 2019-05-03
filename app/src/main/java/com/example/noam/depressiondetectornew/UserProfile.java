@@ -1,6 +1,9 @@
 package com.example.noam.depressiondetectornew;
 
 
+import android.graphics.Bitmap;
+
+import java.util.ArrayList;
 
 public class UserProfile {
 
@@ -9,9 +12,10 @@ public class UserProfile {
     private String _phoneNumber;
     private String _firstName;
     private String _lastName;
-    private String _joinDate;
-    private String _image;
-
+    private String _status;
+    private String _joinDate;//check how to save date
+    private String _image;//check how to save image
+    private ArrayList<Integer> recordings;
 
     public UserProfile(int userId, String phoneNumber){
         _userId = userId;
@@ -24,6 +28,8 @@ public class UserProfile {
     _lastName= lastName;
     _joinDate=  joinDate;
     _image= image;
+    this.recordings = new ArrayList<Integer>();
+
 }
 
     public int get_userId() {
@@ -70,5 +76,20 @@ public class UserProfile {
 
     public void set_joinDate(String _joinDate) {
         this._joinDate = _joinDate;
+    }
+
+    public ArrayList<Integer> getRecordings() {
+        return recordings;
+    }
+
+    public void setRecordings(ArrayList<Integer> recordings) {
+        this.recordings = recordings;
+    }
+
+    public void add_recording(int rec_id){
+        recordings.add(rec_id);
+    }
+    public void remove_recording(int rec_id){
+        recordings.remove(rec_id);
     }
 }

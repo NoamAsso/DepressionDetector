@@ -4,11 +4,19 @@ package com.example.noam.depressiondetectornew;
 
 public class UserProfile {
 
+
+    private int _userId;
     private String _phoneNumber;
     private String _firstName;
     private String _lastName;
     private String _joinDate;
     private String _image;
+
+
+    public UserProfile(int userId, String phoneNumber){
+        _userId = userId;
+        _phoneNumber = phoneNumber;
+    }
 
     public UserProfile(String phoneNumber, String firstName, String lastName, String joinDate, String image){
     _phoneNumber= phoneNumber;
@@ -17,6 +25,14 @@ public class UserProfile {
     _joinDate=  joinDate;
     _image= image;
 }
+
+    public int get_userId() {
+        return _userId;
+    }
+
+    public void set_userId(int _userId) {
+        this._userId = _userId;
+    }
 
     public String get_phoneNumber() {
         return _phoneNumber;

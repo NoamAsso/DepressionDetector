@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity
         //loading the default fragment
         loadFragment(new HomeFragment());
 
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

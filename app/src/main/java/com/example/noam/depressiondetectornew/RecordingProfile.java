@@ -19,6 +19,7 @@ public class RecordingProfile {
     }
 
     public RecordingProfile(int __userId, String _recordName, String _path, int _length, String _time, double _prediction) {
+        this._recId = _recId;
         this.__userId = __userId;
         this._recordName = _recordName;
         this._path = _path;

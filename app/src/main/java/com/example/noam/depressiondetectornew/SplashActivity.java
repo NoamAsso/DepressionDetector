@@ -50,7 +50,7 @@ public class SplashActivity extends AppCompatActivity {
         if (!prefs.getBoolean("firstTime", false)) {
 
             //putInDevice("SMILExtract", R.raw.smilextract);
-            //putInDevice("emobase.conf", R.raw.emobase);
+            putInDevice("emobase.conf", R.raw.emobase);
             putInDevice("girl_notdep2.wav",R.raw.girl_notdep2);
             putInDevice("man_notdep1.wav",R.raw.man_notdep1);
             putInDevice("girl_dep.wav",R.raw.girl_dep);
@@ -173,9 +173,8 @@ public class SplashActivity extends AppCompatActivity {
             }
             recordName = tempName.substring(0,tempName.indexOf("."));
 
-            /////BRING IT BACK!
-            ////////VoiceRecord voice_record = new VoiceRecord(recordName, bankPaths[i], prediction, Utils.getTime(), utils.getDuration(currentFile));
-            ////////utils.saveRecord(voice_record);
+            //RecordingActivity voice_record = new RecordingActivity(recordName, bankPaths[i], prediction, Utils.getTime(), utils.getDuration(currentFile));
+            //utils.saveRecord(voice_record);
         }
     }
 

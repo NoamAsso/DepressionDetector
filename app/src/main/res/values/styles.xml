@@ -29,4 +29,5 @@
         <item name="android:windowBackground">@color/cardview_shadow_start_color</item>
         <!-- <item name="colorPrimaryDark">@android:color/white</item> -->
     </style>
+
 </resources>

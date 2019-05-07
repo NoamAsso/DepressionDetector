@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         utils = new Utils(this);
 
 
-/*
+        /*
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED){
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1001);

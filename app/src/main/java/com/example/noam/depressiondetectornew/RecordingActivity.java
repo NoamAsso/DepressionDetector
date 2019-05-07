@@ -53,7 +53,7 @@ public class RecordingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recording);
+        setContentView(R.layout.activity_recording2);
 
         filesDirPath = Utils.getFilesDirPath(this);
         db = Utils.getDB();
@@ -77,6 +77,7 @@ public class RecordingActivity extends AppCompatActivity {
         resultsText = findViewById(R.id.results);
         titleText = findViewById(R.id.txtTitle);
 
+        // custom_font = Typeface.createFromAsset(getAssets(),  "fonts/EncodeSans-Bold.ttf");
         btnSave = findViewById(R.id.btnSave);
         btnDelete =  findViewById(R.id.btnDelete);
 
@@ -86,8 +87,6 @@ public class RecordingActivity extends AppCompatActivity {
         resultsText.setVisibility(View.INVISIBLE);
 
         Log.d("STAM", "JUST TO CHECKyouvalisidiot");
-        //RandomForestClassifier lgbm = new RandomForestClassifier();
-
     }
 
 
@@ -184,6 +183,9 @@ public class RecordingActivity extends AppCompatActivity {
 
                         v.setBackgroundResource(R.drawable.icons8_pause_button_96);
 
+
+
+
                         resultsText.setText("Recording...");
                         resultsText.setVisibility(View.VISIBLE);
 
@@ -265,29 +267,6 @@ public class RecordingActivity extends AppCompatActivity {
         findViewById(R.id.txtTitle).setVisibility(View.VISIBLE);
         enableButtons(true);
     }
-
-
-  /*  //Execute Shell Commands
-    public void runInBackground(final File wavFile) {
-        new Thread("Main Background Thread") {
-            @Override
-            public void run() {
-                if (firstTimeFlag == false) {//if It's not the first run of the app
-                    recordWavMaster.releaseRecord();
-                }
-*//*
-                try {
-                    trimRecords(latestRecFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-*//*
-                runOpenSmile(wavFile);
-                predictDepression();
-            }
-        }.start();
-
-    }*/
 
 
     @Override

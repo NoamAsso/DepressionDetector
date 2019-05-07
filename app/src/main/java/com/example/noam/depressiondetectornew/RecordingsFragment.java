@@ -32,8 +32,8 @@ public class RecordingsFragment extends Fragment {
         mRecyclerView = (RecyclerView) v.findViewById(R.id.my_recycler_view_rec);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         mDataSet = new ArrayList<RecordingProfile>();
-        RecordingProfile rec = new RecordingProfile( 60, "record check1", "not relevant", 23, "6.5.2019 at 19:46PM", 5.30);
-        RecordingProfile rec2 = new RecordingProfile( 80, "record check2", "not relevant", 43, "6.5.2019 at 20:24PM", 66.30);
+        RecordingProfile rec = new RecordingProfile(60, "record check1", "not relevant", 23, "6.5.2019 at 19:46PM", 5.30);
+        RecordingProfile rec2 = new RecordingProfile(80, "record check2", "not relevant", 43, "6.5.2019 at 20:24PM", 66.30);
         mDataSet.add(rec);
         mDataSet.add(rec2);
         adapter = new SwipeRecyclerViewAdapterRec(getActivity(), mDataSet);

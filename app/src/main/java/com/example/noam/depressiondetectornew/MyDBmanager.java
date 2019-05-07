@@ -8,9 +8,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 import com.example.noam.depressiondetectornew.OnDatabaseChangedListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
+import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.COLUMN_NAME_JOIN_DATE;
 import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.COLUMN_NAME_TIME_ADDED;
 import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.TABLE_NAME_REC;
 import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.TABLE_NAME_USER;
@@ -24,7 +30,7 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
     private Context mContext;
     private static final String LOG_TAG = "MyDBmanager";
     private static OnDatabaseChangedListener mOnDatabaseChangedListener;
-    public static final String DATABASE_NAME = "saved_recordings.db";
+    public static final String DATABASE_NAME = "users_and_recordings.db";
     private static final int DATABASE_VERSION = 1;
 
     public static abstract class MyDBManagerItem implements BaseColumns {
@@ -36,10 +42,14 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
         public static final String COLUMN_NAME_RECORDING_LENGTH = "length";
         public static final String COLUMN_NAME_TIME_ADDED = "time_added";
         public static final String COLUMN_NAME_PREDICTION = "prediction";
+        public static final String COLUMN_NAME_CSV = "csv";
+        public static final String COLUMN_NAME_FEEDBACK = "prediction_feedback";
 
         public static final String COLUMN_NAME_PHONE_NUMBER = "phone_number";
         public static final String COLUMN_NAME_FIRST_NAME = "first_name";
         public static final String COLUMN_NAME_LAST_NAME = "last_name";
+        //public static final String COLUMN_NAME_EMAIL = "email";
+        public static final String COLUMN_RECORDINGS_GSON = "recordings_gson";
         public static final String COLUMN_NAME_STATUS = "status";
         public static final String COLUMN_NAME_JOIN_DATE = "join_date";
 
@@ -50,12 +60,15 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
     private static final String COMMA_SEP = ",";
     private static final String RECORDING_TABLE =
             "CREATE TABLE " + TABLE_NAME_REC + " (" +
-                    MyDBManagerItem._ID + " INTEGER PRIMARY KEY" + COMMA_SEP +
+                    MyDBManagerItem._ID + " INTEGER PRIMARY KEY " + COMMA_SEP +
                     MyDBManagerItem.USER_ID + " REAL " + COMMA_SEP +//////////////////
                     MyDBManagerItem.COLUMN_NAME_PREDICTION + " REAL " + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_RECORDING_NAME + TEXT_TYPE + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_RECORDING_FILE_PATH + TEXT_TYPE + COMMA_SEP +
+                    //MyDBManagerItem.COLUMN_NAME_EMAIL + TEXT_TYPE + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_RECORDING_LENGTH + " INTEGER " + COMMA_SEP +
+                    MyDBManagerItem.COLUMN_NAME_CSV + TEXT_TYPE + COMMA_SEP +
+                    MyDBManagerItem.COLUMN_NAME_FEEDBACK + " INTEGER " + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_TIME_ADDED + " INTEGER " + ")";
     private static final String USER_TABLE =
             "CREATE TABLE " + TABLE_NAME_USER + " (" +
@@ -64,9 +77,8 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
                     MyDBManagerItem.COLUMN_NAME_FIRST_NAME + TEXT_TYPE + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_LAST_NAME + TEXT_TYPE + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_STATUS + " INTEGER " + COMMA_SEP +
-                    MyDBManagerItem.COLUMN_NAME_JOIN_DATE + " INTEGER " + ")";
-
-
+                    MyDBManagerItem.COLUMN_RECORDINGS_GSON + TEXT_TYPE + COMMA_SEP +
+                    COLUMN_NAME_JOIN_DATE + TEXT_TYPE + ")";
     @SuppressWarnings("unused")
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + RECORDING_TABLE;
 
@@ -85,41 +97,53 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
 
     }
 
-    public RecordingProfile getItemAt(int position) {
+    //Get recording via id
+    public RecordingProfile getRecordingAt(int position) {
         SQLiteDatabase db = getReadableDatabase();
         String[] projection = {
                 MyDBManagerItem._ID,
+                MyDBManagerItem.USER_ID,
                 MyDBManagerItem.COLUMN_NAME_RECORDING_NAME,
                 MyDBManagerItem.COLUMN_NAME_RECORDING_FILE_PATH,
                 MyDBManagerItem.COLUMN_NAME_RECORDING_LENGTH,
+                MyDBManagerItem.COLUMN_NAME_CSV,
+                MyDBManagerItem.COLUMN_NAME_FEEDBACK,
                 MyDBManagerItem.COLUMN_NAME_TIME_ADDED,
                 MyDBManagerItem.COLUMN_NAME_PREDICTION
         };
         Cursor c = db.query(RECORDING_TABLE, projection, null, null, null, null, null);
         if (c.moveToPosition(position)) {
             RecordingProfile item = new RecordingProfile();
+            item.set_recId(c.getInt(c.getColumnIndex(MyDBManagerItem._ID)));
+            item.set__userId(c.getInt(c.getColumnIndex(MyDBManagerItem.USER_ID)));
             item.set_recordName(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_RECORDING_NAME)));
             item.set_path(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_RECORDING_FILE_PATH)));
             item.set_length(c.getInt(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_RECORDING_LENGTH)));
             item.set_time(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_TIME_ADDED)));
             item.set_prediction(c.getDouble(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_PREDICTION)));
+            item.set_csv(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_CSV)));
+            item.setPrediction_feedback(c.getInt(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_FEEDBACK)));
             c.close();
             return item;
         }
         return null;
     }
-
+    //add recording to database
     public long addRecording(RecordingProfile voice_record) {
 
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
+        cv.put(MyDBManagerItem.USER_ID,voice_record.get__userId());
+        cv.put(MyDBManagerItem.COLUMN_NAME_CSV,voice_record.get_csv());
+        cv.put(MyDBManagerItem.COLUMN_NAME_FEEDBACK,voice_record.getPrediction_feedback());
         cv.put(MyDBManagerItem.COLUMN_NAME_RECORDING_NAME, voice_record.get_recordName());
         cv.put(MyDBManagerItem.COLUMN_NAME_RECORDING_FILE_PATH, voice_record.get_path());
         cv.put(MyDBManagerItem.COLUMN_NAME_RECORDING_LENGTH, voice_record.get_length());
         cv.put(MyDBManagerItem.COLUMN_NAME_TIME_ADDED, voice_record.get_time());
         cv.put(MyDBManagerItem.COLUMN_NAME_PREDICTION, voice_record.get_prediction());
 
-        long rowId = db.insert(RECORDING_TABLE, null, cv);
+        long rowId = db.insert(TABLE_NAME_REC, null, cv);
+
 
         if (mOnDatabaseChangedListener != null) {
             mOnDatabaseChangedListener.onNewDatabaseEntryAdded();
@@ -127,19 +151,85 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
 
         return rowId;
     }
+    public long addUser(UserProfile new_user) {
+
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        Gson gson = new Gson();
+        String recordings= gson.toJson(new_user.getRecordings());
+        cv.put(MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER,new_user.get_phoneNumber());
+        cv.put(MyDBManagerItem.COLUMN_NAME_FIRST_NAME,new_user.get_firstName());
+        cv.put(MyDBManagerItem.COLUMN_NAME_LAST_NAME,new_user.get_lastName());
+        //cv.put(MyDBManagerItem.COLUMN_NAME_EMAIL,new_user.get_);
+        cv.put(MyDBManagerItem.COLUMN_RECORDINGS_GSON, recordings);
+        cv.put(MyDBManagerItem.COLUMN_NAME_STATUS, new_user.get_status());
+        cv.put(COLUMN_NAME_JOIN_DATE, new_user.get_joinDate());
+
+        long rowId = db.insert(TABLE_NAME_USER, null, cv);
+
+
+        if (mOnDatabaseChangedListener != null) {
+            mOnDatabaseChangedListener.onNewDatabaseEntryAdded();
+        }
+
+        return rowId;
+    }
+
+    //Get recording via id
+    public UserProfile getUserAt(int position) {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] projection = {
+                MyDBManagerItem._ID,
+                MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER,
+                MyDBManagerItem.COLUMN_NAME_FIRST_NAME,
+                MyDBManagerItem.COLUMN_NAME_LAST_NAME,
+                MyDBManagerItem.COLUMN_RECORDINGS_GSON,
+                MyDBManagerItem.COLUMN_NAME_STATUS,
+                COLUMN_NAME_JOIN_DATE,
+        };
+        Cursor c = db.query(TABLE_NAME_USER, projection, null, null, null, null, null);
+        if (c.moveToPosition(position)) {
+            UserProfile item = new UserProfile();
+            Gson gson = new Gson();
+            String recordings;
+            item.set_userId(c.getInt(c.getColumnIndex(MyDBManagerItem._ID)));
+            item.set_phoneNumber(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER)));
+            item.set_firstName(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_FIRST_NAME)));
+            item.set_lastName(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_LAST_NAME)));
+            recordings = (c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_RECORDINGS_GSON)));
+            item.set_status(c.getInt(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_STATUS)));
+            item.set_joinDate(c.getString(c.getColumnIndex(COLUMN_NAME_JOIN_DATE)));
+            ArrayList<Integer> recordlist = gson.fromJson(recordings,new TypeToken<List<Integer>>(){}.getType());
+            item.setRecordings(recordlist);
+            c.close();
+            return item;
+        }
+        return null;
+    }
+
     public static void setOnDatabaseChangedListener(OnDatabaseChangedListener listener) {
         mOnDatabaseChangedListener = listener;
     }
-    public void removeItemWithId(int id) {
+    public void removeRecWithId(int id) {
         SQLiteDatabase db = getWritableDatabase();
         String[] whereArgs = { String.valueOf(id) };
-        db.delete(RECORDING_TABLE, "_ID=?", whereArgs);
+        db.delete(TABLE_NAME_REC, "_ID=?", whereArgs);
     }
-    public Cursor getAllRows(){
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from " + RECORDING_TABLE + " order by " + COLUMN_NAME_TIME_ADDED,null);
-        return cursor;
+    public void removeUserWithId(int id) {
+        SQLiteDatabase db = getWritableDatabase();
+        String[] whereArgs = { String.valueOf(id) };
+        db.delete(TABLE_NAME_USER, "_ID=?", whereArgs);
     }
 
+    public Cursor getAllRowsRecordings(){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME_REC + " order by " + COLUMN_NAME_TIME_ADDED,null);
+        return cursor;
+    }
+    public Cursor getAllRowsUser(){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME_USER + " order by " + COLUMN_NAME_JOIN_DATE,null);
+        return cursor;
+    }
 
 }

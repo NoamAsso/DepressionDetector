@@ -2,25 +2,58 @@ package com.example.noam.depressiondetectornew;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daimajia.swipe.util.Attributes;
+import com.example.jean.jcplayer.model.JcAudio;
+import com.example.jean.jcplayer.view.JcPlayerView;
+import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link RecordingsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link RecordingsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
+
 public class RecordingsFragment extends Fragment {
+    JcPlayerView jcplayerView;
+    private RecyclerView mRecyclerView;
+    private ArrayList<RecordingProfile> mDataSet;
+    SwipeRecyclerViewAdapterRec adapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recordings, container, false);
+        View v=  inflater.inflate(R.layout.fragment_recordings, container, false);
+
+
+
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.my_recycler_view_rec);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        mDataSet = new ArrayList<RecordingProfile>();
+        RecordingProfile rec = new RecordingProfile( 60, "record check1", "not relevant", 23, "6.5.2019 at 19:46PM", 5.30);
+        RecordingProfile rec2 = new RecordingProfile( 80, "record check2", "not relevant", 43, "6.5.2019 at 20:24PM", 66.30);
+        mDataSet.add(rec);
+        mDataSet.add(rec2);
+        adapter = new SwipeRecyclerViewAdapterRec(getActivity(), mDataSet);
+        ((SwipeRecyclerViewAdapterRec) adapter).setMode(Attributes.Mode.Single);
+
+        mRecyclerView.setAdapter(adapter);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                Log.e("RecyclerView", "onScrollStateChanged");
+            }
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+
+        return v;
     }
 
 

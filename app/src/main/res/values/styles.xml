@@ -13,6 +13,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">#F2F2F2</item>
+        <item name="android:borderlessButtonStyle">@style/customButton</item>
+    </style>
+
+    <style name="customButton" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

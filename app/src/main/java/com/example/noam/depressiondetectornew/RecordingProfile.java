@@ -12,20 +12,30 @@ public class RecordingProfile {
     private String _csv;//features x
     private int prediction_feedback;// prediction y
     private double _prediction; //the prediction
+    private boolean isClicked;
 
 
     public RecordingProfile() {
     }
 
-    public RecordingProfile(int _recId, int __userId, String _recordName, String _path, int _length, String _time, double _prediction) {
-        this._recId = _recId;
+    public RecordingProfile(int __userId, String _recordName, String _path, int _length, String _time, double _prediction) {
         this.__userId = __userId;
         this._recordName = _recordName;
         this._path = _path;
         this._length = _length;
         this._time = _time;
         this._prediction = _prediction;
+        this.isClicked = false;
     }
+
+    public boolean isClicked() {
+        return isClicked;
+    }
+
+    public void setClicked(boolean clicked) {
+        isClicked = clicked;
+    }
+
     public String get_csv() {
         return _csv;
     }

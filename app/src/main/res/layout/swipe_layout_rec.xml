@@ -80,7 +80,7 @@
                 android:layout_marginBottom="3dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:src="@drawable/man_icon" />
+                android:src="@drawable/stereo_icon3_2" />
 
 
 
@@ -95,7 +95,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <TextView
-                        android:id="@+id/Name"
+                        android:id="@+id/Name_rec"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -103,15 +103,7 @@
                         android:textColor="@android:color/black"
                         android:textSize="12sp"/>
                     <TextView
-                        android:id="@+id/LastName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="LastName"
-                        android:textColor="@android:color/black"
-                        android:textSize="12sp"/>
-                    <TextView
-                        android:id="@+id/id_and_more"
+                        android:id="@+id/id_and_more_rec"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -122,11 +114,11 @@
 
 
                 <TextView
-                    android:id="@+id/phone"
+                    android:id="@+id/date_rec"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="2dp"
-                    android:text="PhoneNumber"
+                    android:text="Date"
                     android:paddingBottom="2dp"
                     android:textColor="@android:color/black"
                     android:textSize="15sp"/>
@@ -136,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <TextView
-                        android:id="@+id/status"
+                        android:id="@+id/status_rec"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -146,11 +138,11 @@
                         android:textColor="@android:color/black"
                         android:textSize="15sp"/>
                     <TextView
-                        android:id="@+id/date"
+                        android:id="@+id/user_belong"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
-                        android:text="date"
+                        android:text="UserBelong"
                         android:paddingBottom="2dp"
                         android:textColor="@android:color/black"
                         android:textSize="15sp"/>
@@ -161,10 +153,17 @@
 
 
         </LinearLayout>
+        <!-- TODO: Update blank fragment layout -->
+        <com.example.jean.jcplayer.view.JcPlayerView
+            android:id="@+id/jcplayer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"/>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray" />
+
     </LinearLayout>
 
 

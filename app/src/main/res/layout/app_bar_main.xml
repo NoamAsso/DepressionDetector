@@ -28,25 +28,27 @@
         android:orientation="vertical"
         android:paddingBottom="50dp"
         android:gravity="bottom">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|center"
-            android:layout_margin="30dp"
-            app:elevation="10dp"
-            app:srcCompat="@drawable/baseline_mic_white_18dp" />
-
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|center"
-            android:layout_margin="30dp"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="15dp"
+            app:backgroundTint="#dddddddd"
             app:elevation="10dp"
             app:srcCompat="@drawable/baseline_person_add_black_18dp" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|right"
+            android:layout_margin="15dp"
+            app:elevation="10dp"
+            app:srcCompat="@drawable/baseline_mic_white_18dp" />
+
+
     </LinearLayout>
+
 
 
 </android.support.design.widget.CoordinatorLayout>

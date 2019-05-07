@@ -11,38 +11,40 @@ import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
+import com.example.jean.jcplayer.model.JcAudio;
+import com.example.jean.jcplayer.view.JcPlayerView;
 
 import java.util.ArrayList;
 
-public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecyclerViewAdapter.SimpleViewHolder> {
+public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyclerViewAdapterRec.SimpleViewHolderRec> {
 
     private Context mContext;
-    private ArrayList<UserProfile> studentList;
+    private ArrayList<RecordingProfile> studentList;
     MyDBmanager db;
     Utils utils;
-    public SwipeRecyclerViewAdapter(Context context, ArrayList<UserProfile> objects) {
+    public SwipeRecyclerViewAdapterRec(Context context, ArrayList<RecordingProfile> objects) {
         this.mContext = context;
         this.studentList = objects;
     }
 
 
     @Override
-    public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.swipe_layout, parent, false);
-        return new SimpleViewHolder(view);
+    public SimpleViewHolderRec onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.swipe_layout_rec, parent, false);
+        return new SimpleViewHolderRec(view);
     }
 
     @Override
-    public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
-        final UserProfile item = studentList.get(position);
+    public void onBindViewHolder(final SimpleViewHolderRec viewHolder, final int position) {
+        final RecordingProfile item = studentList.get(position);
 
-        viewHolder.Name.setText("Name: " + item.get_firstName());
-        viewHolder.LastName.setText(item.get_lastName());
-        viewHolder.Phone.setText("Phone Number: " + item.get_phoneNumber());
-        viewHolder.Status.setText("Status: " + Integer.toString(item.get_status()));
-        viewHolder.ID.setText("UserId: " + item.get_userId() + " - Row Position " + position);
-        viewHolder.Date.setText("Join: " + item.get_joinDate());
+        viewHolder.Name.setText("Name: " + item.get_recordName());
+        viewHolder.Status.setText("Status: " + Double.toString(item.get_prediction()));
+        viewHolder.ID.setText("UserId: " + item.get_recId() + " - Row Position " + position);
+        viewHolder.Date.setText("Join: " + item.get_time());
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
+
+        viewHolder.jcplayerView.setVisibility(View.GONE);
 
         //dari kiri
         viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, viewHolder.swipeLayout.findViewById(R.id.bottom_wrapper1));
@@ -87,7 +89,23 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
         viewHolder.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, " Click : " + item.get_userId() + " \n" + item.get_phoneNumber(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, " Click : " + item.get__userId() + " \n" + item.get_recordName(), Toast.LENGTH_SHORT).show();
+                if(item.isClicked()){
+
+                    viewHolder.jcplayerView.setVisibility(View.GONE);
+                    viewHolder.jcplayerView.pause();
+                    item.setClicked(false);
+                }
+                else{
+                    viewHolder.jcplayerView.setVisibility(View.VISIBLE);
+                    ArrayList<JcAudio> jcAudios = new ArrayList<>();
+                    JcAudio temp = JcAudio.createFromFilePath("Asset audio","/storage/emulated/0/Documents/AudioRecord/20190506142017.wav");
+                    viewHolder.jcplayerView.playAudio(temp);
+                    item.setClicked(true);
+                }
+
+
+
             }
         });
 
@@ -118,8 +136,8 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
             @Override
             public void onClick(View v) {
                 mItemManger.removeShownLayouts(viewHolder.swipeLayout);
-                db = Utils.getDB();
-                db.removeUserWithId(studentList.get(position).get_userId());
+                //db = Utils.getDB();
+                //db.removeUserWithId(studentList.get(position).get_userId());
                 studentList.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, studentList.size());
@@ -141,7 +159,7 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
         return R.id.swipe;
     }
 
-    public static class SimpleViewHolder extends RecyclerView.ViewHolder{
+    public static class SimpleViewHolderRec extends RecyclerView.ViewHolder{
         public SwipeLayout swipeLayout;
         public TextView Name;
         public TextView LastName;
@@ -153,17 +171,17 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
         public TextView Delete;
         public TextView Edit;
         public TextView Share;
+        public JcPlayerView jcplayerView;
         public ImageButton btnLocation;
-        public SimpleViewHolder(View itemView) {
+        public SimpleViewHolderRec(View itemView) {
             super(itemView);
 
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
-            Name = (TextView) itemView.findViewById(R.id.Name);
-            LastName = (TextView) itemView.findViewById(R.id.LastName);
-            Phone = (TextView) itemView.findViewById(R.id.phone);
-            Status = (TextView) itemView.findViewById(R.id.status);
-            Date = (TextView) itemView.findViewById(R.id.date);
-            ID = (TextView) itemView.findViewById(R.id.id_and_more);
+            Name = (TextView) itemView.findViewById(R.id.Name_rec);
+            Status = (TextView) itemView.findViewById(R.id.status_rec);
+            Date = (TextView) itemView.findViewById(R.id.date_rec);
+            ID = (TextView) itemView.findViewById(R.id.id_and_more_rec);
+            jcplayerView = (JcPlayerView) itemView.findViewById(R.id.jcplayer);
             //EmailId = (TextView) itemView.findViewById(R.id.EmailId);
 
             Delete = (TextView) itemView.findViewById(R.id.Delete);

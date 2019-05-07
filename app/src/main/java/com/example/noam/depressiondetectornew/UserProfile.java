@@ -12,22 +12,29 @@ public class UserProfile {
     private String _phoneNumber;
     private String _firstName;
     private String _lastName;
-    private String _status;
+    private int _status;
+    private ArrayList<Integer> recordings;
     private String _joinDate;//check how to save date
     private String _image;//check how to save image
-    private ArrayList<Integer> recordings;
+
+
+
+    public UserProfile(){
+    }
+
 
     public UserProfile(int userId, String phoneNumber){
         _userId = userId;
         _phoneNumber = phoneNumber;
     }
 
-    public UserProfile(String phoneNumber, String firstName, String lastName, String joinDate, String image){
+    public UserProfile(String phoneNumber, String firstName, String lastName, String joinDate){
     _phoneNumber= phoneNumber;
     _firstName= firstName;
     _lastName= lastName;
     _joinDate=  joinDate;
-    _image= image;
+    _status = 0;
+    //_image= image;
     this.recordings = new ArrayList<Integer>();
 
 }
@@ -52,6 +59,13 @@ public class UserProfile {
         return _lastName;
     }
 
+    public int get_status() {
+        return _status;
+    }
+
+    public void set_status(int _status) {
+        this._status = _status;
+    }
     public String get_joinDate() {
         return _joinDate;
     }

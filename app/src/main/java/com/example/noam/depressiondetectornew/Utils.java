@@ -6,6 +6,12 @@ import android.net.Uri;
 import android.os.Environment;
 
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,6 +33,7 @@ public class Utils {
         }
     }
 
+
     public int getDuration(File wavfile) {
 
         String test = wavfile.toString();
@@ -47,7 +54,7 @@ public class Utils {
     }
 
     public static String getFilesDirPath(Context context) {
-        return Environment.getExternalStorageDirectory().toString();
+        return context.getFilesDir().toString();
     }
 
     public double predictDepression() {
@@ -57,9 +64,8 @@ public class Utils {
         double[] features = new double[989];
         double precentage;
         Scanner scanner = null;
-        File file = new File( workingDirectory + File.separator + "AudioRecord"+"/demo_arff.csv" );
         try {
-            scanner = new Scanner(file);
+            scanner = new Scanner(new File(workingDirectory + "/demo_arff.csv"));
             //       scanner = new Scanner(getResources().openRawResource(R.raw.depman));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -100,7 +106,7 @@ public class Utils {
 
             String smilePath = context.getApplicationInfo().nativeLibraryDir + "/libSMILExtract.so";
             String emobaseConfPath = filesDirPath + "/emobase.conf";
-            String out_folder = filesDirPath + File.separator + "AudioRecord";
+            String out_folder = filesDirPath;
 //            String wavFile = /*testTrimmedPath;*/wavFileInput.toString();
 
             String[] command = new String[]{smilePath, "-C", emobaseConfPath, "-I", wavFile.toString(), "-O", out_folder + "/demo_arff.csv"};
@@ -140,7 +146,7 @@ public class Utils {
             throw new RuntimeException(e);
         }
     }
-
+    
     public static String getTime() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();

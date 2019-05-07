@@ -16,6 +16,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs 'imported-lib/src/', 'more-imported-libs/src/'
+        }
+    }
 }
 
 dependencies {
@@ -29,10 +34,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     api "com.daimajia.swipelayout:library:1.2.0@aar"
-    api 'com.android.support:recyclerview-v7:25.1.1'
+    api 'com.android.support:recyclerview-v7'
     implementation 'com.github.jeancsanchez:JcPlayer:2.6.16'
 }
-
 repositories {
     flatDir {
         dirs 'libs'

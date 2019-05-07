@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         utils = new Utils(this);
 
 
-
+/*
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED){
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1001);
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity
                 != PackageManager.PERMISSION_GRANTED){
             requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},1003);
         }
-        /*
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "external not permitted", Toast.LENGTH_SHORT).show();

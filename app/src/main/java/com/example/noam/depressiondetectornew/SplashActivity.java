@@ -118,13 +118,14 @@ public class SplashActivity extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     // For Project-Day - insert recordings bank. TO BE DELETED!
+                    /*
                         try {
                             insertRecordingBankToDB();
                         } catch (ExecutionException e) {
                             e.printStackTrace();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
-                        }
+                        }*/
 
                         Intent intent = new Intent(getApplicationContext(),
                                 MainActivity.class);
@@ -194,7 +195,7 @@ public class SplashActivity extends AppCompatActivity {
             if (openSmileExitValue != 0) {
                 Log.e("Opensmile", "openSMILE failed with error code " + openSmileExitValue);
             }
-            return utils.predictDepression();
+            return 1.1;
         }
 
 

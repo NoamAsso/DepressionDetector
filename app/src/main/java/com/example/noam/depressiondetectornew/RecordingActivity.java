@@ -47,7 +47,7 @@ public class RecordingActivity extends AppCompatActivity {
     TextView resultsText;
     TextView titleText;
     Button btnSave, btnDelete;
-
+    RecordingProfile voice_record;
     Utils utils;
     String testTrimmedPath = "";
     @Override
@@ -80,13 +80,13 @@ public class RecordingActivity extends AppCompatActivity {
         // custom_font = Typeface.createFromAsset(getAssets(),  "fonts/EncodeSans-Bold.ttf");
         btnSave = findViewById(R.id.btnSave);
         btnDelete =  findViewById(R.id.btnDelete);
-
+        voice_record = new RecordingProfile();
         btnSave.setOnClickListener(btnClick);
         btnDelete.setOnClickListener(btnClick);
 
         resultsText.setVisibility(View.INVISIBLE);
 
-        Log.d("STAM", "JUST TO CHECKyouvalisidiot");
+        Log.d("STAM", "JUST TO CHECK");
     }
 
 
@@ -101,7 +101,7 @@ public class RecordingActivity extends AppCompatActivity {
     void makePopup(){
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
         final View myDialogView = inflater.inflate(R.layout.rename_save_dialogue, null);
-        final String time = Utils.getTime();
+        final String time = Utils.getTimeSave();
         final String defaultName = "Default name - ";
         //Get Audio duration time
         final int duration = utils.getDuration(latestRecFile);
@@ -123,7 +123,14 @@ public class RecordingActivity extends AppCompatActivity {
                 {
                     recordName.setText(defaultName + recID);
                 }
-                RecordingProfile voice_record = new RecordingProfile(1,recordName.getText().toString(),latestRecFile.toString(),duration,time,precentage);
+                //latestRecFile.renameTo()
+                //recordName.getText().toString(),latestRecFile.toString(),duration,time,precentage;
+                voice_record.set_recordName(recordName.getText().toString());
+                voice_record.set_path(latestRecFile.toString());
+                voice_record.set_length(duration);
+                voice_record.set_time(time);
+                voice_record.set_prediction(precentage);
+                voice_record.set__userId(-1);
                 utils.saveRecord(voice_record);
                 dialog.dismiss();
             }
@@ -293,7 +300,10 @@ public class RecordingActivity extends AppCompatActivity {
             if (openSmileExitValue != 0) {
                 Log.e("Opensmile", "openSMILE failed with error code " + openSmileExitValue);
             }
-            return utils.predictDepression();
+            String csv = utils.MakeCSV();
+            voice_record.set_csv(csv);
+
+            return utils.predictDepression(csv);
         }
 
         @Override

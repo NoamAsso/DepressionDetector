@@ -22,6 +22,7 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
     private ArrayList<RecordingProfile> studentList;
     MyDBmanager db;
     Utils utils;
+    boolean flagOpen = false;
     public SwipeRecyclerViewAdapterRec(Context context, ArrayList<RecordingProfile> objects) {
         this.mContext = context;
         this.studentList = objects;
@@ -93,15 +94,24 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
                 if(item.isClicked()){
 
                     viewHolder.jcplayerView.setVisibility(View.GONE);
+
                     viewHolder.jcplayerView.pause();
+                    viewHolder.jcplayerView.kill();
                     item.setClicked(false);
+                    flagOpen = false;
                 }
                 else{
-                    viewHolder.jcplayerView.setVisibility(View.VISIBLE);
-                    ArrayList<JcAudio> jcAudios = new ArrayList<>();
-                    JcAudio temp = JcAudio.createFromFilePath("Asset audio","/storage/emulated/0/Documents/AudioRecord/20190506142017.wav");
-                    viewHolder.jcplayerView.playAudio(temp);
-                    item.setClicked(true);
+                    if(!flagOpen){
+                        viewHolder.jcplayerView.setVisibility(View.VISIBLE);
+                        ArrayList<JcAudio> jcAudios = new ArrayList<>();
+                        JcAudio temp = JcAudio.createFromFilePath("Asset audio",item.get_path());
+                        jcAudios.add(temp);
+                        //viewHolder.jcplayerView.playAudio(temp);
+                        viewHolder.jcplayerView.initAnonPlaylist(jcAudios);
+                        item.setClicked(true);
+                        flagOpen = true;
+                    }
+
                 }
 
 
@@ -136,8 +146,8 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
             @Override
             public void onClick(View v) {
                 mItemManger.removeShownLayouts(viewHolder.swipeLayout);
-                //db = Utils.getDB();
-                //db.removeUserWithId(studentList.get(position).get_userId());
+                db = Utils.getDB();
+                db.removeRecWithId(studentList.get(position).get_recId());
                 studentList.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, studentList.size());

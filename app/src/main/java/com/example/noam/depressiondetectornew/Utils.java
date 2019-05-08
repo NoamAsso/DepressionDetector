@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -49,8 +50,7 @@ public class Utils {
     public static String getFilesDirPath(Context context) {
         return context.getFilesDir().toString();
     }
-
-    public double predictDepression() {
+    public String MakeCSV() {
 
         String workingDirectory = getFilesDirPath(getContext()); //this is the path for the CSV file!!!!!!
         String dataLine = "";
@@ -67,6 +67,12 @@ public class Utils {
         while (scanner.hasNextLine()) {
             dataLine = scanner.nextLine();
         }
+        return dataLine;
+    }
+    public double predictDepression(String dataLine) {
+
+        double[] features = new double[989];
+
         List<String> line = CSVUtils.parseLine(dataLine); //Get the second line in CSV
         //        features = new double[line.size()];
         int j = 0;
@@ -74,8 +80,6 @@ public class Utils {
             features[j] = Double.parseDouble(line.get(i));
             j++;
         }
-
-        scanner.close();
         //most_important = [439,440,54,21,39,933,775,224,420,390,49,47,391]
         double most_important[] = {features[439],features[440],features[54],features[21],features[39],features[933],features[775]
                 ,features[224],features[420],features[390],features[49],features[47],features[391]};
@@ -99,10 +103,9 @@ public class Utils {
 
             String smilePath = context.getApplicationInfo().nativeLibraryDir + "/libSMILExtract.so";
             String emobaseConfPath = filesDirPath + "/emobase.conf";
-            String out_folder = filesDirPath;
 //            String wavFile = /*testTrimmedPath;*/wavFileInput.toString();
 
-            String[] command = new String[]{smilePath, "-C", emobaseConfPath, "-I", wavFile.toString(), "-O", out_folder + "/demo_arff.csv"};
+            String[] command = new String[]{smilePath, "-C", emobaseConfPath, "-I", wavFile.toString(), "-O", filesDirPath + "/demo_arff.csv"};
 
             final String ret;
 
@@ -141,9 +144,17 @@ public class Utils {
     }
 
     public static String getTime() {
+
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         return dateFormat.format(date);
+    }
+    public static String getTimeSave() {
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("EEEE, MMMM d, yyyy 'at' h:mm a");
+        String date = format.format(calendar.getTime());
+        return date;
     }
 
     public String saveRecord(RecordingProfile voice_record){

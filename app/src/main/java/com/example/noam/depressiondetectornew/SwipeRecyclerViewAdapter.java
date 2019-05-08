@@ -1,6 +1,7 @@
 package com.example.noam.depressiondetectornew;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,7 +88,9 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
         viewHolder.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, " Click : " + item.get_userId() + " \n" + item.get_phoneNumber(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, " Click : " + item.get_userId() + " \n" + item.get_phoneNumber(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(v.getContext(),UserPageActivity.class);
+                v.getContext().startActivity(intent);
             }
         });
 

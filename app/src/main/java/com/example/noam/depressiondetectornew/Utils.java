@@ -86,13 +86,13 @@ public class Utils {
         //final int numOfDepTrees = pred1.score(most_important);
         //final int numOfNotDepTrees = 200-numOfDepTrees;
         //final int depression_thr = 139;
-        /////////////////////RandomForestClassifier lgbm = new RandomForestClassifier();
-        /////////////////////double ans = lgbm.score(most_important);
+        RandomForestClassifier lgbm = new RandomForestClassifier();
+        double ans = lgbm.score(most_important);
         //precentage = (double)((numOfDepTrees*100)/200);
         //Log.e("predMain","pred"+precentage);
 
-        return 100;
-        //return ans*100;
+        //return 100;
+        return ans*100;
     }
 
     public int runOpenSmile(File wavFile) {

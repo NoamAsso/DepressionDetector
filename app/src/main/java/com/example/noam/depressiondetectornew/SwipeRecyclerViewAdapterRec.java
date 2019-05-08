@@ -39,10 +39,11 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
     public void onBindViewHolder(final SimpleViewHolderRec viewHolder, final int position) {
         final RecordingProfile item = studentList.get(position);
 
-        viewHolder.Name.setText("Name: " + item.get_recordName());
+        viewHolder.Name.setText(item.get_recordName());
         viewHolder.Status.setText("Status: " + Double.toString(item.get_prediction()));
-        viewHolder.ID.setText("UserId: " + item.get_recId() + " - Row Position " + position);
-        viewHolder.Date.setText("Join: " + item.get_time());
+        viewHolder.ID.setText("Rec ID: " + item.get_recId());
+        viewHolder.Date.setText(item.get_time());
+        viewHolder.UserBelong.setText("User ID: " + item.get__userId());
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
 
         viewHolder.jcplayerView.setVisibility(View.GONE);
@@ -177,7 +178,7 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
         public TextView Status;
         public TextView Date;
         public TextView ID;
-        public TextView EmailId;
+        public TextView UserBelong;
         public TextView Delete;
         public TextView Edit;
         public TextView Share;
@@ -191,6 +192,7 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
             Status = (TextView) itemView.findViewById(R.id.status_rec);
             Date = (TextView) itemView.findViewById(R.id.date_rec);
             ID = (TextView) itemView.findViewById(R.id.id_and_more_rec);
+            UserBelong = (TextView) itemView.findViewById(R.id.user_belong);
             jcplayerView = (JcPlayerView) itemView.findViewById(R.id.jcplayer);
             //EmailId = (TextView) itemView.findViewById(R.id.EmailId);
 

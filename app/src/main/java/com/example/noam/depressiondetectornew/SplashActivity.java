@@ -42,7 +42,7 @@ public class SplashActivity extends AppCompatActivity {
         Activity thisActivity = this;
 
         TextView appName = findViewById(R.id.appName);
-        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/EncodeSans-Black.ttf");
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Highest.ttf");
         appName.setTypeface(custom_font);
 
         //Run One Time - Insert the openSmile necessary files to the phone:

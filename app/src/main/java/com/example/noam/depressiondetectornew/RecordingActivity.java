@@ -1,6 +1,7 @@
 package com.example.noam.depressiondetectornew;
 
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
@@ -22,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class RecordingActivity extends AppCompatActivity {
     long difference = 0;
@@ -130,7 +133,7 @@ public class RecordingActivity extends AppCompatActivity {
                 voice_record.set_length(duration);
                 voice_record.set_time(time);
                 voice_record.set_prediction(precentage);
-                voice_record.set__userId(-1);
+
                 utils.saveRecord(voice_record);
                 dialog.dismiss();
             }
@@ -146,7 +149,64 @@ public class RecordingActivity extends AppCompatActivity {
         dialog.create();
         dialog.show();
     }
+    void makePopupList(){
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(RecordingActivity.this);
+        builderSingle.setIcon(R.drawable.baseline_person_add_black_18dp);
+        builderSingle.setTitle("Select One Name:-");
 
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(RecordingActivity.this, android.R.layout.select_dialog_singlechoice);
+        Cursor mCursor = db.getAllRowsUser();
+        final ArrayList<UserProfile> users = new ArrayList<UserProfile>();
+        for(mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
+            // The Cursor is now set to the right position
+            UserProfile usertemp = new UserProfile();
+            usertemp.set_userId(mCursor.getInt(mCursor.getColumnIndex("_id")));
+            usertemp.set_firstName(mCursor.getString(mCursor.getColumnIndex("first_name")));
+            usertemp.set_lastName(mCursor.getString(mCursor.getColumnIndex("last_name")));
+            usertemp.set_phoneNumber(mCursor.getString(mCursor.getColumnIndex("phone_number")));
+            usertemp.set_status(mCursor.getInt(mCursor.getColumnIndex("status")));
+            usertemp.set_joinDate(mCursor.getString(mCursor.getColumnIndex("join_date")));
+            users.add(usertemp);
+            arrayAdapter.add(usertemp.get_firstName()+ " " + usertemp.get_lastName());
+        }
+
+
+        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String strName = arrayAdapter.getItem(which);
+                AlertDialog.Builder builderInner = new AlertDialog.Builder(RecordingActivity.this);
+                builderInner.setMessage(strName);
+                builderInner.setTitle("Your Selected Item is");
+                builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,int which) {
+                        dialog.dismiss();
+                    }
+                });
+                String arr[] = strName.split(" ", 2);
+
+                String firstWord = arr[0];   //the
+                String theRest = arr[1];     //quick brown fox
+                for(int i = 0 ;i <users.size();i++){
+                    if(firstWord.equals(users.get(i).get_firstName()) && theRest.equals(users.get(i).get_lastName())){
+                        voice_record.set__userId(users.get(i).get_userId());
+                    }
+                }
+
+                builderInner.show();
+                makePopup();
+            }
+        });
+        builderSingle.show();
+    }
 
 
     private void setButtonHandlers() {
@@ -237,7 +297,8 @@ public class RecordingActivity extends AppCompatActivity {
                     break;
                 }
                 case R.id.btnSave:{
-                    makePopup(); //opens the UI name input and saves the record to the Database
+                    makePopupList();
+                    //opens the UI name input and saves the record to the Database
                     findViewById(R.id.txtTitle).setVisibility(View.INVISIBLE);
                     returnBeginning();
                     break;

@@ -33,7 +33,7 @@
             android:id="@+id/btnRecord"
             android:layout_width="120dip"
             android:layout_height="120dip"
-            android:background="@drawable/icons8_record_96"
+            android:background="@drawable/microphone"
             />
 
         <LinearLayout

@@ -80,7 +80,7 @@
                 android:layout_marginBottom="3dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:src="@drawable/stereo_icon3_2" />
+                android:src="@drawable/record_512" />
 
 
 
@@ -101,7 +101,7 @@
                         android:layout_margin="5dp"
                         android:text="Name"
                         android:textColor="@android:color/black"
-                        android:textSize="12sp"/>
+                        android:textSize="20sp"/>
                     <TextView
                         android:id="@+id/id_and_more_rec"
                         android:layout_width="wrap_content"
@@ -109,7 +109,7 @@
                         android:layout_margin="5dp"
                         android:text="id"
                         android:textColor="@android:color/black"
-                        android:textSize="12sp"/>
+                        android:textSize="15sp"/>
                 </LinearLayout>
 
 
@@ -121,7 +121,7 @@
                     android:text="Date"
                     android:paddingBottom="2dp"
                     android:textColor="@android:color/black"
-                    android:textSize="15sp"/>
+                    android:textSize="10sp"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"

@@ -3,8 +3,8 @@ package com.example.noam.depressiondetectornew;
 public class RecordingProfile {
 
 
-    private int _recId;
-    private int __userId;
+    private long _recId;
+    private long __userId;
     private String _recordName; // file name
     private String _path; //file path
     private int _length; // length of recording in seconds
@@ -53,11 +53,11 @@ public class RecordingProfile {
         this.prediction_feedback = prediction_feedback;
     }
 
-    public int get__userId() {
+    public long get__userId() {
         return __userId;
     }
 
-    public void set__userId(int __userId) {
+    public void set__userId(long __userId) {
         this.__userId = __userId;
     }
 
@@ -101,11 +101,11 @@ public class RecordingProfile {
         this._prediction = _prediction;
     }
 
-    public int get_recId() {
+    public long get_recId() {
         return _recId;
     }
 
-    public void set_recId(int _recId) {
+    public void set_recId(long _recId) {
         this._recId = _recId;
     }
 }

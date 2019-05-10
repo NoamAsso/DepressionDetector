@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gauravk.audiovisualizer.visualizer.CircleLineVisualizer;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +41,7 @@ public class RecordingActivity extends AppCompatActivity {
     private long pauseOffset;
     private Chronometer chronometer; //timer
     private boolean running;
-
+    CircleLineVisualizer mVisualizer;
     private static final int RECORDING_NOW = 4;
     private static final int NOT_RECORDING_NOW = 5;
     private static int recState;
@@ -79,7 +81,7 @@ public class RecordingActivity extends AppCompatActivity {
         findViewById(R.id.resultsText).setVisibility(View.INVISIBLE);
         resultsText = findViewById(R.id.results);
         titleText = findViewById(R.id.txtTitle);
-
+        mVisualizer = findViewById(R.id.blast);
         // custom_font = Typeface.createFromAsset(getAssets(),  "fonts/EncodeSans-Bold.ttf");
         btnSave = findViewById(R.id.btnSave);
         btnDelete =  findViewById(R.id.btnDelete);
@@ -134,7 +136,8 @@ public class RecordingActivity extends AppCompatActivity {
                 voice_record.set_time(time);
                 voice_record.set_prediction(precentage);
 
-                utils.saveRecord(voice_record);
+                long recid = utils.saveRecord(voice_record);
+                db.UpdateGson(voice_record.get__userId(),recid);
                 dialog.dismiss();
             }
         });
@@ -255,9 +258,11 @@ public class RecordingActivity extends AppCompatActivity {
 
                         resultsText.setText("Recording...");
                         resultsText.setVisibility(View.VISIBLE);
-
+                        mVisualizer.setVisibility(View.VISIBLE);
                         recordWavMaster = new RecordWavMaster();
-                        recordWavMaster.startRecording();
+                        int sessionId = recordWavMaster.startRecording(mVisualizer);
+                        //mVisualizer.setDrawLine(true);
+                        //mVisualizer.setAudioSessionId(sessionId);
                         break;
                     } else {          //Now recording, needs to stop
                         recState = NOT_RECORDING_NOW;
@@ -268,10 +273,10 @@ public class RecordingActivity extends AppCompatActivity {
                         titleText.setText("Record for at least 10 second for prediction");
                         v.setBackgroundResource(R.drawable.icons8_record_96);
 
-                        recordWavMaster.stopRecording();
-
+                        recordWavMaster.stopRecording(mVisualizer);
+                        mVisualizer.setVisibility(View.GONE);
                         latestRecFile = recordWavMaster.latestRecFile;
-                        recordWavMaster.releaseRecord();
+                        //recordWavMaster.releaseRecord();
                         if(utils.getDuration(latestRecFile)<TEN_SECONDS)
                         {
                             Toast.makeText(RecordingActivity.this, "Record was too short, no prediction was made",

@@ -157,15 +157,17 @@ public class Utils {
         return date;
     }
 
-    public String saveRecord(RecordingProfile voice_record){
+    public long saveRecord(RecordingProfile voice_record){
 
         long insertData = getDB().addRecording(voice_record);
 
         if(insertData==-1){
-            return "PROBLEM: record was UN - Succesfully added yes!, Error trying to save the record!";
+            return -1;
+            //return "PROBLEM: record was UN - Succesfully added yes!, Error trying to save the record!";
         }
         else{
-            return "record was succesfully added";
+            return insertData;
+            //return "record was succesfully added";
         }
     }
     public String saveUser(UserProfile user){

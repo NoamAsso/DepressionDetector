@@ -8,16 +8,23 @@ import java.util.ArrayList;
 public class UserProfile {
 
 
-    private int _userId;
+    private long _userId;
     private String _phoneNumber;
     private String _firstName;
     private String _lastName;
     private int _status;
-    private ArrayList<Integer> recordings;
+    private ArrayList<Long> recordings;
     private String _joinDate;//check how to save date
     private String _image;//check how to save image
+    private static long currentUserId;
 
+    public static long getcurrentUserId() {
+        return currentUserId;
+    }
 
+    public static void setcurrentUserId(long userid) {
+        UserProfile.currentUserId = userid;
+    }
 
     public UserProfile(){
     }
@@ -35,15 +42,15 @@ public class UserProfile {
     _joinDate=  joinDate;
     _status = 0;
     //_image= image;
-    this.recordings = new ArrayList<Integer>();
+    this.recordings = new ArrayList<Long>();
 
 }
 
-    public int get_userId() {
+    public long get_userId() {
         return _userId;
     }
 
-    public void set_userId(int _userId) {
+    public void set_userId(long _userId) {
         this._userId = _userId;
     }
 
@@ -92,18 +99,18 @@ public class UserProfile {
         this._joinDate = _joinDate;
     }
 
-    public ArrayList<Integer> getRecordings() {
+    public ArrayList<Long> getRecordings() {
         return recordings;
     }
 
-    public void setRecordings(ArrayList<Integer> recordings) {
+    public void setRecordings(ArrayList<Long> recordings) {
         this.recordings = recordings;
     }
 
-    public void add_recording(int rec_id){
+    public void add_recording(long rec_id){
         recordings.add(rec_id);
     }
-    public void remove_recording(int rec_id){
+    public void remove_recording(long rec_id){
         recordings.remove(rec_id);
     }
 }

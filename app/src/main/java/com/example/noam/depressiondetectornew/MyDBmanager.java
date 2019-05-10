@@ -16,8 +16,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.provider.BaseColumns._ID;
 import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.COLUMN_NAME_JOIN_DATE;
 import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.COLUMN_NAME_TIME_ADDED;
+import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.COLUMN_RECORDINGS_GSON;
 import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.TABLE_NAME_REC;
 import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.TABLE_NAME_USER;
 
@@ -77,7 +79,7 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
                     MyDBManagerItem.COLUMN_NAME_FIRST_NAME + TEXT_TYPE + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_LAST_NAME + TEXT_TYPE + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_STATUS + " INTEGER " + COMMA_SEP +
-                    MyDBManagerItem.COLUMN_RECORDINGS_GSON + TEXT_TYPE + COMMA_SEP +
+                    COLUMN_RECORDINGS_GSON + TEXT_TYPE + COMMA_SEP +
                     COLUMN_NAME_JOIN_DATE + TEXT_TYPE + ")";
     @SuppressWarnings("unused")
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + RECORDING_TABLE;
@@ -98,7 +100,7 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
     }
 
     //Get recording via id
-    public RecordingProfile getRecordingAt(int position) {
+    public RecordingProfile getRecordingAt(long position) {
         SQLiteDatabase db = getReadableDatabase();
         String[] projection = {
                 MyDBManagerItem._ID,
@@ -112,7 +114,8 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
                 MyDBManagerItem.COLUMN_NAME_PREDICTION
         };
         Cursor c = db.query(RECORDING_TABLE, projection, null, null, null, null, null);
-        if (c.moveToPosition(position)) {
+        int pos = (int)position;
+        if (c.moveToPosition(pos)) {
             RecordingProfile item = new RecordingProfile();
             item.set_recId(c.getInt(c.getColumnIndex(MyDBManagerItem._ID)));
             item.set__userId(c.getInt(c.getColumnIndex(MyDBManagerItem.USER_ID)));
@@ -161,7 +164,7 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
         cv.put(MyDBManagerItem.COLUMN_NAME_FIRST_NAME,new_user.get_firstName());
         cv.put(MyDBManagerItem.COLUMN_NAME_LAST_NAME,new_user.get_lastName());
         //cv.put(MyDBManagerItem.COLUMN_NAME_EMAIL,new_user.get_);
-        cv.put(MyDBManagerItem.COLUMN_RECORDINGS_GSON, recordings);
+        cv.put(COLUMN_RECORDINGS_GSON, recordings);
         cv.put(MyDBManagerItem.COLUMN_NAME_STATUS, new_user.get_status());
         cv.put(COLUMN_NAME_JOIN_DATE, new_user.get_joinDate());
 
@@ -176,19 +179,20 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
     }
 
     //Get recording via id
-    public UserProfile getUserAt(int position) {
+    public UserProfile getUserAt(long position) {
         SQLiteDatabase db = getReadableDatabase();
         String[] projection = {
                 MyDBManagerItem._ID,
                 MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER,
                 MyDBManagerItem.COLUMN_NAME_FIRST_NAME,
                 MyDBManagerItem.COLUMN_NAME_LAST_NAME,
-                MyDBManagerItem.COLUMN_RECORDINGS_GSON,
+                COLUMN_RECORDINGS_GSON,
                 MyDBManagerItem.COLUMN_NAME_STATUS,
                 COLUMN_NAME_JOIN_DATE,
         };
         Cursor c = db.query(TABLE_NAME_USER, projection, null, null, null, null, null);
-        if (c.moveToPosition(position)) {
+        int pos = (int)position;
+        if (c.moveToPosition(pos-1)) {
             UserProfile item = new UserProfile();
             Gson gson = new Gson();
             String recordings;
@@ -196,10 +200,10 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
             item.set_phoneNumber(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER)));
             item.set_firstName(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_FIRST_NAME)));
             item.set_lastName(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_LAST_NAME)));
-            recordings = (c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_RECORDINGS_GSON)));
+            recordings = (c.getString(c.getColumnIndex(COLUMN_RECORDINGS_GSON)));
             item.set_status(c.getInt(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_STATUS)));
             item.set_joinDate(c.getString(c.getColumnIndex(COLUMN_NAME_JOIN_DATE)));
-            ArrayList<Integer> recordlist = gson.fromJson(recordings,new TypeToken<List<Integer>>(){}.getType());
+            ArrayList<Long> recordlist = gson.fromJson(recordings,new TypeToken<List<Long>>(){}.getType());
             item.setRecordings(recordlist);
             c.close();
             return item;
@@ -210,12 +214,12 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
     public static void setOnDatabaseChangedListener(OnDatabaseChangedListener listener) {
         mOnDatabaseChangedListener = listener;
     }
-    public void removeRecWithId(int id) {
+    public void removeRecWithId(long id) {
         SQLiteDatabase db = getWritableDatabase();
         String[] whereArgs = { String.valueOf(id) };
         db.delete(TABLE_NAME_REC, "_ID=?", whereArgs);
     }
-    public void removeUserWithId(int id) {
+    public void removeUserWithId(long id) {
         SQLiteDatabase db = getWritableDatabase();
         String[] whereArgs = { String.valueOf(id) };
         db.delete(TABLE_NAME_USER, "_ID=?", whereArgs);
@@ -231,5 +235,14 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
         Cursor cursor = db.rawQuery("select * from " + TABLE_NAME_USER + " order by " + COLUMN_NAME_JOIN_DATE,null);
         return cursor;
     }
-
+    public Cursor UpdateGson(long userId, long recId){
+        UserProfile userTemp = getUserAt(userId);
+        SQLiteDatabase db = getReadableDatabase();
+        Gson gson = new Gson();
+        ArrayList<Long> newTemp = userTemp.getRecordings();
+        newTemp.add(recId);
+        String recordings= gson.toJson(newTemp);
+        Cursor cursor = db.rawQuery("UPDATE" +TABLE_NAME_USER + "SET" + COLUMN_RECORDINGS_GSON + " = " + recordings + " WHERE" + _ID + " = " + userId,null);
+        return cursor;
+    }
 }

@@ -89,6 +89,7 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
             @Override
             public void onClick(View v) {
                 //Toast.makeText(mContext, " Click : " + item.get_userId() + " \n" + item.get_phoneNumber(), Toast.LENGTH_SHORT).show();
+                item.setcurrentUserId(item.get_userId());
                 Intent intent = new Intent(v.getContext(),UserPageActivity.class);
                 v.getContext().startActivity(intent);
             }

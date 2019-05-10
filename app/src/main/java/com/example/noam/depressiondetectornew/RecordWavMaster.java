@@ -1,11 +1,16 @@
 package com.example.noam.depressiondetectornew;
 
+import android.app.Activity;
+import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.media.audiofx.Visualizer;
 import android.os.Environment;
 import android.text.format.Time;
 import android.util.Log;
+
+import com.gauravk.audiovisualizer.visualizer.CircleLineVisualizer;
 
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -46,18 +51,20 @@ public class RecordWavMaster {
     }
 
     /* Start AudioRecording */
-    public void startRecording() {
+    public int startRecording(CircleLineVisualizer mVisualizer) {
         mIsRecording = true;
         mRecorder.startRecording();
         mRecording = getFile("raw");
         startBufferedWrite(mRecording);
-    }
 
+        return mRecorder.getAudioSessionId();
+    }
     /* Stop AudioRecording */
-    public String stopRecording() {
+    public String stopRecording(CircleLineVisualizer mVisualizer) {
         try {
             mIsRecording = false;
             mRecorder.stop();
+            mVisualizer.release();
             latestRecFile = getFile("wav");
             rawToWave(mRecording, latestRecFile);
             Log.e("path_audioFilePath",audioFilePath);
@@ -70,6 +77,7 @@ public class RecordWavMaster {
 
     /* Release device MIC */
     public void releaseRecord() {
+
         mRecorder.release();
         mRecorder = null;
     }

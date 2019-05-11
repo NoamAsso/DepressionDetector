@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.SystemClock;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gauravk.audiovisualizer.visualizer.CircleLineVisualizer;
+import com.chibde.visualizer.LineBarVisualizer;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +42,6 @@ public class RecordingActivity extends AppCompatActivity {
     private long pauseOffset;
     private Chronometer chronometer; //timer
     private boolean running;
-    CircleLineVisualizer mVisualizer;
     private static final int RECORDING_NOW = 4;
     private static final int NOT_RECORDING_NOW = 5;
     private static int recState;
@@ -53,6 +53,7 @@ public class RecordingActivity extends AppCompatActivity {
     TextView titleText;
     Button btnSave, btnDelete;
     RecordingProfile voice_record;
+    LineBarVisualizer lineBarVisualizer;
     Utils utils;
     String testTrimmedPath = "";
     @Override
@@ -73,7 +74,7 @@ public class RecordingActivity extends AppCompatActivity {
         //mediaPlayer = new MediaPlayer();
         findViewById(R.id.btnSave).setVisibility(View.INVISIBLE);
         findViewById(R.id.btnDelete).setVisibility(View.INVISIBLE);
-
+        lineBarVisualizer = findViewById(R.id.visualizer);
         startTime = System.currentTimeMillis();
         setFilesDirPath();
         setButtonHandlers();
@@ -81,7 +82,7 @@ public class RecordingActivity extends AppCompatActivity {
         findViewById(R.id.resultsText).setVisibility(View.INVISIBLE);
         resultsText = findViewById(R.id.results);
         titleText = findViewById(R.id.txtTitle);
-        mVisualizer = findViewById(R.id.blast);
+
         // custom_font = Typeface.createFromAsset(getAssets(),  "fonts/EncodeSans-Bold.ttf");
         btnSave = findViewById(R.id.btnSave);
         btnDelete =  findViewById(R.id.btnDelete);
@@ -92,6 +93,14 @@ public class RecordingActivity extends AppCompatActivity {
         resultsText.setVisibility(View.INVISIBLE);
 
         Log.d("STAM", "JUST TO CHECK");
+        // set custom color to the line.
+        lineBarVisualizer.setColor(ContextCompat.getColor(this, R.color.av_dark_blue));
+
+        // define custom number of bars you want in the visualizer between (10 - 256).
+        lineBarVisualizer.setDensity(90f);
+
+        // Set your media player to the visualizer.
+        lineBarVisualizer.setPlayer(mediaPlayer.getAudioSessionId());
     }
 
 
@@ -258,11 +267,13 @@ public class RecordingActivity extends AppCompatActivity {
 
                         resultsText.setText("Recording...");
                         resultsText.setVisibility(View.VISIBLE);
-                        mVisualizer.setVisibility(View.VISIBLE);
                         recordWavMaster = new RecordWavMaster();
-                        int sessionId = recordWavMaster.startRecording(mVisualizer);
+                        int sessionId = recordWavMaster.getSession();
+
+                        recordWavMaster.startRecording();
+                        lineBarVisualizer.setPlayer(sessionId);
+                        //mVisualizer.setAudioSessionId(0);
                         //mVisualizer.setDrawLine(true);
-                        //mVisualizer.setAudioSessionId(sessionId);
                         break;
                     } else {          //Now recording, needs to stop
                         recState = NOT_RECORDING_NOW;
@@ -273,10 +284,9 @@ public class RecordingActivity extends AppCompatActivity {
                         titleText.setText("Record for at least 10 second for prediction");
                         v.setBackgroundResource(R.drawable.icons8_record_96);
 
-                        recordWavMaster.stopRecording(mVisualizer);
-                        mVisualizer.setVisibility(View.GONE);
+                        recordWavMaster.stopRecording();
                         latestRecFile = recordWavMaster.latestRecFile;
-                        //recordWavMaster.releaseRecord();
+                        recordWavMaster.releaseRecord();
                         if(utils.getDuration(latestRecFile)<TEN_SECONDS)
                         {
                             Toast.makeText(RecordingActivity.this, "Record was too short, no prediction was made",

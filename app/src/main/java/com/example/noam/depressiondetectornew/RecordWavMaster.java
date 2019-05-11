@@ -51,20 +51,23 @@ public class RecordWavMaster {
     }
 
     /* Start AudioRecording */
-    public int startRecording(CircleLineVisualizer mVisualizer) {
+    public void startRecording() {
         mIsRecording = true;
         mRecorder.startRecording();
         mRecording = getFile("raw");
         startBufferedWrite(mRecording);
 
+        //return mRecorder.getAudioSessionId();
+    }
+    public int getSession(){
         return mRecorder.getAudioSessionId();
     }
+
     /* Stop AudioRecording */
-    public String stopRecording(CircleLineVisualizer mVisualizer) {
+    public String stopRecording() {
         try {
             mIsRecording = false;
             mRecorder.stop();
-            mVisualizer.release();
             latestRecFile = getFile("wav");
             rawToWave(mRecording, latestRecFile);
             Log.e("path_audioFilePath",audioFilePath);

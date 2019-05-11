@@ -73,7 +73,8 @@ public class SplashActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(thisActivity,
                     new String[]{Manifest.permission.RECORD_AUDIO,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE},
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.MODIFY_AUDIO_SETTINGS},
                     PERMISSIONS_REQUEST_RECORD_AND_STORAGE);
               /*  ActivityCompat.requestPermissions(thisActivity,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},

@@ -26,6 +26,10 @@ android {
             universalApk true
         }
     }
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+
+    }
 }
 
 dependencies {
@@ -41,5 +45,6 @@ dependencies {
     api 'com.daimajia.swipelayout:library:1.2.0@aar'
     api 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.github.jeancsanchez:JcPlayer:2.6.16'
-    implementation 'com.gauravk.audiovisualizer:audiovisualizer:0.9.2'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation 'com.github.GautamChibde:android-audio-visualizer:2.1.0'
 }

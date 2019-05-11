@@ -1,6 +1,7 @@
 package com.example.noam.depressiondetectornew;
 
 import android.database.Cursor;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,10 +10,19 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.daimajia.swipe.util.Attributes;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 
 public class UserPageActivity extends AppCompatActivity {
+
+    public static final String TAG = "UserPageActivity";
     private RecyclerView mRecyclerView;
     private ArrayList<RecordingProfile> mDataSet;
     SwipeRecyclerViewAdapterRec adapter;
@@ -24,6 +34,7 @@ public class UserPageActivity extends AppCompatActivity {
     TextView Status;
     TextView Date;
     TextView ID;
+    LineChart mChart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +44,36 @@ public class UserPageActivity extends AppCompatActivity {
         myActionBar.hide();
         Name = (TextView) findViewById(R.id.name_and_last_name);
         Phone = (TextView) findViewById(R.id.phone_num_user);
+        mChart = (LineChart) findViewById(R.id.line_chart);
+        //mChart.setOnChartGestureListener(UserPageActivity.this);
+        //mChart.setOnChartValueSelectedListener(UserPageActivity.this);
+        mChart.setDragEnabled(true);
+        mChart.setScaleEnabled(false);
+
+        ArrayList<Entry> yValues = new ArrayList<>();
+
+        yValues.add(new Entry(0,60f));
+        yValues.add(new Entry(1,50f));
+        yValues.add(new Entry(2,70f));
+        yValues.add(new Entry(3,30f));
+        yValues.add(new Entry(4,50f));
+        yValues.add(new Entry(5,60f));
+        yValues.add(new Entry(6,65f));
+
+        LineDataSet set1 = new LineDataSet(yValues,"data set 1");
+
+        set1.setFillAlpha(110);
+        set1.setColor(Color.BLUE);
+        set1.setCircleColor(Color.YELLOW);
+        set1.setCircleRadius(6f);
+        set1.setLineWidth(3f);
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set1);
+
+        LineData data = new LineData(dataSets);
+
+        mChart.setData(data);
+        mChart.animateY(2000);
         long currentUserIdtemp = UserProfile.getcurrentUserId();
         UserProfile currentUser = db.getUserAt(currentUserIdtemp);
 

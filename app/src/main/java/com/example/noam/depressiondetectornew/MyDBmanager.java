@@ -113,9 +113,9 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
                 MyDBManagerItem.COLUMN_NAME_TIME_ADDED,
                 MyDBManagerItem.COLUMN_NAME_PREDICTION
         };
-        Cursor c = db.query(RECORDING_TABLE, projection, null, null, null, null, null);
+        Cursor c = db.query(TABLE_NAME_REC, projection, null, null, null, null, null);
         int pos = (int)position;
-        if (c.moveToPosition(pos)) {
+        if (c.moveToPosition(pos-1)) {
             RecordingProfile item = new RecordingProfile();
             item.set_recId(c.getInt(c.getColumnIndex(MyDBManagerItem._ID)));
             item.set__userId(c.getInt(c.getColumnIndex(MyDBManagerItem.USER_ID)));
@@ -242,7 +242,9 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
         ArrayList<Long> newTemp = userTemp.getRecordings();
         newTemp.add(recId);
         String recordings= gson.toJson(newTemp);
-        Cursor cursor = db.rawQuery("UPDATE" +TABLE_NAME_USER + "SET" + COLUMN_RECORDINGS_GSON + " = " + recordings + " WHERE" + _ID + " = " + userId,null);
+        Cursor cursor = db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + COLUMN_RECORDINGS_GSON + " = '" + recordings + "'" + " WHERE " + _ID + " = " + userId,null);
+        cursor.moveToFirst();
+        cursor.close();
         return cursor;
     }
 }

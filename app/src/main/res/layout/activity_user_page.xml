@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_blur"
+    android:background="#4a939c"
     tools:context=".UserPageActivity">
 
 
     <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="580dp"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true">
 
         <LinearLayout
@@ -182,7 +182,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="recordings" />
-
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp" />
                         <!-- TODO: Update blank fragment layout -->
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/my_recycler_view_user_page"
@@ -206,13 +208,26 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="Event ID: 53"
+                            android:text="Prediction history graph"
                             android:textColor="@android:color/black"
                             android:textSize="12dp" />
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="5dp" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp">
+
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/line_chart">
+
+                        </com.github.mikephil.charting.charts.LineChart>
+                    </LinearLayout>
 
                     </LinearLayout>
                 </RelativeLayout>

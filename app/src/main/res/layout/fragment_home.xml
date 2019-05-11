@@ -3,12 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_blur_3"
     tools:context=".HomeFragment">
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Depression Detector"
+        android:textSize="30dp"
+        android:layout_gravity="center|top"
+        android:paddingTop="18dp"
+        android:id="@+id/appName2"
+        android:textColor="#ffffff"
+        android:fontFamily=""/>
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:paddingTop="100dp"
         android:orientation="vertical">
 
         <ImageView

@@ -5,6 +5,7 @@
     android:id="@+id/swipe"
     app:leftEdgeSwipeOffset="0dp"
     app:rightEdgeSwipeOffset="0dp"
+
     android:layout_height="wrap_content">
 
 
@@ -15,22 +16,30 @@
         android:orientation="horizontal"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/Edit"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#0076a5"
-            android:gravity="center"
-            android:text="Edit"
-            android:textColor="#ffffff"/>
+
+            <TextView
+                android:id="@+id/Edit"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/edit_backgoundd"
+                android:gravity="center"
+                android:text="Edit"
+                android:paddingBottom="4dp"
+                android:paddingRight="8dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="4dp"
+                android:textColor="#ffffff"/>
+
+
+
 
         <TextView
             android:id="@+id/Share"
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#2cbb00"
+            android:background="@drawable/share_backgoundd"
             android:gravity="center"
             android:text="Share"
             android:textColor="#ffffff" />
@@ -40,7 +49,7 @@
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#ff0000"
+            android:background="@drawable/delete_backgoundd"
             android:gravity="center"
             android:text="Delete"
             android:textColor="#ffffff"/>
@@ -66,9 +75,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="8dp"
+        android:paddingBottom="4dp"
         android:paddingRight="8dp"
-        android:paddingLeft="8dp">
+        android:paddingLeft="8dp"
+        android:paddingTop="4dp">
 
 
         <LinearLayout
@@ -87,6 +97,8 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="3dp"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="7dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:src="@drawable/record_512" />

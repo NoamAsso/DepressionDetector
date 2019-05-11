@@ -11,13 +11,13 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fitsSystemWindows="true"
-        android:background="@drawable/background_circles">
+        android:background="@drawable/background_blur_3">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="56dp"
+            android:paddingTop="36dp"
             android:paddingLeft="24dp"
             android:paddingRight="24dp"
             android:background="#8dffffff">
@@ -31,14 +31,23 @@
                 android:text="Create New Patient Profile"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
-                android:paddingEnd="24dp"/>
+                />
+            <View
+                android:layout_width="240dp"
+                android:layout_height="1dp"
+                android:layout_gravity="center"
+                android:background="#303030"
+                android:paddingTop="2dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
             <ImageView
                 android:layout_width="213dp"
-                android:layout_height="147dp"
+                android:layout_height="127dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="3dp"
-                android:src="@drawable/logo_depression_2" />
+                android:src="@drawable/logo_depression_2_man" />
 
 
             <LinearLayout

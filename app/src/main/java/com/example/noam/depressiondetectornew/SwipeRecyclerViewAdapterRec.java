@@ -91,7 +91,7 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
         viewHolder.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, " Click : " + item.get__userId() + " \n" + item.get_recordName(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, " Click : " + item.get__userId() + " \n" + item.get_recordName(), Toast.LENGTH_SHORT).show();
                 if(item.isClicked()){
 
                     viewHolder.jcplayerView.setVisibility(View.GONE);

@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.SystemClock;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,7 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chibde.visualizer.LineBarVisualizer;
+import com.gauravk.audiovisualizer.visualizer.BarVisualizer;
+import com.gauravk.audiovisualizer.visualizer.CircleLineVisualizer;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +53,6 @@ public class RecordingActivity extends AppCompatActivity {
     TextView titleText;
     Button btnSave, btnDelete;
     RecordingProfile voice_record;
-    LineBarVisualizer lineBarVisualizer;
     Utils utils;
     String testTrimmedPath = "";
     @Override
@@ -74,7 +73,7 @@ public class RecordingActivity extends AppCompatActivity {
         //mediaPlayer = new MediaPlayer();
         findViewById(R.id.btnSave).setVisibility(View.INVISIBLE);
         findViewById(R.id.btnDelete).setVisibility(View.INVISIBLE);
-        lineBarVisualizer = findViewById(R.id.visualizer);
+
         startTime = System.currentTimeMillis();
         setFilesDirPath();
         setButtonHandlers();
@@ -82,7 +81,6 @@ public class RecordingActivity extends AppCompatActivity {
         findViewById(R.id.resultsText).setVisibility(View.INVISIBLE);
         resultsText = findViewById(R.id.results);
         titleText = findViewById(R.id.txtTitle);
-
         // custom_font = Typeface.createFromAsset(getAssets(),  "fonts/EncodeSans-Bold.ttf");
         btnSave = findViewById(R.id.btnSave);
         btnDelete =  findViewById(R.id.btnDelete);
@@ -93,14 +91,6 @@ public class RecordingActivity extends AppCompatActivity {
         resultsText.setVisibility(View.INVISIBLE);
 
         Log.d("STAM", "JUST TO CHECK");
-        // set custom color to the line.
-        lineBarVisualizer.setColor(ContextCompat.getColor(this, R.color.av_dark_blue));
-
-        // define custom number of bars you want in the visualizer between (10 - 256).
-        lineBarVisualizer.setDensity(90f);
-
-        // Set your media player to the visualizer.
-        lineBarVisualizer.setPlayer(mediaPlayer.getAudioSessionId());
     }
 
 
@@ -271,7 +261,6 @@ public class RecordingActivity extends AppCompatActivity {
                         int sessionId = recordWavMaster.getSession();
 
                         recordWavMaster.startRecording();
-                        lineBarVisualizer.setPlayer(sessionId);
                         //mVisualizer.setAudioSessionId(0);
                         //mVisualizer.setDrawLine(true);
                         break;

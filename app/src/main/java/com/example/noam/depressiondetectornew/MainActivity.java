@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity
             // Permission is not granted
         }*/
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Home");
+        toolbar.setTitle("Depression Detector");
         setSupportActionBar(toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -176,20 +176,20 @@ public class MainActivity extends AppCompatActivity
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    toolbar.setTitle("Home");
-                    setSupportActionBar(toolbar);
+                    //toolbar.setTitle("Home");
+                    //setSupportActionBar(toolbar);
                     fragment = new HomeFragment();
                     break;
 
                 case R.id.navigation_dashboard:
-                    toolbar.setTitle("Patients");
-                    setSupportActionBar(toolbar);
+                    //toolbar.setTitle("Patients");
+                    //setSupportActionBar(toolbar);
                     fragment = new PeopleFragment();
                     break;
 
                 case R.id.navigation_notifications:
-                    toolbar.setTitle("Recordings");
-                    setSupportActionBar(toolbar);
+                    //toolbar.setTitle("Recordings");
+                    //setSupportActionBar(toolbar);
                     fragment = new RecordingsFragment();
                     break;
             }

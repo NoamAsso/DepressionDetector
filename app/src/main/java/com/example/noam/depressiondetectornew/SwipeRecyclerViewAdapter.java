@@ -37,11 +37,11 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
     public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
         final UserProfile item = studentList.get(position);
 
-        viewHolder.Name.setText("Name: " + item.get_firstName());
-        viewHolder.LastName.setText(item.get_lastName());
+        viewHolder.Name.setText(item.get_firstName()+" "+item.get_lastName());
+        //viewHolder.LastName.setText(item.get_lastName());
         viewHolder.Phone.setText("Phone Number: " + item.get_phoneNumber());
-        viewHolder.Status.setText("Status: " + Integer.toString(item.get_status()));
-        viewHolder.ID.setText("UserId: " + item.get_userId() + " - Row Position " + position);
+        viewHolder.Status.setText("Prediction: " + Integer.toString(item.get_status()));
+        //viewHolder.ID.setText("UserId: " + item.get_userId() + " - Row Position " + position);
         viewHolder.Date.setText("Join: " + item.get_joinDate());
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
 
@@ -163,11 +163,11 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
 
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
             Name = (TextView) itemView.findViewById(R.id.Name);
-            LastName = (TextView) itemView.findViewById(R.id.LastName);
+            //LastName = (TextView) itemView.findViewById(R.id.LastName);
             Phone = (TextView) itemView.findViewById(R.id.phone);
             Status = (TextView) itemView.findViewById(R.id.status);
             Date = (TextView) itemView.findViewById(R.id.date);
-            ID = (TextView) itemView.findViewById(R.id.id_and_more);
+            //ID = (TextView) itemView.findViewById(R.id.id_and_more);
             //EmailId = (TextView) itemView.findViewById(R.id.EmailId);
 
             Delete = (TextView) itemView.findViewById(R.id.Delete);

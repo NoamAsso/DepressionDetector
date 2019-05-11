@@ -121,16 +121,32 @@
                 android:layout_marginBottom="24dp"
                 android:padding="12dp"
                 android:background="@drawable/curve_edges_button_login"
-                android:text="Create New Patient"
+                android:text="Create new patient"
+                android:textAllCaps="false"
                 android:textColor="@android:color/white"/>
 
             <TextView android:id="@+id/link_login"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:text="Already a member? Login"
+
+                android:text="Or"
                 android:gravity="center"
                 android:textSize="16dip"/>
+
+
+            <!-- Signup Button -->
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_signup_contacts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:layout_gravity="center"
+                android:padding="12dp"
+                android:background="@drawable/curve_edges_button_save"
+                android:textAllCaps="false"
+                android:text="Import from contact list"
+                android:textColor="@android:color/white"/>
 
         </LinearLayout>
     </ScrollView>

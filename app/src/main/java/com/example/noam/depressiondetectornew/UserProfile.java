@@ -100,6 +100,8 @@ public class UserProfile {
     }
 
     public ArrayList<Long> getRecordings() {
+        if(recordings == null)
+            recordings = new ArrayList<Long>();
         return recordings;
     }
 

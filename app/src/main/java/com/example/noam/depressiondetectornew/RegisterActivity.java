@@ -1,12 +1,16 @@
 package com.example.noam.depressiondetectornew;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +18,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -21,6 +26,7 @@ import com.google.gson.Gson;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class RegisterActivity extends AppCompatActivity {
     EditText firstnameWrapper;
@@ -35,6 +41,8 @@ public class RegisterActivity extends AppCompatActivity {
     Utils utils;
     Button registerButton;
     Button contactsButton;
+    public  static final int RequestPermissionCode  = 1 ;
+    Intent intent ;
     private String TAG = "Contacts";
     private static final int RESULT_PICK_CONTACT = 2015;
     @Override
@@ -52,21 +60,16 @@ public class RegisterActivity extends AppCompatActivity {
         emailWrapper = (EditText) findViewById(R.id.input_email);
         registerButton = (Button) findViewById(R.id.btn_signup);
         contactsButton = (Button) findViewById(R.id.btn_signup_contacts);
-
+        EnableRuntimePermission();
         contactsButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
 
-                selectSingleContact();
-                Calendar calendar = Calendar.getInstance();
-                SimpleDateFormat format = new SimpleDateFormat("EEEE, MMMM d, yyyy 'at' h:mm a");
-                String date = format.format(calendar.getTime());
-                UserProfile user = new UserProfile(phoneNo,name,
-                        name,date);
 
-                utils.saveUser(user);
-                finish();
+                intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(intent, 7);
+
             }
 
 
@@ -120,12 +123,14 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
     private void selectSingleContact() {
-        Intent pickContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-        startActivityForResult(pickContact, 2015);
+
     }
 
+
+/*
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 // check whether the result is ok
         Uri contactData = data.getData();
         Cursor c = getContentResolver().query(contactData, null, null, null, null);
@@ -134,7 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
             String num = c.getString(phoneIndex);
             Toast.makeText(RegisterActivity.this, "Number=" + num, Toast.LENGTH_LONG).show();
         }
-    }
+    }*/
 
     private void contactPicked(Intent data) {
 
@@ -195,4 +200,100 @@ public class RegisterActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
+
+    public void EnableRuntimePermission(){
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(RegisterActivity.this,
+                Manifest.permission.READ_CONTACTS))
+        {
+
+            Toast.makeText(RegisterActivity.this,"CONTACTS permission allows us to Access CONTACTS app", Toast.LENGTH_LONG).show();
+
+        } else {
+
+            ActivityCompat.requestPermissions(RegisterActivity.this,new String[]{
+                    Manifest.permission.READ_CONTACTS}, RequestPermissionCode);
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int RC, String per[], int[] PResult) {
+
+        switch (RC) {
+
+            case RequestPermissionCode:
+
+                if (PResult.length > 0 && PResult[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Toast.makeText(RegisterActivity.this,"Permission Granted, Now your application can access CONTACTS.", Toast.LENGTH_LONG).show();
+
+                } else {
+
+                    Toast.makeText(RegisterActivity.this,"Permission Canceled, Now your application cannot access CONTACTS.", Toast.LENGTH_LONG).show();
+
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int RequestCode, int ResultCode, Intent ResultIntent) {
+
+        super.onActivityResult(RequestCode, ResultCode, ResultIntent);
+
+        switch (RequestCode) {
+
+            case (7):
+                if (ResultCode == Activity.RESULT_OK) {
+
+                    Uri uri;
+                    Cursor cursor1, cursor2;
+                    String TempNameHolder, TempNumberHolder, TempContactID, IDresult = "" ;
+                    int IDresultHolder ;
+
+                    uri = ResultIntent.getData();
+
+                    cursor1 = getContentResolver().query(uri, null, null, null, null);
+
+                    if (cursor1.moveToFirst()) {
+
+                        TempNameHolder = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+
+                        TempContactID = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts._ID));
+
+                        IDresult = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+
+                        IDresultHolder = Integer.valueOf(IDresult) ;
+
+                        if (IDresultHolder == 1) {
+
+                            cursor2 = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + TempContactID, null, null);
+
+                            if (cursor2.moveToNext()) {
+
+                                TempNumberHolder = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                //selectSingleContact();
+                                Calendar calendar = Calendar.getInstance();
+                                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy 'at' h:mm a", Locale.ENGLISH);
+                                String date = format.format(calendar.getTime());
+                                UserProfile user = new UserProfile(TempNumberHolder,TempNameHolder,
+                                        "",date);
+
+                                utils.saveUser(user);
+
+                                finish();
+
+                            }
+                        }
+
+                    }
+                }
+
+                break;
+        }
+    }
+
 }

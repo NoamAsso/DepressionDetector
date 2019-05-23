@@ -47,12 +47,39 @@ public class UserPageActivity extends AppCompatActivity {
         mChart = (LineChart) findViewById(R.id.line_chart);
         //mChart.setOnChartGestureListener(UserPageActivity.this);
         //mChart.setOnChartValueSelectedListener(UserPageActivity.this);
+
+        long currentUserIdtemp = UserProfile.getcurrentUserId();
+        UserProfile currentUser = db.getUserAt(currentUserIdtemp);
+
+        Name.setText(currentUser.get_firstName() + " " + currentUser.get_lastName());
+        Phone.setText(currentUser.get_phoneNumber());
+
+        db = Utils.getDB();
+        utils = new Utils(this);
+
+        mDataSet = new ArrayList<RecordingProfile>();
+        for(int i = 0; i < currentUser.getRecordings().size(); i++){
+            mDataSet.add(db.getRecordingAt(currentUser.getRecordings().get(i)));
+        }
+
+
+
+
+        ///////////////////////////////////////
+
         mChart.setDragEnabled(true);
         mChart.setScaleEnabled(false);
 
         ArrayList<Entry> yValues = new ArrayList<>();
 
-        yValues.add(new Entry(0,60f));
+        /*
+        for (int i ; i < mDataSet.size(); i++){
+            String date = mDataSet.get(i).get_time();
+
+
+            yValues.add(new Entry(6,60f));
+        }*/
+
         yValues.add(new Entry(1,50f));
         yValues.add(new Entry(2,70f));
         yValues.add(new Entry(3,30f));
@@ -74,20 +101,10 @@ public class UserPageActivity extends AppCompatActivity {
 
         mChart.setData(data);
         mChart.animateY(2000);
-        long currentUserIdtemp = UserProfile.getcurrentUserId();
-        UserProfile currentUser = db.getUserAt(currentUserIdtemp);
 
-        Name.setText(currentUser.get_firstName() + " " + currentUser.get_lastName());
-        Phone.setText(currentUser.get_phoneNumber());
 
-        db = Utils.getDB();
-        utils = new Utils(this);
 
-        mDataSet = new ArrayList<RecordingProfile>();
-        for(int i = 0; i < currentUser.getRecordings().size(); i++){
-            mDataSet.add(db.getRecordingAt(currentUser.getRecordings().get(i)));
-        }
-
+        ///////////////////////////////////////////////
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_user_page);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         /*

@@ -40,7 +40,7 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
         viewHolder.Name.setText(item.get_firstName()+" "+item.get_lastName());
         //viewHolder.LastName.setText(item.get_lastName());
         viewHolder.Phone.setText("Phone Number: " + item.get_phoneNumber());
-        viewHolder.Status.setText("Prediction: " + Integer.toString(item.get_status()));
+        viewHolder.Status.setText("Prediction: " + Integer.toString(((int)item.get_userId())));
         //viewHolder.ID.setText("UserId: " + item.get_userId() + " - Row Position " + position);
         viewHolder.Date.setText("Join: " + item.get_joinDate());
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);

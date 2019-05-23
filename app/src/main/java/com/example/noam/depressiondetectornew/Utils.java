@@ -145,14 +145,14 @@ public class Utils {
 
     public static String getTime() {
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy 'at' h:mm a");
         Date date = new Date();
         return dateFormat.format(date);
     }
     public static String getTimeSave() {
 
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("EEEE, MMMM d, yyyy 'at' h:mm a");
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy 'at' h:mm a");
         String date = format.format(calendar.getTime());
         return date;
     }

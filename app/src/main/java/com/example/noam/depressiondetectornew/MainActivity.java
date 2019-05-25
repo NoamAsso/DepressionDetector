@@ -15,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,12 +27,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.luseen.spacenavigation.SpaceItem;
+import com.luseen.spacenavigation.SpaceNavigationView;
+import com.luseen.spacenavigation.SpaceOnClickListener;
+import com.luseen.spacenavigation.SpaceOnLongClickListener;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static MyDBmanager db;
     Utils utils;
     String filesDirPath;
+    private SpaceNavigationView spaceNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,45 +49,10 @@ public class MainActivity extends AppCompatActivity
         db= Utils.getDB();
         utils = new Utils(this);
 
-
-        /*
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED){
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1001);
-        }
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED){
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1002);
-        }
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.RECORD_AUDIO)
-                != PackageManager.PERMISSION_GRANTED){
-            requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},1003);
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "external not permitted", Toast.LENGTH_SHORT).show();
-            requestPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, 1);
-            // Permission is not granted
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "read external not permitted", Toast.LENGTH_SHORT).show();
-            // Permission is not granted
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
-                != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "recording not permitted", Toast.LENGTH_SHORT).show();
-            // Permission is not granted
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WAKE_LOCK)
-                != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "wake not permitted", Toast.LENGTH_SHORT).show();
-            // Permission is not granted
-        }*/
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Depression Detector");
         setSupportActionBar(toolbar);
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +70,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
 
-        });
+        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -109,8 +81,87 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        //BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        //navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        spaceNavigationView = (SpaceNavigationView) findViewById(R.id.space);
+        spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
+        spaceNavigationView.addSpaceItem(new SpaceItem("People", R.drawable.baseline_account_circle_black_18dp));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Recordings", R.drawable.baseline_record_voice_over_black_18dp));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Statistics", R.drawable.baseline_record_voice_over_black_18dp));
+        spaceNavigationView.shouldShowFullBadgeText(true);
+        spaceNavigationView.setCentreButtonIconColorFilterEnabled(false);
+
+        spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
+            @Override
+            public void onCentreButtonClick() {
+                Log.d("onCentreButtonClick ", "onCentreButtonClick");
+                spaceNavigationView.shouldShowFullBadgeText(true);
+                Intent intent = new Intent(getApplicationContext(),RecordingActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onItemClick(int itemIndex, String itemName) {
+                Log.d("onItemClick ", "" + itemIndex + " " + itemName);
+                Fragment fragment = null;
+                switch (itemIndex) {
+                    case 0:
+                        //toolbar.setTitle("Home");
+                        //setSupportActionBar(toolbar);
+                        fragment = new PeopleFragment();
+                        break;
+
+                    case 1:
+                        //toolbar.setTitle("Patients");
+                        //setSupportActionBar(toolbar);
+                        fragment = new RecordingsFragment();
+                        break;
+                }
+                loadFragment(fragment);
+            }
+
+            @Override
+            public void onItemReselected(int itemIndex, String itemName) {
+                Log.d("onItemReselected ", "" + itemIndex + " " + itemName);
+                Log.d("onItemClick ", "" + itemIndex + " " + itemName);
+                Fragment fragment = null;
+                switch (itemIndex) {
+                    case 0:
+                        //toolbar.setTitle("Home");
+                        //setSupportActionBar(toolbar);
+                        fragment = new PeopleFragment();
+                        break;
+
+                    case 1:
+                        //toolbar.setTitle("Patients");
+                        //setSupportActionBar(toolbar);
+                        fragment = new RecordingsFragment();
+                        break;
+                }
+                loadFragment(fragment);
+            }
+
+        });
+
+        spaceNavigationView.setSpaceOnLongClickListener(new SpaceOnLongClickListener() {
+            @Override
+            public void onCentreButtonLongClick() {
+                Toast.makeText(MainActivity.this, "onCentreButtonLongClick", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemLongClick(int itemIndex, String itemName) {
+                Toast.makeText(MainActivity.this, itemIndex + " " + itemName, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+
+
+
+
     }
 
     @Override
@@ -176,7 +227,6 @@ public class MainActivity extends AppCompatActivity
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment fragment = null;
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     //toolbar.setTitle("Home");

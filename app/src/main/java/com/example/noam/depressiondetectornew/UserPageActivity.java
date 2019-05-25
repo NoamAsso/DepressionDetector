@@ -1,5 +1,6 @@
 package com.example.noam.depressiondetectornew;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -11,14 +12,26 @@ import android.widget.TextView;
 
 import com.daimajia.swipe.util.Attributes;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.MarkerView;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.MPPointF;
 
+import java.security.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class UserPageActivity extends AppCompatActivity {
 
@@ -31,10 +44,12 @@ public class UserPageActivity extends AppCompatActivity {
     TextView Name;
     TextView LastName;
     TextView Phone;
+    TextView uId;
     TextView Status;
     TextView Date;
     TextView ID;
     LineChart mChart;
+    Long reference_timestamp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +60,8 @@ public class UserPageActivity extends AppCompatActivity {
         Name = (TextView) findViewById(R.id.name_and_last_name);
         Phone = (TextView) findViewById(R.id.phone_num_user);
         mChart = (LineChart) findViewById(R.id.line_chart);
+        uId =  (TextView) findViewById(R.id.user_id);
+
         //mChart.setOnChartGestureListener(UserPageActivity.this);
         //mChart.setOnChartValueSelectedListener(UserPageActivity.this);
 
@@ -53,7 +70,7 @@ public class UserPageActivity extends AppCompatActivity {
 
         Name.setText(currentUser.get_firstName() + " " + currentUser.get_lastName());
         Phone.setText(currentUser.get_phoneNumber());
-
+        uId.setText(Long.toString(currentUser.get_userId()));
         db = Utils.getDB();
         utils = new Utils(this);
 
@@ -67,25 +84,35 @@ public class UserPageActivity extends AppCompatActivity {
 
         ///////////////////////////////////////
 
+
+
         mChart.setDragEnabled(true);
         mChart.setScaleEnabled(false);
 
         ArrayList<Entry> yValues = new ArrayList<>();
 
-        /*
-        for (int i ; i < mDataSet.size(); i++){
+
+        for (int i=0 ; i < mDataSet.size(); i++){
             String date = mDataSet.get(i).get_time();
+            java.util.Date date1 = null;
+            //SimpleDateFormat formatter1=new SimpleDateFormat("dd/MM/yyyy 'at' h:mm a");
+            try {
+                SimpleDateFormat formatter1=new SimpleDateFormat("dd/MM/yyyy 'at' h:mm a");
+                date1=formatter1.parse(date);
+            } catch (java.text.ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            if(i==0)
+                reference_timestamp = date1.getTime();
 
+            long Xnew = date1.getTime() - reference_timestamp;
+            yValues.add(new Entry((float)Xnew,(float)mDataSet.get(i).get_prediction()));
 
-            yValues.add(new Entry(6,60f));
-        }*/
-
-        yValues.add(new Entry(1,50f));
-        yValues.add(new Entry(2,70f));
-        yValues.add(new Entry(3,30f));
-        yValues.add(new Entry(4,50f));
-        yValues.add(new Entry(5,60f));
-        yValues.add(new Entry(6,65f));
+        }
+        ValueFormatter xAxisFormatter = new HourAxisValueFormatter(reference_timestamp);
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setValueFormatter(xAxisFormatter);
 
         LineDataSet set1 = new LineDataSet(yValues,"data set 1");
 
@@ -98,7 +125,8 @@ public class UserPageActivity extends AppCompatActivity {
         dataSets.add(set1);
 
         LineData data = new LineData(dataSets);
-
+        MyMarkerView myMarkerView= new MyMarkerView(getApplicationContext(), R.layout.custom_marker_view, reference_timestamp);
+        mChart.setMarkerView(myMarkerView);
         mChart.setData(data);
         mChart.animateY(2000);
 
@@ -130,5 +158,97 @@ public class UserPageActivity extends AppCompatActivity {
             }
         });
 
+    }
+}
+
+class HourAxisValueFormatter extends ValueFormatter {
+
+    private long referenceTimestamp;
+    private DateFormat mDataFormat;
+    private Date mDate;
+
+    /**
+     * Constructor of the formatter.
+     *
+     * @param referenceTimestamp minimum timestamp of the data set (in seconds).
+     */
+    public HourAxisValueFormatter(long referenceTimestamp) {
+        this.referenceTimestamp = referenceTimestamp;
+        this.mDataFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        this.mDate = new Date();
+    }
+
+    /**
+     * Called when a value from an axis is to be formatted before being drawn.
+     *
+     * @param value the value to be formatted.
+     * @param axis  the axis the value belongs to.
+     * @return timestamp formatted.
+     */
+    @Override
+    public String getFormattedValue(float value, AxisBase axis) {
+        // relativeTimestamp = originalTimestamp - referenceTimestamp
+        long relativeTimestamp = (long) value;
+        // Retrieve absolute timestamp (referenceTimestamp + relativeTimestamp)
+        long originalTimestamp = referenceTimestamp + relativeTimestamp;
+        // Convert timestamp to hour:minute
+        return getHour(originalTimestamp);
+    }
+
+    /**
+     * Get formatted hour from a timestamp.
+     *
+     * @param timestamp timestamp to format.
+     * @return formatted hour.
+     */
+    private String getHour(long timestamp) {
+        mDate.setTime(timestamp * 1000); // Convert from seconds to milliseconds
+        return mDataFormat.format(mDate);
+    }
+}
+class MyMarkerView extends MarkerView {
+
+    private TextView tvContent;
+    private long referenceTimestamp;  // minimum timestamp in your data set
+    private DateFormat mDataFormat;
+    private Date mDate;
+    private MPPointF mOffset = new MPPointF();
+
+    public MyMarkerView (Context context, int layoutResource, long referenceTimestamp) {
+        super(context, layoutResource);
+        // this markerview only displays a textview
+        tvContent = (TextView) findViewById(R.id.tvContent);
+        this.referenceTimestamp = referenceTimestamp;
+        this.mDataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        this.mDate = new Date();
+    }
+
+    // callbacks everytime the MarkerView is redrawn, can be used to update the
+    // content (user-interface)
+    @Override
+    public void refreshContent(Entry e, Highlight highlight) {
+        long currentTimestamp = (int)e.getX() + referenceTimestamp;
+
+        tvContent.setText(e.getY() + "% at " + getTimedate(currentTimestamp)); // set the entry-value as the display text
+    }
+
+    @Override
+    public MPPointF getOffset() {
+        mOffset = new MPPointF();
+        mOffset.x = -(getWidth() / 2);
+        mOffset.y = -getHeight();
+        return mOffset;
+    }
+
+
+    private String getTimedate(long timestamp){
+
+        try{
+            mDate.setTime(timestamp*1000);
+            return mDataFormat.format(mDate);
+        }
+        catch(Exception ex){
+            return "xx";
+        }
     }
 }

@@ -1,15 +1,19 @@
 package com.example.noam.depressiondetectornew;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.daimajia.swipe.util.Attributes;
@@ -32,7 +36,6 @@ public class PeopleFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_people, container, false);
-
 
 
         db = Utils.getDB();
@@ -69,6 +72,17 @@ public class PeopleFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
             }
+        });
+
+        Button fab2 = (Button) v.findViewById(R.id.fab2);
+        fab2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(),RegisterActivity.class);
+                startActivity(intent);
+            }
+
         });
         return v;
     }

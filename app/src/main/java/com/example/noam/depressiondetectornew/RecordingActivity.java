@@ -1,6 +1,7 @@
 package com.example.noam.depressiondetectornew;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
@@ -113,6 +114,10 @@ public class RecordingActivity extends AppCompatActivity {
 
         final EditText recordName = myDialogView.findViewById(R.id.recordName);
 
+        UserProfile usertemp = db.getUserAt(voice_record.get__userId());
+        int size = usertemp.getRecordings().size() +1;
+        String name = usertemp.get_firstName();
+        recordName.setText(name + " Rec " +Integer.toString(size), TextView.BufferType.EDITABLE );
         //Build the dialog
         final AlertDialog.Builder dialog = new AlertDialog.Builder(
                 RecordingActivity.this,
@@ -125,7 +130,7 @@ public class RecordingActivity extends AppCompatActivity {
                 recID++;
                 if(recordName.getText().toString().equals(""))
                 {
-                    recordName.setText(defaultName + recID);
+
                 }
                 //latestRecFile.renameTo()
                 //recordName.getText().toString(),latestRecFile.toString(),duration,time,precentage;
@@ -169,7 +174,7 @@ public class RecordingActivity extends AppCompatActivity {
             usertemp.set_status(mCursor.getInt(mCursor.getColumnIndex("status")));
             usertemp.set_joinDate(mCursor.getString(mCursor.getColumnIndex("join_date")));
             users.add(usertemp);
-            arrayAdapter.add(usertemp.get_firstName()+ " " + usertemp.get_lastName());
+            arrayAdapter.add(usertemp.get_firstName());
         }
 
 
@@ -195,16 +200,20 @@ public class RecordingActivity extends AppCompatActivity {
                 });
                 String arr[] = strName.split(" ", 2);
 
-                String firstWord = arr[0];   //the
-                String theRest = arr[1];     //quick brown fox
+
                 for(int i = 0 ;i <users.size();i++){
-                    if(firstWord.equals(users.get(i).get_firstName()) && theRest.equals(users.get(i).get_lastName())){
+
+                    String name = users.get(i).get_firstName();
+                    if(strName.equals(name)){
                         voice_record.set__userId(users.get(i).get_userId());
                     }
                 }
 
                 builderInner.show();
                 makePopup();
+
+                //finish();
+
             }
         });
         builderSingle.show();

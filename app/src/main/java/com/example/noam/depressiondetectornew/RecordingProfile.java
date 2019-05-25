@@ -13,6 +13,7 @@ public class RecordingProfile {
     private int prediction_feedback;// prediction y
     private double _prediction; //the prediction
     private boolean isClicked;
+    private static int currentRecPos = 0;
 
 
     public RecordingProfile() {
@@ -27,6 +28,7 @@ public class RecordingProfile {
         this._time = _time;
         this._prediction = _prediction;
         this.isClicked = false;
+
     }
 
     public boolean isClicked() {
@@ -108,4 +110,13 @@ public class RecordingProfile {
     public void set_recId(long _recId) {
         this._recId = _recId;
     }
+
+    public static int getCurrentRecPos() {
+        return currentRecPos;
+    }
+
+    public static void setCurrentRecPos(int currentRecPos) {
+        RecordingProfile.currentRecPos = currentRecPos;
+    }
+
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -112,6 +113,24 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
                         item.setClicked(true);
                         flagOpen = true;
                     }
+                    else{
+                        RecyclerView vtemp = v.findViewById(R.id.my_recycler_view_rec);
+                        View vPrev = getViewByPosition(RecordingProfile.getCurrentRecPos(),vtemp);
+                        SimpleViewHolderRec prevPos = new SimpleViewHolderRec(vPrev);
+                        prevPos.jcplayerView.setVisibility(View.GONE);
+                        prevPos.jcplayerView.pause();
+                        prevPos.jcplayerView.kill();
+
+                        viewHolder.jcplayerView.setVisibility(View.VISIBLE);
+                        ArrayList<JcAudio> jcAudios = new ArrayList<>();
+                        JcAudio temp = JcAudio.createFromFilePath("Asset audio",item.get_path());
+                        jcAudios.add(temp);
+                        //viewHolder.jcplayerView.playAudio(temp);
+                        viewHolder.jcplayerView.initAnonPlaylist(jcAudios);
+                        item.setClicked(true);
+                        flagOpen = true;
+
+                    }
 
                 }
 
@@ -201,5 +220,10 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
             Share = (TextView) itemView.findViewById(R.id.Share);
             btnLocation = (ImageButton) itemView.findViewById(R.id.btnLocation);
         }
+    }
+    public View getViewByPosition(int pos, RecyclerView listView) {
+
+            return listView.getChildAt(pos);
+
     }
 }

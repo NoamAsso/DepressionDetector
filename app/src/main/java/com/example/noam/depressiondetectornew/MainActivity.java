@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static MyDBmanager db;
+    //this.deleteDatabase(DATABASE_NAME);
     Utils utils;
     String filesDirPath;
     private SpaceNavigationView spaceNavigationView;

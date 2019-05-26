@@ -18,6 +18,7 @@ public class UserProfile {
     private String _image;//check how to save image
     private static long currentUserId;
 
+
     public static long getcurrentUserId() {
         return currentUserId;
     }

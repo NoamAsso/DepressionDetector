@@ -3,6 +3,7 @@ package com.example.noam.depressiondetectornew;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
@@ -221,6 +222,10 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
     }
     public void removeUserWithId(long id) {
         SQLiteDatabase db = getWritableDatabase();
+        ArrayList<Long> rectemp = this.getUserAt(id).getRecordings();
+        for(int i=0 ; i < rectemp.size(); i++  ){
+            this.removeRecWithId(rectemp.get(i));
+        }
         String[] whereArgs = { String.valueOf(id) };
         db.delete(TABLE_NAME_USER, "_ID=?", whereArgs);
     }
@@ -246,5 +251,30 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
         cursor.moveToFirst();
         cursor.close();
         return cursor;
+    }
+    public Cursor UpdateDelGson(long userId, long recId){
+        UserProfile userTemp = getUserAt(userId);
+        SQLiteDatabase db = getReadableDatabase();
+        Gson gson = new Gson();
+        ArrayList<Long> newTemp = userTemp.getRecordings();
+        newTemp.remove(recId);
+        String recordings= gson.toJson(newTemp);
+        Cursor cursor = db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + COLUMN_RECORDINGS_GSON + " = '" + recordings + "'" + " WHERE " + _ID + " = " + userId,null);
+        cursor.moveToFirst();
+        cursor.close();
+        return cursor;
+    }
+
+    public long getUserCount(){
+        SQLiteDatabase db = getReadableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_NAME_USER);
+        db.close();
+        return count;
+    }
+    public long getRecCount(){
+        SQLiteDatabase db = getReadableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_NAME_REC);
+        db.close();
+        return count;
     }
 }

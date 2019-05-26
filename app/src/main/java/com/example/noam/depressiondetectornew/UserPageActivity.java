@@ -15,6 +15,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -49,6 +50,7 @@ public class UserPageActivity extends AppCompatActivity {
     TextView Date;
     TextView ID;
     LineChart mChart;
+    YAxis yAxis;
     Long reference_timestamp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +62,7 @@ public class UserPageActivity extends AppCompatActivity {
         Name = (TextView) findViewById(R.id.name_and_last_name);
         Phone = (TextView) findViewById(R.id.phone_num_user);
         mChart = (LineChart) findViewById(R.id.line_chart);
-        uId =  (TextView) findViewById(R.id.user_id);
+        uId = (TextView) findViewById(R.id.user_id);
 
         //mChart.setOnChartGestureListener(UserPageActivity.this);
         //mChart.setOnChartValueSelectedListener(UserPageActivity.this);
@@ -75,15 +77,12 @@ public class UserPageActivity extends AppCompatActivity {
         utils = new Utils(this);
 
         mDataSet = new ArrayList<RecordingProfile>();
-        for(int i = 0; i < currentUser.getRecordings().size(); i++){
+        for (int i = 0; i < currentUser.getRecordings().size(); i++) {
             mDataSet.add(db.getRecordingAt(currentUser.getRecordings().get(i)));
         }
 
 
-
-
         ///////////////////////////////////////
-
 
 
         mChart.setDragEnabled(true);
@@ -91,44 +90,57 @@ public class UserPageActivity extends AppCompatActivity {
 
         ArrayList<Entry> yValues = new ArrayList<>();
 
+        if (mDataSet.size() > 0) {
+            for (int i = 0; i < mDataSet.size(); i++) {
+                String date = mDataSet.get(i).get_time();
+                java.util.Date date1 = null;
+                //SimpleDateFormat formatter1=new SimpleDateFormat("dd/MM/yyyy 'at' h:mm a");
+                try {
+                    SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy 'at' h:mm a");
+                    date1 = formatter1.parse(date);
+                } catch (java.text.ParseException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                if (i == 0)
+                    reference_timestamp = date1.getTime();
 
-        for (int i=0 ; i < mDataSet.size(); i++){
-            String date = mDataSet.get(i).get_time();
-            java.util.Date date1 = null;
-            //SimpleDateFormat formatter1=new SimpleDateFormat("dd/MM/yyyy 'at' h:mm a");
-            try {
-                SimpleDateFormat formatter1=new SimpleDateFormat("dd/MM/yyyy 'at' h:mm a");
-                date1=formatter1.parse(date);
-            } catch (java.text.ParseException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                long Xnew = date1.getTime() - reference_timestamp;
+                yValues.add(new Entry((float) Xnew, (float) mDataSet.get(i).get_prediction()));
+
             }
-            if(i==0)
-                reference_timestamp = date1.getTime();
+            ValueFormatter xAxisFormatter = new HourAxisValueFormatter(reference_timestamp);
+            XAxis xAxis = mChart.getXAxis();
+            xAxis.setValueFormatter(xAxisFormatter);
 
-            long Xnew = date1.getTime() - reference_timestamp;
-            yValues.add(new Entry((float)Xnew,(float)mDataSet.get(i).get_prediction()));
+            LineDataSet set1 = new LineDataSet(yValues, "data set 1");
 
+            set1.setFillAlpha(110);
+            set1.setColor(Color.BLUE);
+            set1.setCircleColor(Color.YELLOW);
+            set1.setCircleRadius(6f);
+            set1.setLineWidth(3f);
+            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+            dataSets.add(set1);
+
+            LineData data = new LineData(dataSets);
+            MyMarkerView myMarkerView = new MyMarkerView(getApplicationContext(), R.layout.custom_marker_view, reference_timestamp);
+            yAxis = mChart.getAxisLeft();
+            yAxis.setAxisMaximum(100f);
+            yAxis.setAxisMinimum(0f);
+            mChart.setMarkerView(myMarkerView);
+            mChart.setData(data);
+            mChart.animateY(2000);
+        } else{
+            yAxis = mChart.getAxisLeft();
+            yAxis.setAxisMaximum(100f);
+            yAxis.setAxisMinimum(0f);
+            LineData data = new LineData(); // use your valid x-values array here
+            mChart.setData(data);
+            mChart.invalidate();
+            //mChart.setAutofillHints("No predictions was made");
+            //mchart.set
         }
-        ValueFormatter xAxisFormatter = new HourAxisValueFormatter(reference_timestamp);
-        XAxis xAxis = mChart.getXAxis();
-        xAxis.setValueFormatter(xAxisFormatter);
-
-        LineDataSet set1 = new LineDataSet(yValues,"data set 1");
-
-        set1.setFillAlpha(110);
-        set1.setColor(Color.BLUE);
-        set1.setCircleColor(Color.YELLOW);
-        set1.setCircleRadius(6f);
-        set1.setLineWidth(3f);
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set1);
-
-        LineData data = new LineData(dataSets);
-        MyMarkerView myMarkerView= new MyMarkerView(getApplicationContext(), R.layout.custom_marker_view, reference_timestamp);
-        mChart.setMarkerView(myMarkerView);
-        mChart.setData(data);
-        mChart.animateY(2000);
 
 
 

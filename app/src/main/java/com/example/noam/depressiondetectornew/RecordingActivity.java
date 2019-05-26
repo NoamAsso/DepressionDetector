@@ -49,7 +49,7 @@ public class RecordingActivity extends AppCompatActivity {
     private static boolean firstTimeFlag = true;
     private double precentage;
     long startTime;
-    static int TEN_SECONDS = 10000;
+    static int TEN_SECONDS = 100000;
     TextView resultsText;
     TextView titleText;
     Button btnSave, btnDelete;
@@ -250,28 +250,37 @@ public class RecordingActivity extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.btnRecord: {
                     if (recState == NOT_RECORDING_NOW) {
-                        recState = RECORDING_NOW;
 
-                        //   titleText.setVisibility(View.INVISIBLE);
-                        //   titleText.setText("Press the MIC to stop and see results");
-
-                        chronometer.setVisibility(View.VISIBLE);
-                        startChronometer(v);
-                        enableButtons(true);
-
-                        v.setBackgroundResource(R.drawable.icons8_pause_button_96);
+                        if(db.getUserCount()==0){
+                            Toast.makeText(RecordingActivity.this, "No users detected! create a user first.",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            recState = RECORDING_NOW;
 
 
+                            //   titleText.setVisibility(View.INVISIBLE);
+                            //   titleText.setText("Press the MIC to stop and see results");
+
+                            chronometer.setVisibility(View.VISIBLE);
+                            startChronometer(v);
+                            enableButtons(true);
+
+                            v.setBackgroundResource(R.drawable.icons8_pause_button_96);
 
 
-                        resultsText.setText("Recording...");
-                        resultsText.setVisibility(View.VISIBLE);
-                        recordWavMaster = new RecordWavMaster();
-                        int sessionId = recordWavMaster.getSession();
 
-                        recordWavMaster.startRecording();
-                        //mVisualizer.setAudioSessionId(0);
-                        //mVisualizer.setDrawLine(true);
+
+                            resultsText.setText("Recording...");
+                            resultsText.setVisibility(View.VISIBLE);
+                            recordWavMaster = new RecordWavMaster();
+                            int sessionId = recordWavMaster.getSession();
+
+                            recordWavMaster.startRecording();
+                            //mVisualizer.setAudioSessionId(0);
+                            //mVisualizer.setDrawLine(true);
+                        }
+
                         break;
                     } else {          //Now recording, needs to stop
                         recState = NOT_RECORDING_NOW;

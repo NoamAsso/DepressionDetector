@@ -100,6 +100,7 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
 
     }
 
+    
     //Get recording via id
     public RecordingProfile getRecordingAt(long position) {
         SQLiteDatabase db = getReadableDatabase();

@@ -40,7 +40,7 @@ public class SplashActivity extends AppCompatActivity {
         utils = new Utils(this);
         context = this;
         Activity thisActivity = this;
-
+        RandomForestClassifier lgbm = new RandomForestClassifier();
         TextView appName = findViewById(R.id.appName);
         Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Highest.ttf");
         appName.setTypeface(custom_font);

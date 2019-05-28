@@ -32,9 +32,12 @@ import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
 import com.luseen.spacenavigation.SpaceOnLongClickListener;
 
+
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    private static final int REC_ACTIVITY_REQUEST = 1;
+    private static final int REGISTER_ACTIVITY_REQUEST = 2;
     public static MyDBmanager db;
     //this.deleteDatabase(DATABASE_NAME);
     Utils utils;
@@ -98,8 +101,8 @@ public class MainActivity extends AppCompatActivity
             public void onCentreButtonClick() {
                 Log.d("onCentreButtonClick ", "onCentreButtonClick");
                 spaceNavigationView.shouldShowFullBadgeText(true);
-                Intent intent = new Intent(getApplicationContext(),RecordingActivity.class);
-                startActivity(intent);
+                Intent i = new Intent(getApplicationContext(), RecordingActivity.class);
+                startActivityForResult(i, REC_ACTIVITY_REQUEST);
             }
 
             @Override
@@ -141,6 +144,7 @@ public class MainActivity extends AppCompatActivity
                         break;
                 }
                 loadFragment(fragment);
+
             }
 
         });
@@ -156,13 +160,6 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(MainActivity.this, itemIndex + " " + itemName, Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-
-
-
-
     }
 
     @Override
@@ -269,6 +266,24 @@ public class MainActivity extends AppCompatActivity
 
         // put your code here...
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+
+        switch (resultCode){
+            case REC_ACTIVITY_REQUEST:
+                if (resultCode == RESULT_OK) {
+                    loadFragment(new RecordingsFragment());
+                }
+                break;
+            case REGISTER_ACTIVITY_REQUEST:
+                if (resultCode == RESULT_OK) {
+                    loadFragment(new PeopleFragment());
+                }
+                break;
+        }
     }
 
 }

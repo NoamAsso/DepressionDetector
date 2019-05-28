@@ -1,5 +1,6 @@
 package com.example.noam.depressiondetectornew;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -113,7 +114,6 @@ public class RecordingActivity extends AppCompatActivity {
 
 
         final EditText recordName = myDialogView.findViewById(R.id.recordName);
-
         UserProfile usertemp = db.getUserAt(voice_record.get__userId());
         int size = usertemp.getRecordings().size() +1;
         String name = usertemp.get_firstName();
@@ -178,20 +178,13 @@ public class RecordingActivity extends AppCompatActivity {
         }
 
 
-        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
         builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String strName = arrayAdapter.getItem(which);
                 AlertDialog.Builder builderInner = new AlertDialog.Builder(RecordingActivity.this);
-                builderInner.setMessage(strName);
                 builderInner.setTitle("Your Selected Item is");
+                builderInner.setMessage(strName);
                 builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog,int which) {
@@ -208,12 +201,15 @@ public class RecordingActivity extends AppCompatActivity {
                         voice_record.set__userId(users.get(i).get_userId());
                     }
                 }
-
+                builderInner.create();
                 builderInner.show();
-                makePopup();
+            }
+        });
 
-                //finish();
-
+        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
             }
         });
         builderSingle.show();
@@ -320,9 +316,15 @@ public class RecordingActivity extends AppCompatActivity {
                 }
                 case R.id.btnSave:{
                     makePopupList();
+                    makePopup();
+
+
+                    Intent returnIntent = new Intent();
+                    setResult(Activity.RESULT_OK,returnIntent);
+                    finish();
                     //opens the UI name input and saves the record to the Database
-                    findViewById(R.id.txtTitle).setVisibility(View.INVISIBLE);
-                    returnBeginning();
+                    //findViewById(R.id.txtTitle).setVisibility(View.INVISIBLE);
+                    //returnBeginning();
                     break;
                 }
             }

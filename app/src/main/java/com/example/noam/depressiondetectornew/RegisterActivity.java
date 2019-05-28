@@ -16,8 +16,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,9 +60,27 @@ public class RegisterActivity extends AppCompatActivity {
         firstnameWrapper = (EditText) findViewById(R.id.input_first_name);
         lastnameWrapper = (EditText) findViewById(R.id.input_last_name);
         phoneWrapper = (EditText) findViewById(R.id.input_phone_number);
-        emailWrapper = (EditText) findViewById(R.id.input_email);
         registerButton = (Button) findViewById(R.id.btn_signup);
         contactsButton = (Button) findViewById(R.id.btn_signup_contacts);
+
+        final Spinner spinnerGender = (Spinner) findViewById(R.id.spinner_gender);
+        String[] items = new String[] {"Male", "Female"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerGender.setAdapter(adapter);
+        spinnerGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                       int arg2, long arg3) {
+                // TODO Auto-generated method stub
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+            }
+        });
+
         EnableRuntimePermission();
         contactsButton.setOnClickListener(new View.OnClickListener() {
 
@@ -288,7 +309,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                             }
                         }
-
                     }
                 }
 

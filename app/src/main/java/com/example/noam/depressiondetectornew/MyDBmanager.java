@@ -51,7 +51,7 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
         public static final String COLUMN_NAME_PHONE_NUMBER = "phone_number";
         public static final String COLUMN_NAME_FIRST_NAME = "first_name";
         public static final String COLUMN_NAME_LAST_NAME = "last_name";
-        //public static final String COLUMN_NAME_EMAIL = "email";
+        public static final String COLUMN_NAME_GENDER = "gender";
         public static final String COLUMN_RECORDINGS_GSON = "recordings_gson";
         public static final String COLUMN_NAME_STATUS = "status";
         public static final String COLUMN_NAME_JOIN_DATE = "join_date";
@@ -68,7 +68,6 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
                     MyDBManagerItem.COLUMN_NAME_PREDICTION + " REAL " + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_RECORDING_NAME + TEXT_TYPE + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_RECORDING_FILE_PATH + TEXT_TYPE + COMMA_SEP +
-                    //MyDBManagerItem.COLUMN_NAME_EMAIL + TEXT_TYPE + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_RECORDING_LENGTH + " INTEGER " + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_CSV + TEXT_TYPE + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_FEEDBACK + " INTEGER " + COMMA_SEP +
@@ -79,6 +78,7 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
                     MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER + TEXT_TYPE + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_FIRST_NAME + TEXT_TYPE + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_LAST_NAME + TEXT_TYPE + COMMA_SEP +
+                    MyDBManagerItem.COLUMN_NAME_GENDER + TEXT_TYPE + COMMA_SEP +
                     MyDBManagerItem.COLUMN_NAME_STATUS + " INTEGER " + COMMA_SEP +
                     COLUMN_RECORDINGS_GSON + TEXT_TYPE + COMMA_SEP +
                     COLUMN_NAME_JOIN_DATE + TEXT_TYPE + ")";
@@ -165,7 +165,7 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
         cv.put(MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER,new_user.get_phoneNumber());
         cv.put(MyDBManagerItem.COLUMN_NAME_FIRST_NAME,new_user.get_firstName());
         cv.put(MyDBManagerItem.COLUMN_NAME_LAST_NAME,new_user.get_lastName());
-        //cv.put(MyDBManagerItem.COLUMN_NAME_EMAIL,new_user.get_);
+        cv.put(MyDBManagerItem.COLUMN_NAME_GENDER,new_user.get_gender());
         cv.put(COLUMN_RECORDINGS_GSON, recordings);
         cv.put(MyDBManagerItem.COLUMN_NAME_STATUS, new_user.get_status());
         cv.put(COLUMN_NAME_JOIN_DATE, new_user.get_joinDate());
@@ -188,6 +188,7 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
                 MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER,
                 MyDBManagerItem.COLUMN_NAME_FIRST_NAME,
                 MyDBManagerItem.COLUMN_NAME_LAST_NAME,
+                MyDBManagerItem.COLUMN_NAME_GENDER,
                 COLUMN_RECORDINGS_GSON,
                 MyDBManagerItem.COLUMN_NAME_STATUS,
                 COLUMN_NAME_JOIN_DATE,
@@ -202,6 +203,7 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
             item.set_phoneNumber(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER)));
             item.set_firstName(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_FIRST_NAME)));
             item.set_lastName(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_LAST_NAME)));
+            item.set_gender(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_GENDER)));
             recordings = (c.getString(c.getColumnIndex(COLUMN_RECORDINGS_GSON)));
             item.set_status(c.getInt(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_STATUS)));
             item.set_joinDate(c.getString(c.getColumnIndex(COLUMN_NAME_JOIN_DATE)));

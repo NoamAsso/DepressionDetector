@@ -112,7 +112,7 @@
                 android:layout_marginRight="@dimen/spacing_xlarge"
                 android:layout_marginLeft="115dp"
                 android:background="@drawable/curve_edges_button_save"
-                android:text="Cancle"
+                android:text="Cancel"
                 android:textColor="@android:color/white" />
 
 

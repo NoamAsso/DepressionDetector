@@ -212,7 +212,6 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
             ID = (TextView) itemView.findViewById(R.id.id_and_more_rec);
             UserBelong = (TextView) itemView.findViewById(R.id.user_belong);
             jcplayerView = (JcPlayerView) itemView.findViewById(R.id.jcplayer);
-            //EmailId = (TextView) itemView.findViewById(R.id.EmailId);
 
             Delete = (TextView) itemView.findViewById(R.id.Delete);
             Edit = (TextView) itemView.findViewById(R.id.Edit);

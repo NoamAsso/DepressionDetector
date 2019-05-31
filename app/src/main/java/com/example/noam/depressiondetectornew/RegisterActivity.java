@@ -35,7 +35,6 @@ public class RegisterActivity extends AppCompatActivity {
     EditText firstnameWrapper;
     EditText lastnameWrapper;
     EditText phoneWrapper;
-    EditText emailWrapper;
     String name;
     String phoneNo;
     String email;
@@ -115,19 +114,19 @@ public class RegisterActivity extends AppCompatActivity {
                     error = true;
                     //userEmail.setBackgroundResource(R.drawable.rounded_edittext_red );
                 }
-                if(emailWrapper.getText().toString().matches("")) {
+                if(spinnerGender.getSelectedItem().toString().matches("")) {
                     error = true;
                     //userPhone.setBackgroundResource(R.drawable.rounded_edittext_red );
                 }
+
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat format = new SimpleDateFormat("EEEE, MMMM d, yyyy 'at' h:mm a");
                 String date = format.format(calendar.getTime());
                 if(!error){
                     UserProfile user = new UserProfile(phoneWrapper.getText().toString(),firstnameWrapper.getText().toString(),
                             lastnameWrapper.getText().toString(),date);
-
+                    user.set_gender(spinnerGender.getSelectedItem().toString());
                     utils.saveUser(user);
-
 
                     //Intent myIntent = new Intent(RegisterActivity.this, LoginMenu.class);
                     //myIntent.putExtra("key", value); //Optional parameters

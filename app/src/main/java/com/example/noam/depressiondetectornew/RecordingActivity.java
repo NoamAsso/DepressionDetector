@@ -13,11 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +55,8 @@ public class RecordingActivity extends AppCompatActivity {
     static int TEN_SECONDS = 100000;
     TextView resultsText;
     TextView titleText;
+    ImageButton like;
+    ImageButton dislike;
     Button btnSave, btnDelete;
     RecordingProfile voice_record;
     Utils utils;
@@ -86,6 +90,8 @@ public class RecordingActivity extends AppCompatActivity {
         // custom_font = Typeface.createFromAsset(getAssets(),  "fonts/EncodeSans-Bold.ttf");
         btnSave = findViewById(R.id.btnSave);
         btnDelete =  findViewById(R.id.btnDelete);
+        like = findViewById(R.id.like);
+        dislike = findViewById((R.id.dislike));
         voice_record = new RecordingProfile();
         btnSave.setOnClickListener(btnClick);
         btnDelete.setOnClickListener(btnClick);
@@ -140,8 +146,6 @@ public class RecordingActivity extends AppCompatActivity {
                 voice_record.set_time(time);
                 voice_record.set_prediction(precentage);
 
-                long recid = utils.saveRecord(voice_record);
-                db.UpdateGson(voice_record.get__userId(),recid);
                 dialog.dismiss();
             }
         });
@@ -213,6 +217,67 @@ public class RecordingActivity extends AppCompatActivity {
             }
         });
         builderSingle.show();
+    }
+
+    void makePopupFeedback(){
+        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+        final View myDialogView = inflater.inflate(R.layout.rename_feedback_dialogue, null);
+        final String time = Utils.getTimeSave();
+        final String defaultName = "Default name - ";
+        //Get Audio duration time
+        final int duration = utils.getDuration(latestRecFile);
+
+        final EditText recordName = myDialogView.findViewById(R.id.recordName);
+        UserProfile usertemp = db.getUserAt(voice_record.get__userId());
+        int size = usertemp.getRecordings().size() +1;
+        String name = usertemp.get_firstName();
+        recordName.setText(name + " Rec " +Integer.toString(size), TextView.BufferType.EDITABLE );
+        //Build the dialog
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(
+                RecordingActivity.this,
+                R.style.MyDialogTheme
+        );
+        dialog.setTitle("Prediction feedback");
+        dialog.setView(myDialogView);
+        like.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                like.setPressed(true);
+                return true;
+            }
+        });
+        dislike.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                dislike.setPressed(true);
+                return true;
+            }
+        });
+        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                if(dislike.isPressed())
+                    voice_record.setPrediction_feedback(0);
+                else if(like.isPressed())
+                    voice_record.setPrediction_feedback(1);
+                //latestRecFile.renameTo()
+                //recordName.getText().toString(),latestRecFile.toString(),duration,time,precentage;
+                long recid = utils.saveRecord(voice_record);
+                db.UpdateGson(voice_record.get__userId(),recid);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                long recid = utils.saveRecord(voice_record);
+                db.UpdateGson(voice_record.get__userId(),recid);
+                latestRecFile.delete();
+                dialog.dismiss();
+            }
+        });
+        //   dialog.setNegativeButton("Cancel", null);
+        dialog.create();
+        dialog.show();
     }
 
 
@@ -317,6 +382,7 @@ public class RecordingActivity extends AppCompatActivity {
                 case R.id.btnSave:{
                     makePopupList();
                     makePopup();
+                    makePopupFeedback();
 
 
                     Intent returnIntent = new Intent();

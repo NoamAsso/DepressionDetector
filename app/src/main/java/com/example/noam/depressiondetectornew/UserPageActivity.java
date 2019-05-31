@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.util.Attributes;
@@ -46,9 +47,11 @@ public class UserPageActivity extends AppCompatActivity {
     TextView LastName;
     TextView Phone;
     TextView uId;
-    TextView Status;
+    TextView status;
+    ImageView statusImage;
     TextView Date;
     TextView ID;
+    ImageView image;
     LineChart mChart;
     YAxis yAxis;
     Long reference_timestamp;
@@ -61,6 +64,9 @@ public class UserPageActivity extends AppCompatActivity {
         myActionBar.hide();
         Name = (TextView) findViewById(R.id.name_and_last_name);
         Phone = (TextView) findViewById(R.id.phone_num_user);
+        image = (ImageView) findViewById(R.id.gender_image);
+        status = (TextView) findViewById(R.id.status_user);
+        statusImage = (ImageView) findViewById(R.id.status_icon);
         mChart = (LineChart) findViewById(R.id.line_chart);
         uId = (TextView) findViewById(R.id.user_id);
 
@@ -72,7 +78,12 @@ public class UserPageActivity extends AppCompatActivity {
 
         Name.setText(currentUser.get_firstName() + " " + currentUser.get_lastName());
         Phone.setText(currentUser.get_phoneNumber());
-        uId.setText(Long.toString(currentUser.get_userId()));
+        uId.setText("Patient id: "+ String.format("%d", currentUser.get_userId()));
+
+
+        if(currentUser.get_gender() == "Female"){
+            image.setBackgroundResource(R.drawable.ic_circle_icon_woman);
+        }
         db = Utils.getDB();
         utils = new Utils(this);
 
@@ -81,9 +92,22 @@ public class UserPageActivity extends AppCompatActivity {
             mDataSet.add(db.getRecordingAt(currentUser.getRecordings().get(i)));
         }
 
+        if(mDataSet.isEmpty()){
+            statusImage.setBackgroundResource(R.drawable.ic_information);
+            status.setText( "No predictions detected");
+        }
+        else {
+            double pred = mDataSet.get(mDataSet.size() - 1).get_prediction();
+            status.setText(String.format("%f", pred) + " depressed");
+            if(pred > 66f)
+                statusImage.setBackgroundResource(R.drawable.ic_happy);
+            else if(pred < 33f)
+                statusImage.setBackgroundResource(R.drawable.ic_sad);
+            else
+                statusImage.setBackgroundResource(R.drawable.ic_confused);
+        }
 
         ///////////////////////////////////////
-
 
         mChart.setDragEnabled(true);
         mChart.setScaleEnabled(false);
@@ -141,8 +165,6 @@ public class UserPageActivity extends AppCompatActivity {
             //mChart.setAutofillHints("No predictions was made");
             //mchart.set
         }
-
-
 
         ///////////////////////////////////////////////
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_user_page);

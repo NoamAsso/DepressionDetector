@@ -5,30 +5,124 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_blur_3"
     tools:context=".HomeFragment">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Depression Detector"
-        android:textSize="30dp"
-        android:layout_gravity="center|top"
-        android:paddingTop="18dp"
-        android:id="@+id/appName2"
-        android:textColor="#ffffff"
-        android:fontFamily=""/>
-    <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
+
+
+
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:paddingTop="100dp"
-        android:orientation="vertical">
+        android:layout_alignParentTop="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/search_list_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Search"
+                android:textColor="#78000000"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+            <View
+                android:layout_width="240dp"
+                android:layout_height="1dp"
+                android:layout_gravity="center"
+                android:background="#303030"
+                android:paddingTop="2dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <android.support.v7.widget.SearchView
+                    android:id="@+id/search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/recoding_list_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:layout_gravity="center"
-            android:src="@drawable/depression_logo_man"/>
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/recording_list_title_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Recordings"
+                    android:textColor="#78000000"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+                <View
+                    android:layout_width="240dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="#303030"
+                    android:paddingTop="2dp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
+                <!-- TODO: Update blank fragment layout -->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/my_recycler_view_rec_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:elevation="2dp"
+                    android:layout_weight="1"
+                    android:scrollbars="vertical" />
+
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/patients_list_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:id="@+id/patients_list_title_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Patients"
+                    android:textColor="#78000000"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+                <View
+                    android:layout_width="240dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="#303030"
+                    android:paddingTop="2dp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
+                <!-- TODO: Update blank fragment layout -->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/my_recycler_view_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:elevation="2dp"
+                    android:layout_weight="1"
+                    android:scrollbars="vertical" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 </FrameLayout>

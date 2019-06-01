@@ -193,23 +193,24 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
                 MyDBManagerItem.COLUMN_NAME_STATUS,
                 COLUMN_NAME_JOIN_DATE,
         };
+        Cursor c1= db.rawQuery("select * from " + TABLE_NAME_USER + " where " + _ID + "='" + position + "'" , null);
         Cursor c = db.query(TABLE_NAME_USER, projection, null, null, null, null, null);
         int pos = (int)position;
-        if (c.moveToPosition(pos-1)) {
+        if (c1.moveToFirst()) {
             UserProfile item = new UserProfile();
             Gson gson = new Gson();
             String recordings;
-            item.set_userId(c.getInt(c.getColumnIndex(MyDBManagerItem._ID)));
-            item.set_phoneNumber(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER)));
-            item.set_firstName(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_FIRST_NAME)));
-            item.set_lastName(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_LAST_NAME)));
-            item.set_gender(c.getString(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_GENDER)));
-            recordings = (c.getString(c.getColumnIndex(COLUMN_RECORDINGS_GSON)));
-            item.set_status(c.getInt(c.getColumnIndex(MyDBManagerItem.COLUMN_NAME_STATUS)));
-            item.set_joinDate(c.getString(c.getColumnIndex(COLUMN_NAME_JOIN_DATE)));
+            item.set_userId(c1.getInt(c1.getColumnIndex(MyDBManagerItem._ID)));
+            item.set_phoneNumber(c1.getString(c1.getColumnIndex(MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER)));
+            item.set_firstName(c1.getString(c1.getColumnIndex(MyDBManagerItem.COLUMN_NAME_FIRST_NAME)));
+            item.set_lastName(c1.getString(c1.getColumnIndex(MyDBManagerItem.COLUMN_NAME_LAST_NAME)));
+            item.set_gender(c1.getString(c1.getColumnIndex(MyDBManagerItem.COLUMN_NAME_GENDER)));
+            recordings = (c1.getString(c1.getColumnIndex(COLUMN_RECORDINGS_GSON)));
+            item.set_status(c1.getInt(c1.getColumnIndex(MyDBManagerItem.COLUMN_NAME_STATUS)));
+            item.set_joinDate(c1.getString(c1.getColumnIndex(COLUMN_NAME_JOIN_DATE)));
             ArrayList<Long> recordlist = gson.fromJson(recordings,new TypeToken<List<Long>>(){}.getType());
             item.setRecordings(recordlist);
-            c.close();
+            c1.close();
             return item;
         }
         return null;
@@ -225,10 +226,14 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
     }
     public void removeUserWithId(long id) {
         SQLiteDatabase db = getWritableDatabase();
-        ArrayList<Long> rectemp = this.getUserAt(id).getRecordings();
-        for(int i=0 ; i < rectemp.size(); i++  ){
-            this.removeRecWithId(rectemp.get(i));
+        UserProfile temp = getUserAt(id);
+        if(getUserAt(id).getRecordings()!=null){
+            ArrayList<Long> rectemp = getUserAt(id).getRecordings();
+            for(int i=0 ; i < rectemp.size(); i++  ){
+                removeRecWithId(rectemp.get(i));
+            }
         }
+
         String[] whereArgs = { String.valueOf(id) };
         db.delete(TABLE_NAME_USER, "_ID=?", whereArgs);
     }
@@ -268,6 +273,16 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
         return cursor;
     }
 
+    public void updateUser(UserProfile user){
+        SQLiteDatabase db = getReadableDatabase();
+        long id = user.get_userId();
+        db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_FIRST_NAME + " = '" + user.get_firstName() + "'" + " WHERE " + _ID + " = " + id,null);
+        db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_LAST_NAME + " = '" + user.get_lastName() + "'" + " WHERE " + _ID + " = " + id,null);
+        db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER + " = '" + user.get_phoneNumber() + "'" + " WHERE " + _ID + " = " + id,null);
+        db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_GENDER + " = '" + user.get_phoneNumber() + "'" + " WHERE " + _ID + " = " + id,null);
+        //return 0;
+    }
+
     public long getUserCount(){
         SQLiteDatabase db = getReadableDatabase();
         long count = DatabaseUtils.queryNumEntries(db, TABLE_NAME_USER);
@@ -279,5 +294,26 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
         long count = DatabaseUtils.queryNumEntries(db, TABLE_NAME_REC);
         db.close();
         return count;
+    }
+
+    public Cursor SearchUserDb(String s){
+        SQLiteDatabase db = getReadableDatabase();
+        //Select id from sometable where name like '%omm%'
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME_USER + " where "
+                + MyDBManagerItem.COLUMN_NAME_GENDER + " like " + "'%"+s+"%'"
+                + " or " + MyDBManagerItem.COLUMN_NAME_GENDER + " like " + "'%"+s+"%'"
+                + " or " + MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER + " like " + "'%"+s+"%'"
+                + " or " + MyDBManagerItem.COLUMN_NAME_FIRST_NAME + " like " + "'%"+s+"%'"
+                + " or " + MyDBManagerItem.COLUMN_NAME_LAST_NAME + " like " + "'%"+s+"%'",null);
+        //db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_FIRST_NAME + " = '" + user.get_firstName() + "'" + " WHERE " + _ID + " = " + id,null);
+        return cursor;
+    }
+    public Cursor SearchRecDb(String s){
+        SQLiteDatabase db = getReadableDatabase();
+        //Select id from sometable where name like '%omm%'
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME_REC + " where "
+                + MyDBManagerItem.COLUMN_NAME_RECORDING_NAME + " like " + "'%"+s+"%'",null);
+        //db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_FIRST_NAME + " = '" + user.get_firstName() + "'" + " WHERE " + _ID + " = " + id,null);
+        return cursor;
     }
 }

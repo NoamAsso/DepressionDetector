@@ -46,6 +46,7 @@ public class PeopleFragment extends Fragment {
             // The Cursor is now set to the right position
             UserProfile usertemp = new UserProfile();
             usertemp.set_userId(mCursor.getInt(mCursor.getColumnIndex("_id")));
+            usertemp.set_gender(mCursor.getString(mCursor.getColumnIndex("gender")));
             usertemp.set_firstName(mCursor.getString(mCursor.getColumnIndex("first_name")));
             usertemp.set_lastName(mCursor.getString(mCursor.getColumnIndex("last_name")));
             usertemp.set_phoneNumber(mCursor.getString(mCursor.getColumnIndex("phone_number")));
@@ -79,8 +80,8 @@ public class PeopleFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),RegisterActivity.class);
-                startActivity(intent);
+                Intent i = new Intent(getActivity(), RegisterActivity.class);
+                getActivity().startActivityForResult(i, 2);
             }
 
         });

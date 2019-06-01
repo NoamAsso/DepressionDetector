@@ -64,7 +64,7 @@
                 android:padding="12dp"
                 android:background="@drawable/curve_edges_button_save"
                 android:textAllCaps="false"
-                android:text="Add new contact"
+                android:text="Add new Patient"
                 android:textColor="@android:color/white"/>
             <View
                 android:layout_width="match_parent"

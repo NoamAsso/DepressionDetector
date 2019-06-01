@@ -49,9 +49,12 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
         viewHolder.Status.setText("Prediction: " + Integer.toString(((int)item.get_userId())));
         //viewHolder.ID.setText("UserId: " + item.get_userId() + " - Row Position " + position);
         viewHolder.Date.setText("Join: " + item.get_joinDate());
-        if(item.get_gender() == "Female"){
-            viewHolder.image.setBackgroundResource(R.drawable.ic_circle_icon_woman);
+        if (item.get_gender() != null) {
+            if(item.get_gender().matches("Female")){
+                viewHolder.image.setImageResource(R.drawable.ic_circle_icon_woman);
+            }
         }
+
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
 
         //dari kiri
@@ -133,21 +136,6 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
             }
         });
 
-        viewHolder.Share.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Toast.makeText(view.getContext(), "Clicked on Share " + viewHolder.Name.getText().toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        viewHolder.Edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Toast.makeText(view.getContext(), "Clicked on Edit  " + viewHolder.Name.getText().toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
 
         viewHolder.details.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +152,7 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
             public void onClick(View v) {
                 mItemManger.removeShownLayouts(viewHolder.swipeLayout);
                 db = Utils.getDB();
-                db.removeUserWithId(studentList.get(position).get_userId());
+                db.removeUserWithId(item.get_userId());
                 studentList.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, studentList.size());
@@ -217,8 +205,6 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
             //EmailId = (TextView) itemView.findViewById(R.id.EmailId);
 
             Delete = (TextView) itemView.findViewById(R.id.Delete);
-            Edit = (TextView) itemView.findViewById(R.id.Edit);
-            Share = (TextView) itemView.findViewById(R.id.Share);
             btnLocation = (ImageButton) itemView.findViewById(R.id.btnLocation);
         }
     }

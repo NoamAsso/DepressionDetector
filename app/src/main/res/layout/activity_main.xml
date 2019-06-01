@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                app:space_background_color="#BEBEBE"
+                app:space_background_color="#474747"
                 app:centre_button_icon="@drawable/baseline_mic_white_18dp"
                 app:centre_button_color="#CA0000"
                 app:layout_behavior="com.luseen.spacenavigation.SpaceNavigationViewBehavior" />

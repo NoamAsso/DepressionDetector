@@ -38,6 +38,7 @@ public class RecordingsFragment extends Fragment {
             // The Cursor is now set to the right position
             RecordingProfile rectemp = new RecordingProfile();
             rectemp.set_recId(mCursor.getInt(mCursor.getColumnIndex("_id")));
+            rectemp.set__userId(mCursor.getInt(mCursor.getColumnIndex("user_id")));
             rectemp.set_recordName(mCursor.getString(mCursor.getColumnIndex("recording_name")));
             rectemp.set_prediction(mCursor.getInt(mCursor.getColumnIndex("prediction")));
             rectemp.set_time(mCursor.getString(mCursor.getColumnIndex("time_added")));

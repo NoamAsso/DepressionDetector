@@ -90,8 +90,7 @@ public class RecordingActivity extends AppCompatActivity {
         // custom_font = Typeface.createFromAsset(getAssets(),  "fonts/EncodeSans-Bold.ttf");
         btnSave = findViewById(R.id.btnSave);
         btnDelete =  findViewById(R.id.btnDelete);
-        like = findViewById(R.id.like);
-        dislike = findViewById((R.id.dislike));
+
         voice_record = new RecordingProfile();
         btnSave.setOnClickListener(btnClick);
         btnDelete.setOnClickListener(btnClick);
@@ -117,8 +116,6 @@ public class RecordingActivity extends AppCompatActivity {
         final String defaultName = "Default name - ";
         //Get Audio duration time
         final int duration = utils.getDuration(latestRecFile);
-
-
         final EditText recordName = myDialogView.findViewById(R.id.recordName);
         UserProfile usertemp = db.getUserAt(voice_record.get__userId());
         int size = usertemp.getRecordings().size() +1;
@@ -145,7 +142,7 @@ public class RecordingActivity extends AppCompatActivity {
                 voice_record.set_length(duration);
                 voice_record.set_time(time);
                 voice_record.set_prediction(precentage);
-
+                makePopupFeedback();
                 dialog.dismiss();
             }
         });
@@ -160,6 +157,8 @@ public class RecordingActivity extends AppCompatActivity {
         dialog.create();
         dialog.show();
     }
+
+
     void makePopupList(){
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(RecordingActivity.this);
         builderSingle.setIcon(R.drawable.baseline_person_add_black_18dp);
@@ -192,6 +191,14 @@ public class RecordingActivity extends AppCompatActivity {
                 builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog,int which) {
+                        makePopup();
+                        dialog.dismiss();
+                    }
+                });
+
+                builderInner.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
@@ -203,6 +210,7 @@ public class RecordingActivity extends AppCompatActivity {
                     String name = users.get(i).get_firstName();
                     if(strName.equals(name)){
                         voice_record.set__userId(users.get(i).get_userId());
+                        break;
                     }
                 }
                 builderInner.create();
@@ -210,12 +218,6 @@ public class RecordingActivity extends AppCompatActivity {
             }
         });
 
-        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
         builderSingle.show();
     }
 
@@ -227,11 +229,9 @@ public class RecordingActivity extends AppCompatActivity {
         //Get Audio duration time
         final int duration = utils.getDuration(latestRecFile);
 
-        final EditText recordName = myDialogView.findViewById(R.id.recordName);
-        UserProfile usertemp = db.getUserAt(voice_record.get__userId());
-        int size = usertemp.getRecordings().size() +1;
-        String name = usertemp.get_firstName();
-        recordName.setText(name + " Rec " +Integer.toString(size), TextView.BufferType.EDITABLE );
+        like = myDialogView.findViewById(R.id.like);
+        dislike = myDialogView.findViewById((R.id.dislike));
+
         //Build the dialog
         final AlertDialog.Builder dialog = new AlertDialog.Builder(
                 RecordingActivity.this,
@@ -242,6 +242,7 @@ public class RecordingActivity extends AppCompatActivity {
         like.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                like.setBackgroundResource(R.drawable.event_page_background3);
                 like.setPressed(true);
                 return true;
             }
@@ -249,6 +250,7 @@ public class RecordingActivity extends AppCompatActivity {
         dislike.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                dislike.setBackgroundResource(R.drawable.event_page_background3);
                 dislike.setPressed(true);
                 return true;
             }
@@ -264,6 +266,9 @@ public class RecordingActivity extends AppCompatActivity {
                 long recid = utils.saveRecord(voice_record);
                 db.UpdateGson(voice_record.get__userId(),recid);
                 dialog.dismiss();
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_OK,returnIntent);
+                finish();
             }
         });
 
@@ -381,13 +386,8 @@ public class RecordingActivity extends AppCompatActivity {
                 }
                 case R.id.btnSave:{
                     makePopupList();
-                    makePopup();
-                    makePopupFeedback();
 
 
-                    Intent returnIntent = new Intent();
-                    setResult(Activity.RESULT_OK,returnIntent);
-                    finish();
                     //opens the UI name input and saves the record to the Database
                     //findViewById(R.id.txtTitle).setVisibility(View.INVISIBLE);
                     //returnBeginning();

@@ -1,6 +1,7 @@
 package com.example.noam.depressiondetectornew;
 
 import android.Manifest;
+import android.arch.lifecycle.Lifecycle;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -13,6 +14,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //loading the default fragment
-        loadFragment(new HomeFragment());
+        loadFragment(new PeopleFragment());
         filesDirPath = Utils.getFilesDirPath(this);
         db= Utils.getDB();
         utils = new Utils(this);
@@ -90,11 +92,14 @@ public class MainActivity extends AppCompatActivity
 
         spaceNavigationView = (SpaceNavigationView) findViewById(R.id.space);
         spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
-        spaceNavigationView.addSpaceItem(new SpaceItem("People", R.drawable.baseline_account_circle_black_18dp));
-        spaceNavigationView.addSpaceItem(new SpaceItem("Recordings", R.drawable.baseline_record_voice_over_black_18dp));
-        spaceNavigationView.addSpaceItem(new SpaceItem("Statistics", R.drawable.baseline_record_voice_over_black_18dp));
-        spaceNavigationView.shouldShowFullBadgeText(true);
+        spaceNavigationView.addSpaceItem(new SpaceItem("papa", R.drawable.baseline_account_circle_black_18dp));
+        spaceNavigationView.addSpaceItem(new SpaceItem(null, R.drawable.baseline_record_voice_over_black_18dp));
+        spaceNavigationView.addSpaceItem(new SpaceItem(null, R.drawable.ic_baseline_search_24px));
+        spaceNavigationView.addSpaceItem(new SpaceItem(null, R.drawable.ic_baseline_bar_chart_24px));
+        //spaceNavigationView.shouldShowFullBadgeText(true);
         spaceNavigationView.setCentreButtonIconColorFilterEnabled(false);
+        spaceNavigationView.showIconOnly();
+        spaceNavigationView.setSpaceItemIconSizeInOnlyIconMode(70);
 
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
@@ -120,6 +125,16 @@ public class MainActivity extends AppCompatActivity
                         //toolbar.setTitle("Patients");
                         //setSupportActionBar(toolbar);
                         fragment = new RecordingsFragment();
+                        break;
+                    case 2:
+                        //toolbar.setTitle("Patients");
+                        //setSupportActionBar(toolbar);
+                        fragment = new HomeFragment();
+                        break;
+                    case 3:
+                        //toolbar.setTitle("Patients");
+                        //setSupportActionBar(toolbar);
+                        fragment = new StatisticsFragment();
                         break;
                 }
                 loadFragment(fragment);
@@ -260,6 +275,17 @@ public class MainActivity extends AppCompatActivity
         }
         return false;
     }
+    private boolean reloadFragment(Fragment fragment) {
+        //switching fragment
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commitAllowingStateLoss();
+            return true;
+        }
+        return false;
+    }
     @Override
     public void onResume(){
         super.onResume();
@@ -271,16 +297,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
-
-        switch (resultCode){
+        //getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED);
+        switch (requestCode){
             case REC_ACTIVITY_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    loadFragment(new RecordingsFragment());
+                    /*
+                    Fragment frg = null;
+                    frg = getSupportFragmentManager().findFragmentByTag("Your_Fragment_TAG");
+                    final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.detach(frg);
+                    ft.attach(frg);
+                    ft.commit();*/
+                    reloadFragment(new RecordingsFragment());
                 }
                 break;
             case REGISTER_ACTIVITY_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    loadFragment(new PeopleFragment());
+                    reloadFragment(new PeopleFragment());
                 }
                 break;
         }

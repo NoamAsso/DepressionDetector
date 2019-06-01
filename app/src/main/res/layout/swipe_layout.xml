@@ -15,32 +15,13 @@
         android:orientation="horizontal"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/Edit"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#0076a5"
-            android:gravity="center"
-            android:text="Edit"
-            android:textColor="#fff"/>
-
-        <TextView
-            android:id="@+id/Share"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#2cbb00"
-            android:gravity="center"
-            android:text="Share"
-            android:textColor="#fff" />
 
         <TextView
             android:id="@+id/Delete"
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#ff0000"
+            android:background="@drawable/delete_backgoundd"
             android:gravity="center"
             android:text="Delete"
             android:textColor="#fff"/>

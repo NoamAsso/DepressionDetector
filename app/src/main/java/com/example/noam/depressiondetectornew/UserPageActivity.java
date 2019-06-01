@@ -1,6 +1,7 @@
 package com.example.noam.depressiondetectornew;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,6 +52,7 @@ public class UserPageActivity extends AppCompatActivity {
     TextView uId;
     TextView status;
     ImageView statusImage;
+    Button editUserBtn;
     TextView Date;
     TextView ID;
     ImageView image;
@@ -64,9 +68,10 @@ public class UserPageActivity extends AppCompatActivity {
         myActionBar.hide();
         Name = (TextView) findViewById(R.id.name_and_last_name);
         Phone = (TextView) findViewById(R.id.phone_num_user);
-        image = (ImageView) findViewById(R.id.gender_image);
+        image = (ImageView) findViewById(R.id.user_pic);
         status = (TextView) findViewById(R.id.status_user);
         statusImage = (ImageView) findViewById(R.id.status_icon);
+        editUserBtn = (Button) findViewById(R.id.change);
         mChart = (LineChart) findViewById(R.id.line_chart);
         uId = (TextView) findViewById(R.id.user_id);
 
@@ -80,10 +85,12 @@ public class UserPageActivity extends AppCompatActivity {
         Phone.setText(currentUser.get_phoneNumber());
         uId.setText("Patient id: "+ String.format("%d", currentUser.get_userId()));
 
-
-        if(currentUser.get_gender() == "Female"){
-            image.setBackgroundResource(R.drawable.ic_circle_icon_woman);
+        if(currentUser.get_gender()!=null){
+            if(currentUser.get_gender().matches("Female")){
+                image.setBackgroundResource(R.drawable.ic_circle_icon_woman);
+            }
         }
+
         db = Utils.getDB();
         utils = new Utils(this);
 
@@ -100,13 +107,24 @@ public class UserPageActivity extends AppCompatActivity {
             double pred = mDataSet.get(mDataSet.size() - 1).get_prediction();
             status.setText(String.format("%f", pred) + " depressed");
             if(pred > 66f)
-                statusImage.setBackgroundResource(R.drawable.ic_happy);
-            else if(pred < 33f)
                 statusImage.setBackgroundResource(R.drawable.ic_sad);
+            else if(pred < 33f)
+                statusImage.setBackgroundResource(R.drawable.ic_happy);
             else
                 statusImage.setBackgroundResource(R.drawable.ic_confused);
         }
 
+
+
+        editUserBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), EditRegisterActivity.class);
+                startActivityForResult(i, 3);
+            }
+
+        });
         ///////////////////////////////////////
 
         mChart.setDragEnabled(true);
@@ -133,7 +151,7 @@ public class UserPageActivity extends AppCompatActivity {
                 yValues.add(new Entry((float) Xnew, (float) mDataSet.get(i).get_prediction()));
 
             }
-            ValueFormatter xAxisFormatter = new HourAxisValueFormatter(reference_timestamp);
+            ValueFormatter xAxisFormatter = new FooFormatter(reference_timestamp);
             XAxis xAxis = mChart.getXAxis();
             xAxis.setValueFormatter(xAxisFormatter);
 
@@ -152,7 +170,7 @@ public class UserPageActivity extends AppCompatActivity {
             yAxis = mChart.getAxisLeft();
             yAxis.setAxisMaximum(100f);
             yAxis.setAxisMinimum(0f);
-            mChart.setMarkerView(myMarkerView);
+            mChart.setMarker(myMarkerView);
             mChart.setData(data);
             mChart.animateY(2000);
         } else{
@@ -193,51 +211,55 @@ public class UserPageActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        // put your code here...
+
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == 3) {
+            Intent refresh = new Intent(this, UserPageActivity.class);
+            startActivity(refresh);
+            this.finish();
+        }
+    }
 }
 
-class HourAxisValueFormatter extends ValueFormatter {
-
-    private long referenceTimestamp;
+class FooFormatter extends ValueFormatter {
+    private long referenceTimestamp; // minimum timestamp in your data set
     private DateFormat mDataFormat;
     private Date mDate;
 
-    /**
-     * Constructor of the formatter.
-     *
-     * @param referenceTimestamp minimum timestamp of the data set (in seconds).
-     */
-    public HourAxisValueFormatter(long referenceTimestamp) {
+    public FooFormatter(long referenceTimestamp) {
         this.referenceTimestamp = referenceTimestamp;
-        this.mDataFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        this.mDataFormat = new SimpleDateFormat("dd/MM/yyyy 'at' h:mm a");
         this.mDate = new Date();
     }
 
-    /**
-     * Called when a value from an axis is to be formatted before being drawn.
-     *
-     * @param value the value to be formatted.
-     * @param axis  the axis the value belongs to.
-     * @return timestamp formatted.
-     */
     @Override
-    public String getFormattedValue(float value, AxisBase axis) {
-        // relativeTimestamp = originalTimestamp - referenceTimestamp
-        long relativeTimestamp = (long) value;
-        // Retrieve absolute timestamp (referenceTimestamp + relativeTimestamp)
-        long originalTimestamp = referenceTimestamp + relativeTimestamp;
+    public String getFormattedValue(float value) {
+        // convertedTimestamp = originalTimestamp - referenceTimestamp
+        long convertedTimestamp = (long) value;
+
+        // Retrieve original timestamp
+        long originalTimestamp = referenceTimestamp + convertedTimestamp;
+
         // Convert timestamp to hour:minute
-        return getHour(originalTimestamp);
+        return getDateString(originalTimestamp);
     }
 
-    /**
-     * Get formatted hour from a timestamp.
-     *
-     * @param timestamp timestamp to format.
-     * @return formatted hour.
-     */
-    private String getHour(long timestamp) {
-        mDate.setTime(timestamp * 1000); // Convert from seconds to milliseconds
-        return mDataFormat.format(mDate);
+    private String getDateString(long timestamp) {
+        try {
+            mDate.setTime(timestamp);
+            return mDataFormat.format(mDate);
+        } catch(Exception ex) {
+            return "xx";
+        }
     }
 }
 class MyMarkerView extends MarkerView {
@@ -285,4 +307,6 @@ class MyMarkerView extends MarkerView {
             return "xx";
         }
     }
+
+
 }

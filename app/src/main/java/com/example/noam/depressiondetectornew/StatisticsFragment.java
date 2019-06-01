@@ -50,6 +50,17 @@ public class StatisticsFragment extends Fragment {
 
 
 
+        pieChart = (PieChart) v.findViewById(R.id.piechart);
+
+        pieChart.setUsePercentValues(true);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setExtraOffsets(5,10,5,5);
+
+        pieChart.setDragDecelerationFrictionCoef(0.95f);
+
+        pieChart.setDrawHoleEnabled(true);
+
+
         list = v.findViewById(R.id.statistics_list);
         db = Utils.getDB();
         utils = new Utils(getActivity());

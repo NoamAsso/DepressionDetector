@@ -2,6 +2,7 @@ package com.example.noam.depressiondetectornew;
 
 
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -59,6 +60,24 @@ public class StatisticsFragment extends Fragment {
         pieChart.setDragDecelerationFrictionCoef(0.95f);
 
         pieChart.setDrawHoleEnabled(true);
+        pieChart.setHoleColor(Color.TRANSPARENT);
+        pieChart.setTransparentCircleRadius(61f);
+
+        ArrayList<PieEntry> yValues = new ArrayList<>();
+
+        yValues.add(new PieEntry(34f,"Depressed"));
+        yValues.add(new PieEntry(10f,"Not depressed"));
+
+        PieDataSet dataSet = new PieDataSet(yValues,"People");
+        dataSet.setSliceSpace(3f);
+        dataSet.setSelectionShift(5f);
+        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+
+        PieData data = new PieData(dataSet);
+        data.setValueTextSize(18f);
+        data.setValueTextColor(Color.YELLOW);
+
+        pieChart.setData(data);
 
 
         list = v.findViewById(R.id.statistics_list);

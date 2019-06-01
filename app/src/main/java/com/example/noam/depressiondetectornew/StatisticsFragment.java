@@ -49,7 +49,30 @@ public class StatisticsFragment extends Fragment {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_statistics, container, false);
 
-
+        db = Utils.getDB();
+        Cursor mCursor1 = db.getAllRowsRecordings();
+        ArrayList<RecordingProfile> mDataSet1 = new ArrayList<RecordingProfile>();
+        for(mCursor1.moveToFirst(); !mCursor1.isAfterLast(); mCursor1.moveToNext()) {
+            // The Cursor is now set to the right position
+            RecordingProfile rectemp = new RecordingProfile();
+            rectemp.set_recId(mCursor1.getInt(mCursor1.getColumnIndex("_id")));
+            rectemp.set__userId(mCursor1.getInt(mCursor1.getColumnIndex("user_id")));
+            rectemp.set_recordName(mCursor1.getString(mCursor1.getColumnIndex("recording_name")));
+            rectemp.set_prediction(mCursor1.getInt(mCursor1.getColumnIndex("prediction")));
+            rectemp.set_time(mCursor1.getString(mCursor1.getColumnIndex("time_added")));
+            rectemp.set_length(mCursor1.getInt(mCursor1.getColumnIndex("length")));
+            rectemp.set_path(mCursor1.getString(mCursor1.getColumnIndex("file_path")));
+            mDataSet1.add(rectemp);
+        }
+        int depressed = 0, middle = 0, happy = 0;
+        for(int i=0; i < mDataSet1.size(); i++){
+            if (mDataSet1.get(i).get_prediction()>66f)
+                depressed++;
+            else if(mDataSet1.get(i).get_prediction()<33f)
+                happy++;
+            else
+                middle++;
+        }
 
         pieChart = (PieChart) v.findViewById(R.id.piechart);
 
@@ -65,10 +88,11 @@ public class StatisticsFragment extends Fragment {
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
 
-        yValues.add(new PieEntry(34f,"Depressed"));
-        yValues.add(new PieEntry(10f,"Not depressed"));
+        yValues.add(new PieEntry(depressed,"Depressed"));
+        yValues.add(new PieEntry(happy,"Not depressed"));
+        yValues.add(new PieEntry(middle,"Middle area"));
 
-        PieDataSet dataSet = new PieDataSet(yValues,"People");
+        PieDataSet dataSet = new PieDataSet(yValues,"Patients");
         dataSet.setSliceSpace(3f);
         dataSet.setSelectionShift(5f);
         dataSet.setColors(ColorTemplate.JOYFUL_COLORS);

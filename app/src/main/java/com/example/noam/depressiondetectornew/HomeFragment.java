@@ -43,6 +43,12 @@ public class HomeFragment extends Fragment {
         search = (SearchView) v.findViewById(R.id.search);
         db = Utils.getDB();
         utils = new Utils(getActivity());
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search.setIconified(false);
+            }
+        });
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {

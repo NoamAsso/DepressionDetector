@@ -78,6 +78,7 @@ public class GraphAdapter extends BaseAdapter {
             ArrayList<Entry> yValues = new ArrayList<>();
 
             if (mDataSet.size() > 0) {
+                long Xnew[] = new long[mDataSet.size()];
                 for (int i = 0; i < mDataSet.size(); i++) {
                     String date = mDataSet.get(i).get_time();
                     java.util.Date date1 = null;
@@ -92,10 +93,11 @@ public class GraphAdapter extends BaseAdapter {
                     if (i == 0)
                         reference_timestamp = date1.getTime();
 
-                    long Xnew = date1.getTime() - reference_timestamp;
-                    yValues.add(new Entry((float) Xnew, (float) mDataSet.get(i).get_prediction()));
+                    Xnew[i] = date1.getTime() - reference_timestamp;
+                    yValues.add(new Entry((float) i, (float) mDataSet.get(i).get_prediction()));
 
                 }
+                UserPageActivity.setit(Xnew);
                 ValueFormatter xAxisFormatter = new FooFormatter(reference_timestamp);
                 XAxis xAxis = mChart.getXAxis();
                 xAxis.setValueFormatter(xAxisFormatter);

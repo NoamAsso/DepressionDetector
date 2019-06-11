@@ -49,6 +49,7 @@ public class StatisticsFragment extends Fragment {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_statistics, container, false);
 
+
         db = Utils.getDB();
         Cursor mCursor1 = db.getAllRowsRecordings();
         ArrayList<RecordingProfile> mDataSet1 = new ArrayList<RecordingProfile>();
@@ -76,7 +77,7 @@ public class StatisticsFragment extends Fragment {
 
         pieChart = (PieChart) v.findViewById(R.id.piechart);
 
-        pieChart.setUsePercentValues(true);
+        //pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
         pieChart.setExtraOffsets(5,10,5,5);
 
@@ -88,11 +89,11 @@ public class StatisticsFragment extends Fragment {
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
 
-        yValues.add(new PieEntry(depressed,"Depressed"));
-        yValues.add(new PieEntry(happy,"Not depressed"));
-        yValues.add(new PieEntry(middle,"Middle area"));
+        yValues.add(new PieEntry(34,"Depressed"));
+        yValues.add(new PieEntry(10,"Not depressed"));
+        yValues.add(new PieEntry(10,"Middle area"));
 
-        PieDataSet dataSet = new PieDataSet(yValues,"Patients");
+        PieDataSet dataSet = new PieDataSet(yValues,"");
         dataSet.setSliceSpace(3f);
         dataSet.setSelectionShift(5f);
         dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
@@ -102,7 +103,10 @@ public class StatisticsFragment extends Fragment {
         data.setValueTextColor(Color.YELLOW);
 
         pieChart.setData(data);
-
+        pieChart.animateY(2000);
+        pieChart.setCenterText("All\nrecords");
+        //pieChart.setCenterTextColor(android.R.color.white);
+        pieChart.setCenterTextSize(20f);
 
         list = v.findViewById(R.id.statistics_list);
         db = Utils.getDB();

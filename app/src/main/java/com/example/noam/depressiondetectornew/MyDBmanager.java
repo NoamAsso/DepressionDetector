@@ -276,10 +276,18 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
     public void updateUser(UserProfile user){
         SQLiteDatabase db = getReadableDatabase();
         long id = user.get_userId();
-        db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_FIRST_NAME + " = '" + user.get_firstName() + "'" + " WHERE " + _ID + " = " + id,null);
-        db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_LAST_NAME + " = '" + user.get_lastName() + "'" + " WHERE " + _ID + " = " + id,null);
-        db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER + " = '" + user.get_phoneNumber() + "'" + " WHERE " + _ID + " = " + id,null);
-        db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_GENDER + " = '" + user.get_phoneNumber() + "'" + " WHERE " + _ID + " = " + id,null);
+        Cursor cursor1 = db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_FIRST_NAME + " = '" + user.get_firstName() + "'" + " WHERE " + _ID + " = " + id,null);
+        cursor1.moveToFirst();
+        cursor1.close();
+        Cursor cursor2 = db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_LAST_NAME + " = '" + user.get_lastName() + "'" + " WHERE " + _ID + " = " + id,null);
+        cursor2.moveToFirst();
+        cursor2.close();
+        Cursor cursor3 = db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER + " = '" + user.get_phoneNumber() + "'" + " WHERE " + _ID + " = " + id,null);
+        cursor3.moveToFirst();
+        cursor3.close();
+        Cursor cursor4 = db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_GENDER + " = '" + user.get_phoneNumber() + "'" + " WHERE " + _ID + " = " + id,null);
+        cursor4.moveToFirst();
+        cursor4.close();
         //return 0;
     }
 

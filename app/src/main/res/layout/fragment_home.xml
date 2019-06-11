@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_blur_3"
+    android:background="@drawable/capture"
     tools:context=".HomeFragment">
 
 
@@ -24,7 +24,7 @@
                 android:text="Search"
                 android:textColor="#78000000"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+ />
             <View
                 android:layout_width="240dp"
                 android:layout_height="1dp"
@@ -41,7 +41,8 @@
                 <android.support.v7.widget.SearchView
                     android:id="@+id/search"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/event_page_background3"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/recoding_list_layout"
@@ -57,8 +58,7 @@
                     android:layout_gravity="center"
                     android:text="Recordings"
                     android:textColor="#78000000"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
+                    android:textSize="30sp" />
                 <View
                     android:layout_width="240dp"
                     android:layout_height="1dp"
@@ -95,8 +95,7 @@
                     android:layout_gravity="center"
                     android:text="Patients"
                     android:textColor="#78000000"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
+                    android:textSize="30sp" />
                 <View
                     android:layout_width="240dp"
                     android:layout_height="1dp"

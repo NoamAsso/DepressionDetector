@@ -46,7 +46,7 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
         final RecordingProfile item = studentList.get(position);
 
         viewHolder.Name.setText(item.get_recordName());
-        viewHolder.Status.setText("Status: " + Double.toString(item.get_prediction()));
+        viewHolder.Status.setText("Status: " + String.format("%.2f", item.get_prediction()));
         viewHolder.ID.setText("Rec ID: " + item.get_recId());
         if(item.getPrediction_feedback() == 0)
             viewHolder.feedbackImage.setImageResource(R.drawable.ic_dislike);

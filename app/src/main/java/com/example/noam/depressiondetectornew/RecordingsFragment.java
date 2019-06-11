@@ -43,7 +43,9 @@ public class RecordingsFragment extends Fragment {
             rectemp.set_prediction(mCursor.getInt(mCursor.getColumnIndex("prediction")));
             rectemp.set_time(mCursor.getString(mCursor.getColumnIndex("time_added")));
             rectemp.set_length(mCursor.getInt(mCursor.getColumnIndex("length")));
+            rectemp.set_csv(mCursor.getString(mCursor.getColumnIndex("csv")));
             rectemp.set_path(mCursor.getString(mCursor.getColumnIndex("file_path")));
+            rectemp.setPrediction_feedback(mCursor.getInt(mCursor.getColumnIndex("prediction_feedback")));
             mDataSet.add(rectemp);
         }
 

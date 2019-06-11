@@ -59,6 +59,7 @@ public class UserPageActivity extends AppCompatActivity {
     LineChart mChart;
     YAxis yAxis;
     Long reference_timestamp;
+    static long Xnew[];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +134,8 @@ public class UserPageActivity extends AppCompatActivity {
         ArrayList<Entry> yValues = new ArrayList<>();
 
         if (mDataSet.size() > 0) {
+
+            long xXnew[] = new long[mDataSet.size()];
             for (int i = 0; i < mDataSet.size(); i++) {
                 String date = mDataSet.get(i).get_time();
                 java.util.Date date1 = null;
@@ -147,10 +150,11 @@ public class UserPageActivity extends AppCompatActivity {
                 if (i == 0)
                     reference_timestamp = date1.getTime();
 
-                long Xnew = date1.getTime() - reference_timestamp;
-                yValues.add(new Entry((float) Xnew, (float) mDataSet.get(i).get_prediction()));
+                xXnew[i] = date1.getTime() - reference_timestamp;
+                yValues.add(new Entry((float) i, (float) mDataSet.get(i).get_prediction()));
 
             }
+            setit(xXnew);
             ValueFormatter xAxisFormatter = new FooFormatter(reference_timestamp);
             XAxis xAxis = mChart.getXAxis();
             xAxis.setValueFormatter(xAxisFormatter);
@@ -211,7 +215,12 @@ public class UserPageActivity extends AppCompatActivity {
         });
 
     }
-
+    public static void setit(long xnnew[]){
+        Xnew = xnnew;
+    }
+    public static long[] getit(){
+        return Xnew;
+    }
     @Override
     public void onResume(){
         super.onResume();
@@ -237,7 +246,7 @@ class FooFormatter extends ValueFormatter {
 
     public FooFormatter(long referenceTimestamp) {
         this.referenceTimestamp = referenceTimestamp;
-        this.mDataFormat = new SimpleDateFormat("dd/MM/yyyy 'at' h:mm a");
+        this.mDataFormat = new SimpleDateFormat("dd/MM");
         this.mDate = new Date();
     }
 
@@ -275,7 +284,7 @@ class MyMarkerView extends MarkerView {
         // this markerview only displays a textview
         tvContent = (TextView) findViewById(R.id.tvContent);
         this.referenceTimestamp = referenceTimestamp;
-        this.mDataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        this.mDataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
         this.mDate = new Date();
     }
 
@@ -283,9 +292,9 @@ class MyMarkerView extends MarkerView {
     // content (user-interface)
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        long currentTimestamp = (int)e.getX() + referenceTimestamp;
+        long currentTimestamp = UserPageActivity.getit()[(int)e.getX()] + referenceTimestamp;
 
-        tvContent.setText(e.getY() + "% at " + getTimedate(currentTimestamp)); // set the entry-value as the display text
+        tvContent.setText(String.format("%.02f", e.getY()) + "% \n" + getTimedate(currentTimestamp)); // set the entry-value as the display text
     }
 
     @Override
@@ -300,7 +309,7 @@ class MyMarkerView extends MarkerView {
     private String getTimedate(long timestamp){
 
         try{
-            mDate.setTime(timestamp*1000);
+            mDate.setTime(timestamp);
             return mDataFormat.format(mDate);
         }
         catch(Exception ex){

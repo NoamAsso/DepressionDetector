@@ -12,6 +12,11 @@ import android.widget.ListView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -19,6 +24,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -115,6 +122,68 @@ public class StatisticsFragment extends Fragment {
 
 
         barChart = (BarChart) v.findViewById(R.id.barchart);
+        Description desc ;
+        Legend L;
+
+        L = barChart.getLegend();
+        desc = barChart.getDescription();
+        desc.setText(""); // this is the weirdest way to clear something!!
+        L.setEnabled(false);
+
+
+        YAxis leftAxis = barChart.getAxisLeft();
+        YAxis rightAxis = barChart.getAxisRight();
+        XAxis xAxis = barChart.getXAxis();
+
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextSize(10f);
+        xAxis.setDrawAxisLine(true);
+        xAxis.setDrawGridLines(false);
+
+
+        leftAxis.setTextSize(10f);
+        leftAxis.setDrawLabels(false);
+        leftAxis.setDrawAxisLine(true);
+        leftAxis.setDrawGridLines(false);
+
+        rightAxis.setDrawAxisLine(false);
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setDrawLabels(false);
+        ArrayList<BarEntry> entries = new ArrayList<>();
+
+        entries.add(new BarEntry(0f, 30f));
+        entries.add(new BarEntry(1f, 80f));
+        entries.add(new BarEntry(2f, 60f));
+        entries.add(new BarEntry(3f, 50f));
+        entries.add(new BarEntry(4f, 70f));
+        entries.add(new BarEntry(5f, 60f));
+
+
+        BarDataSet set = new BarDataSet(entries, "");
+        set.setColors(ColorTemplate.MATERIAL_COLORS);
+        BarData data2 = new BarData(  set);
+        ArrayList<String> labels = new ArrayList<>();
+        labels.add("Good");
+        labels.add("Bad");
+        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+        data2.setBarWidth(0.9f); // set custom bar width
+        barChart.setData(data2);
+
+        barChart.setFitBars(true); // make the x-axis fit exactly all bars
+        barChart.invalidate(); // refresh
+        barChart.setScaleEnabled(false);
+        barChart.setDoubleTapToZoomEnabled(false);
+        barChart.animateXY(2000, 2000);
+        barChart.setDrawBorders(false);
+        barChart.setDescription(desc);
+        barChart.setDrawValueAboveBar(true);
+        barChart.animateXY(1000,2000);
+
+
+
+        /*
+
+        //barChart = (BarChart) v.findViewById(R.id.barchart);
 
         //pieChart.setUsePercentValues(true);
         barChart.getDescription().setEnabled(false);
@@ -133,7 +202,7 @@ public class StatisticsFragment extends Fragment {
         barChart.getAxisLeft().setDrawGridLines(false);
         barChart.getXAxis().setDrawGridLines(false);
         barChart.animateXY(1000,2000);
-
+        */
         list = v.findViewById(R.id.statistics_list);
         db = Utils.getDB();
         utils = new Utils(getActivity());
@@ -168,5 +237,16 @@ public class StatisticsFragment extends Fragment {
     }
 
 
+    public class LabelFormatter implements IAxisValueFormatter {
+        private final String[] mLabels;
 
+        public LabelFormatter(String[] labels) {
+            mLabels = labels;
+        }
+
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            return mLabels[(int) value];
+        }
+    }
 }

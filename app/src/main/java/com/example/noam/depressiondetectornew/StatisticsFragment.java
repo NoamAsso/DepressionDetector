@@ -10,7 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -34,6 +38,7 @@ public class StatisticsFragment extends Fragment {
     MyDBmanager db;
     Utils utils;
     PieChart pieChart ;
+    BarChart barChart;
     ArrayList<PieEntry> entries ;
     ArrayList<String> PieEntryLabels ;
     PieDataSet pieDataSet ;
@@ -107,6 +112,27 @@ public class StatisticsFragment extends Fragment {
         pieChart.setCenterText("All\nrecords");
         //pieChart.setCenterTextColor(android.R.color.white);
         pieChart.setCenterTextSize(20f);
+
+
+        barChart = (BarChart) v.findViewById(R.id.barchart);
+
+        //pieChart.setUsePercentValues(true);
+        barChart.getDescription().setEnabled(false);
+        ArrayList<BarEntry> yValsBar = new ArrayList<>();
+        yValsBar.add(new BarEntry(1,10));
+        yValsBar.add(new BarEntry(2,20));
+        BarDataSet set = new BarDataSet(yValsBar,"Feedback");
+        set.setColors(ColorTemplate.MATERIAL_COLORS);
+        set.setDrawValues(true);
+        ArrayList<String> labels = new ArrayList<>();
+        labels.add("Good");
+        labels.add("Bad");
+        BarData data2 = new BarData(set);
+        barChart.setData(data2);
+        barChart.invalidate();
+        barChart.getAxisLeft().setDrawGridLines(false);
+        barChart.getXAxis().setDrawGridLines(false);
+        barChart.animateXY(1000,2000);
 
         list = v.findViewById(R.id.statistics_list);
         db = Utils.getDB();

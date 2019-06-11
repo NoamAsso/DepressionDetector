@@ -157,6 +157,7 @@ public class UserPageActivity extends AppCompatActivity {
             setit(xXnew);
             ValueFormatter xAxisFormatter = new FooFormatter(reference_timestamp);
             XAxis xAxis = mChart.getXAxis();
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
             xAxis.setValueFormatter(xAxisFormatter);
 
             LineDataSet set1 = new LineDataSet(yValues, "data set 1");

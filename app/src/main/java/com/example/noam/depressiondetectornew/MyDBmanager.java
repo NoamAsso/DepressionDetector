@@ -240,12 +240,12 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
 
     public Cursor getAllRowsRecordings(){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME_REC + " order by " + COLUMN_NAME_TIME_ADDED,null);
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME_REC + " order by " + _ID,null);
         return cursor;
     }
     public Cursor getAllRowsUser(){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME_USER + " order by " + COLUMN_NAME_JOIN_DATE,null);
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME_USER + " order by " + _ID,null);
         return cursor;
     }
     public Cursor UpdateGson(long userId, long recId){
@@ -285,7 +285,7 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
         Cursor cursor3 = db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_PHONE_NUMBER + " = '" + user.get_phoneNumber() + "'" + " WHERE " + _ID + " = " + id,null);
         cursor3.moveToFirst();
         cursor3.close();
-        Cursor cursor4 = db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_GENDER + " = '" + user.get_phoneNumber() + "'" + " WHERE " + _ID + " = " + id,null);
+        Cursor cursor4 = db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_GENDER + " = '" + user.get_gender() + "'" + " WHERE " + _ID + " = " + id,null);
         cursor4.moveToFirst();
         cursor4.close();
         //return 0;

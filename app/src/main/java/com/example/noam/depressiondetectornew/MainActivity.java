@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -48,6 +50,10 @@ import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
 
@@ -62,7 +68,8 @@ public class MainActivity extends AppCompatActivity
     File wavFile;
     ImageButton like;
     ImageButton dislike;
-
+    File currentDB;
+    File backupDB2;
     public static MyDBmanager db;
     public int flag = 0;
     //this.deleteDatabase(DATABASE_NAME);
@@ -252,7 +259,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-
+            exportDB();
+            sendEmail();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -315,15 +323,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume(){
         super.onResume();
-
+        Fragment fragRefresh = getSupportFragmentManager().getPrimaryNavigationFragment();
         if(flag == 1)
             reloadFragment(new RecordingsFragment());
         else if(flag == 2)
             reloadFragment(new PeopleFragment());
         else if(flag == 3)
             reloadFragment(new RecordingsFragment());
-
-
+        else
+            reloadFragment(fragRefresh);
         // put your code here...
 
     }
@@ -334,18 +342,18 @@ public class MainActivity extends AppCompatActivity
         //getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED);
         switch (requestCode){
             case REC_ACTIVITY_REQUEST:
-                if (resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK || resultCode == 0 ) {
 
                     flag = 1;
                 }
                 break;
             case REGISTER_ACTIVITY_REQUEST:
-                if (resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK || resultCode == 0) {
                     flag = 2;
                 }
                 break;
             case IMPORT_WAV:
-                if (resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK || resultCode == 0){
                     flag = 3;
                     importwav(data);
                 }
@@ -590,6 +598,54 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onProgressUpdate(Void... param) {
 
+        }
+    }
+
+
+    public void sendEmail()
+    {
+        try
+        {
+            //email = et_email.getText().toString();
+            //subject = et_subject.getText().toString();
+            //message = et_message.getText().toString();
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+            Uri path = Uri.fromFile(backupDB2);
+            final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+            emailIntent.setType("plain/text");
+            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,new String[] { "assoulinenoam@gmail.com" });
+            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,"Depression Detection Database");
+            if (backupDB2 != null) {
+                emailIntent.putExtra(Intent.EXTRA_STREAM, path);
+            }
+            emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "this is the database!");
+            this.startActivity(Intent.createChooser(emailIntent,"Sending email..."));
+        }
+        catch (Throwable t)
+        {
+            Toast.makeText(this, "Request failed try again: " + t.toString(),Toast.LENGTH_LONG).show();
+        }
+    }
+    private void exportDB(){
+        File sd = Environment.getExternalStorageDirectory();
+        File data = Environment.getDataDirectory();
+        FileChannel source=null;
+        FileChannel destination=null;
+        String currentDBPath = "/data/"+ "com.example.noam.depressiondetectornew" +"/databases/"+"users_and_recordings.db";
+        String backupDBPath = "users_and_recordings.db";
+        currentDB = new File(data, currentDBPath);
+        backupDB2 = new File(sd, backupDBPath);
+
+        try {
+            source = new FileInputStream(currentDB).getChannel();
+            destination = new FileOutputStream(backupDB2).getChannel();
+            destination.transferFrom(source, 0, source.size());
+            source.close();
+            destination.close();
+            Toast.makeText(this, "DB Exported!", Toast.LENGTH_LONG).show();
+        } catch(IOException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -42,13 +42,19 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
     @Override
     public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
         final UserProfile item = studentList.get(position);
-
+        db = utils.getDB();
         viewHolder.Name.setText(item.get_firstName()+" "+item.get_lastName());
         //viewHolder.LastName.setText(item.get_lastName());
         viewHolder.Phone.setText("Phone Number: " + item.get_phoneNumber());
-        viewHolder.Status.setText("Prediction: " + Integer.toString(((int)item.get_userId())));
-        //viewHolder.ID.setText("UserId: " + item.get_userId() + " - Row Position " + position);
-        viewHolder.Date.setText("Join: " + item.get_joinDate());
+        if(item.getRecordings().size() == 0)
+            viewHolder.Status.setText("No predictions yet");
+        else{
+            long idx = item.getRecordings().get(item.getRecordings().size()-1);
+            RecordingProfile rec = db.getRecordingAt(idx);
+            viewHolder.Status.setText("Last prediction: " + String.format("%.2f", rec.get_prediction())+"%");
+            //viewHolder.ID.setText("UserId: " + item.get_userId() + " - Row Position " + position);
+            viewHolder.Date.setText("At: " + rec.get_time());
+        }
         if (item.get_gender() != null) {
             if(item.get_gender().matches("Female")){
                 viewHolder.image.setImageResource(R.drawable.ic_circle_icon_woman);

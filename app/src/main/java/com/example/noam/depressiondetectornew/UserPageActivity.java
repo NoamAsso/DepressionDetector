@@ -106,7 +106,7 @@ public class UserPageActivity extends AppCompatActivity {
         }
         else {
             double pred = mDataSet.get(mDataSet.size() - 1).get_prediction();
-            status.setText(String.format("%f", pred) + " depressed");
+            status.setText(String.format("%.4f", pred) +"%" +" depressed");
             if(pred > 66f)
                 statusImage.setBackgroundResource(R.drawable.ic_sad);
             else if(pred < 33f)

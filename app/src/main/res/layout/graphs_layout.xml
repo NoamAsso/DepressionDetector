@@ -1,9 +1,60 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:id="@+id/swipe"
+    app:leftEdgeSwipeOffset="0dp"
+    app:rightEdgeSwipeOffset="0dp"
 
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/bottom_wraper"
+        android:layout_width="100dp"
+        android:weightSum="3"
+        android:orientation="horizontal"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/Delete"
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/delete_backgoundd"
+            android:gravity="center"
+            android:text="Delete"
+            android:textColor="#fff"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_wrapper1"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:weightSum="1">
+        <ImageButton
+            android:id="@+id/btnLocation"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center"
+            android:src="@android:drawable/ic_menu_info_details"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="5dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/event_page_background44"
+        android:orientation="vertical">
     <TextView
         android:id="@+id/text_view_item_name"
         android:layout_width="match_parent"
@@ -24,4 +75,7 @@
 
         </com.github.mikephil.charting.charts.LineChart>
     </LinearLayout>
-</LinearLayout>
+
+    </LinearLayout>
+    </LinearLayout>
+</com.daimajia.swipe.SwipeLayout>

@@ -60,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
         lastnameWrapper = (EditText) findViewById(R.id.input_last_name);
         phoneWrapper = (EditText) findViewById(R.id.input_phone_number);
         registerButton = (Button) findViewById(R.id.btn_signup);
-        contactsButton = (Button) findViewById(R.id.btn_signup_contacts);
+        //contactsButton = (Button) findViewById(R.id.btn_signup_contacts);
 
         final Spinner spinnerGender = (Spinner) findViewById(R.id.spinner_gender);
         String[] items = new String[] {"Male", "Female"};
@@ -297,7 +297,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 TempNumberHolder = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                                 //selectSingleContact();
                                 Calendar calendar = Calendar.getInstance();
-                                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy 'at' h:mm a", Locale.ENGLISH);
+                                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy 'at' h:mm a");
                                 String date = format.format(calendar.getTime());
                                 UserProfile user = new UserProfile(TempNumberHolder,TempNameHolder,
                                         "",date);

@@ -5,11 +5,16 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.daimajia.swipe.util.Attributes;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -50,6 +55,8 @@ public class StatisticsFragment extends Fragment {
     ArrayList<String> PieEntryLabels ;
     PieDataSet pieDataSet ;
     PieData pieData ;
+    private RecyclerView mRecyclerView;
+    GraphAdapter adapter;
     public StatisticsFragment() {
         // Required empty public constructor
     }
@@ -115,7 +122,7 @@ public class StatisticsFragment extends Fragment {
         data.setValueTextColor(Color.YELLOW);
 
         pieChart.setData(data);
-        pieChart.animateY(2000);
+        pieChart.animateY(1000);
         pieChart.setCenterText("All\nrecords");
         //pieChart.setCenterTextColor(android.R.color.white);
         pieChart.setCenterTextSize(20f);
@@ -145,35 +152,33 @@ public class StatisticsFragment extends Fragment {
         leftAxis.setDrawLabels(false);
         leftAxis.setDrawAxisLine(true);
         leftAxis.setDrawGridLines(false);
-
+        leftAxis.setAxisMinimum(0f);
         rightAxis.setDrawAxisLine(false);
         rightAxis.setDrawGridLines(false);
         rightAxis.setDrawLabels(false);
+        rightAxis.setAxisMinimum(0f);
         ArrayList<BarEntry> entries = new ArrayList<>();
 
         entries.add(new BarEntry(0f, 30f));
-        entries.add(new BarEntry(1f, 80f));
-        entries.add(new BarEntry(2f, 60f));
-        entries.add(new BarEntry(3f, 50f));
-        entries.add(new BarEntry(4f, 70f));
-        entries.add(new BarEntry(5f, 60f));
+        entries.add(new BarEntry(1f, 50f));
 
 
         BarDataSet set = new BarDataSet(entries, "");
         set.setColors(ColorTemplate.MATERIAL_COLORS);
+        set.setValueTextSize(12f);
         BarData data2 = new BarData(  set);
         ArrayList<String> labels = new ArrayList<>();
         labels.add("Good");
         labels.add("Bad");
         barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
-        data2.setBarWidth(0.9f); // set custom bar width
-        barChart.setData(data2);
+        data2.setBarWidth(0.9f); // set custom bar width;
 
+        barChart.setData(data2);
         barChart.setFitBars(true); // make the x-axis fit exactly all bars
         barChart.invalidate(); // refresh
-        barChart.setScaleEnabled(false);
+        barChart.setScaleEnabled(true);
         barChart.setDoubleTapToZoomEnabled(false);
-        barChart.animateXY(2000, 2000);
+        //barChart.animateXY(2000, 2000);
         barChart.setDrawBorders(false);
         barChart.setDescription(desc);
         barChart.setDrawValueAboveBar(true);
@@ -203,7 +208,8 @@ public class StatisticsFragment extends Fragment {
         barChart.getXAxis().setDrawGridLines(false);
         barChart.animateXY(1000,2000);
         */
-        list = v.findViewById(R.id.statistics_list);
+        //list = v.findViewById(R.id.statistics_list);
+        //ViewCompat.setNestedScrollingEnabled(list, true);
         db = Utils.getDB();
         utils = new Utils(getActivity());
         Cursor mCursor = db.getAllRowsUser();
@@ -226,11 +232,26 @@ public class StatisticsFragment extends Fragment {
         }
 
 
-// instantiate the custom list adapter
-        GraphAdapter adapter = new GraphAdapter(getActivity(), mDataSet);
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.statistics_list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
 
-// get the ListView and attach the adapter
-        list.setAdapter(adapter);
+        adapter = new GraphAdapter(getActivity(), mDataSet);
+        ((GraphAdapter) adapter).setMode(Attributes.Mode.Single);
+
+        mRecyclerView.setAdapter(adapter);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                Log.e("RecyclerView", "onScrollStateChanged");
+            }
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+
 
 
         return v;

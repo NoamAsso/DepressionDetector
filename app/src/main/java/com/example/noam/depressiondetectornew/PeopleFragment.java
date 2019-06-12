@@ -17,9 +17,13 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.daimajia.swipe.util.Attributes;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.COLUMN_RECORDINGS_GSON;
 
 
 public class PeopleFragment extends Fragment {
@@ -45,12 +49,16 @@ public class PeopleFragment extends Fragment {
         for(mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
             // The Cursor is now set to the right position
             UserProfile usertemp = new UserProfile();
+            Gson gson = new Gson();
             usertemp.set_userId(mCursor.getInt(mCursor.getColumnIndex("_id")));
             usertemp.set_gender(mCursor.getString(mCursor.getColumnIndex("gender")));
             usertemp.set_firstName(mCursor.getString(mCursor.getColumnIndex("first_name")));
             usertemp.set_lastName(mCursor.getString(mCursor.getColumnIndex("last_name")));
             usertemp.set_phoneNumber(mCursor.getString(mCursor.getColumnIndex("phone_number")));
             usertemp.set_status(mCursor.getInt(mCursor.getColumnIndex("status")));
+            String recordings = (mCursor.getString(mCursor.getColumnIndex(COLUMN_RECORDINGS_GSON)));
+            ArrayList<Long> recordlist = gson.fromJson(recordings,new TypeToken<List<Long>>(){}.getType());
+            usertemp.setRecordings(recordlist);
             usertemp.set_joinDate(mCursor.getString(mCursor.getColumnIndex("join_date")));
             mDataSet.add(usertemp);
         }

@@ -57,7 +57,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                if(s.matches("")) {
+                if(s.matches("")|| s.matches(" ")) {
                     v.findViewById(R.id.patients_list_layout).setVisibility(View.GONE);
                     v.findViewById(R.id.recoding_list_layout).setVisibility(View.GONE);
                     return false;
@@ -114,7 +114,7 @@ public class HomeFragment extends Fragment {
                     rectemp.set_time(mCursor2.getString(mCursor2.getColumnIndex("time_added")));
                     rectemp.set_length(mCursor2.getInt(mCursor2.getColumnIndex("length")));
                     rectemp.set_path(mCursor2.getString(mCursor2.getColumnIndex("file_path")));
-                    rectemp.setPrediction_feedback(mCursor.getInt(mCursor.getColumnIndex("prediction_feedback")));
+                    rectemp.setPrediction_feedback(mCursor2.getInt(mCursor2.getColumnIndex("prediction_feedback")));
                     mDataSetRec.add(rectemp);
                 }
                 if(flag)

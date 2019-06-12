@@ -4,60 +4,143 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/capture"
+    android:background="@drawable/wood_back"
     tools:context=".MainActivity">
-
     <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:fillViewport="true">
-
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_alignParentTop="true"
 
-            <TextView
-                android:id="@+id/statistics_list_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Statistics"
-                android:textColor="#78000000"
-                android:textSize="30sp" />
-            <View
-                android:layout_width="240dp"
-                android:layout_height="1dp"
-                android:layout_gravity="center"
-                android:background="#303030"
-                android:paddingTop="2dp" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
+            android:fillViewport="true"
+            >
 
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/piechart"
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp" />
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/barchart"
-                android:layout_width="match_parent"
-                android:layout_height="300dp" />
-                <ListView
-                    android:id="@+id/statistics_list"
+                android:layout_height="match_parent"
+                android:paddingTop="10dp"
+                android:paddingBottom="40dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center">
+                    android:layout_height="match_parent"
 
-                </ListView>
+                    android:orientation="vertical"
+                    android:background="#7CFFFFFF">
+
+                    <TextView
+                        android:id="@+id/statistics_list_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Statistics"
+                        android:textColor="#78000000"
+                        android:textSize="30sp" />
+                    <View
+                        android:layout_width="240dp"
+                        android:layout_height="1dp"
+                        android:layout_gravity="center"
+                        android:background="#303030"
+                        android:paddingTop="2dp" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp" />
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/piechart"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp" />
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="80dp"
+                        android:paddingTop="30dp"
+                        android:paddingBottom="30dp"
+                        android:src="@drawable/circle_dot"
+                        android:layout_gravity="center"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Feedbacks"
+                        android:paddingTop="8dp"
+                        android:textColor="#78000000"
+                        android:textSize="25sp" />
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/barchart"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/ic_like"/>
+                        <View
+                            android:layout_width="60dp"
+                            android:layout_height="match_parent" />
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/ic_dislike" />
+
+                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="80dp"
+                        android:paddingTop="30dp"
+                        android:paddingBottom="30dp"
+                        android:src="@drawable/circle_dot"
+                        android:layout_gravity="center"/>
+
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="80dp"
+                        android:paddingTop="30dp"
+                        android:src="@drawable/ic_line_graphic"
+                        android:layout_gravity="center"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Patients graphs"
+                        android:paddingTop="5dp"
+                        android:textColor="#78000000"
+                        android:textSize="25sp" />
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/statistics_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:elevation="2dp"
+                        android:layout_weight="1"
+                        android:scrollbars="vertical" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp" />
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:paddingTop="30dp"
+                        android:src="@drawable/mp_android_chart"
+                        android:layout_gravity="center"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp" />
+
+                </LinearLayout>
+            </LinearLayout>
 
 
 
-        </LinearLayout>
 
 
+        </android.support.v4.widget.NestedScrollView>
 
-    </android.support.v4.widget.NestedScrollView>
+
 </android.support.constraint.ConstraintLayout>
 

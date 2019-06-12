@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/capture"
+    android:background="@drawable/wood_back"
     tools:context=".HomeFragment">
 
 
@@ -37,6 +37,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
                 android:orientation="vertical">
                 <android.support.v7.widget.SearchView
                     android:id="@+id/search"

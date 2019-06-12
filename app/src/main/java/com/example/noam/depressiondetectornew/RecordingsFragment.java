@@ -40,7 +40,7 @@ public class RecordingsFragment extends Fragment {
             rectemp.set_recId(mCursor.getInt(mCursor.getColumnIndex("_id")));
             rectemp.set__userId(mCursor.getInt(mCursor.getColumnIndex("user_id")));
             rectemp.set_recordName(mCursor.getString(mCursor.getColumnIndex("recording_name")));
-            rectemp.set_prediction(mCursor.getInt(mCursor.getColumnIndex("prediction")));
+            rectemp.set_prediction(mCursor.getDouble(mCursor.getColumnIndex("prediction")));
             rectemp.set_time(mCursor.getString(mCursor.getColumnIndex("time_added")));
             rectemp.set_length(mCursor.getInt(mCursor.getColumnIndex("length")));
             rectemp.set_csv(mCursor.getString(mCursor.getColumnIndex("csv")));

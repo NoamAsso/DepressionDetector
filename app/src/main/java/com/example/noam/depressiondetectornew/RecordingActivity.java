@@ -1,33 +1,70 @@
 package com.example.noam.depressiondetectornew;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.Typeface;
+import android.media.AudioFormat;
 import android.media.MediaPlayer;
+import android.media.MediaRecorder;
+import android.media.audiofx.NoiseSuppressor;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.SystemClock;
-import android.support.v4.content.ContextCompat;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chibde.visualizer.LineBarVisualizer;
+import com.gauravk.audiovisualizer.visualizer.BarVisualizer;
+import com.gauravk.audiovisualizer.visualizer.CircleLineVisualizer;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import me.bogerchan.niervisualizer.NierVisualizerManager;
+import me.bogerchan.niervisualizer.renderer.IRenderer;
+import me.bogerchan.niervisualizer.renderer.circle.CircleBarRenderer;
+import me.bogerchan.niervisualizer.renderer.circle.CircleWaveRenderer;
+import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType1Renderer;
+import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType4Renderer;
+import me.bogerchan.niervisualizer.renderer.line.LineRenderer;
+import me.bogerchan.niervisualizer.renderer.other.ArcStaticRenderer;
+import omrecorder.AudioChunk;
+import omrecorder.AudioRecordConfig;
+import omrecorder.OmRecorder;
+import omrecorder.PullTransport;
+import omrecorder.PullableSource;
+import omrecorder.Recorder;
+
+import static com.example.noam.depressiondetectornew.RecordWavMaster.getInstanceInit;
+
+//import static com.example.noam.depressiondetectornew.RecordWavMaster.getBytes;
+//import static com.example.noam.depressiondetectornew.RecordWavMaster.getInstanceInit;
 
 public class RecordingActivity extends AppCompatActivity {
     long difference = 0;
@@ -48,20 +85,57 @@ public class RecordingActivity extends AppCompatActivity {
     private static boolean firstTimeFlag = true;
     private double precentage;
     long startTime;
-    static int TEN_SECONDS = 10000;
+    static int TEN_SECONDS = 100000;
     TextView resultsText;
     TextView titleText;
+    ImageButton like;
+    ImageButton dislike;
     Button btnSave, btnDelete;
+    SurfaceView surface;
     RecordingProfile voice_record;
-    LineBarVisualizer lineBarVisualizer;
+    NierVisualizerManager visualizerManager;
+    CircleLineVisualizer circleVisual;
     Utils utils;
     String testTrimmedPath = "";
+
+
+
+    File lastestFile;
+    String audioFilePath;
+    private String RECORD_WAV_PATH = Environment.getExternalStorageDirectory() + File.separator + "AudioRecord";
+    Recorder recorder;
+    ImageView recordButton;
+    View general;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recording2);
 
-        filesDirPath = Utils.getFilesDirPath(this);
+
+        //circleVisual = (CircleLineVisualizer) findViewById(R.id.blast) ;
+        //surface = (SurfaceView) findViewById(R.id.sv_wave);
+        /*
+        surface.setZOrderOnTop(true);    // necessary
+        SurfaceHolder sfhTrackHolder = surface.getHolder();
+        sfhTrackHolder.setFormat(PixelFormat.TRANSPARENT);
+        */
+        //pass the bytes to visualizer
+
+
+
+        //setupRecorder();
+        recordButton = (ImageButton) findViewById( R.id.btnRecord);
+        recordButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                recorder.startRecording();
+            }
+        });
+
+
+
+
+        //filesDirPath = Utils.getFilesDirPath(this);
         db = Utils.getDB();
         utils = new Utils(this);
 
@@ -74,7 +148,7 @@ public class RecordingActivity extends AppCompatActivity {
         //mediaPlayer = new MediaPlayer();
         findViewById(R.id.btnSave).setVisibility(View.INVISIBLE);
         findViewById(R.id.btnDelete).setVisibility(View.INVISIBLE);
-        lineBarVisualizer = findViewById(R.id.visualizer);
+
         startTime = System.currentTimeMillis();
         setFilesDirPath();
         setButtonHandlers();
@@ -82,10 +156,10 @@ public class RecordingActivity extends AppCompatActivity {
         findViewById(R.id.resultsText).setVisibility(View.INVISIBLE);
         resultsText = findViewById(R.id.results);
         titleText = findViewById(R.id.txtTitle);
-
         // custom_font = Typeface.createFromAsset(getAssets(),  "fonts/EncodeSans-Bold.ttf");
         btnSave = findViewById(R.id.btnSave);
         btnDelete =  findViewById(R.id.btnDelete);
+
         voice_record = new RecordingProfile();
         btnSave.setOnClickListener(btnClick);
         btnDelete.setOnClickListener(btnClick);
@@ -93,14 +167,6 @@ public class RecordingActivity extends AppCompatActivity {
         resultsText.setVisibility(View.INVISIBLE);
 
         Log.d("STAM", "JUST TO CHECK");
-        // set custom color to the line.
-        lineBarVisualizer.setColor(ContextCompat.getColor(this, R.color.av_dark_blue));
-
-        // define custom number of bars you want in the visualizer between (10 - 256).
-        lineBarVisualizer.setDensity(90f);
-
-        // Set your media player to the visualizer.
-        lineBarVisualizer.setPlayer(mediaPlayer.getAudioSessionId());
     }
 
 
@@ -118,11 +184,12 @@ public class RecordingActivity extends AppCompatActivity {
         final String time = Utils.getTimeSave();
         final String defaultName = "Default name - ";
         //Get Audio duration time
-        final int duration = utils.getDuration(latestRecFile);
-
-
+        final int duration = utils.getDuration(lastestFile);
         final EditText recordName = myDialogView.findViewById(R.id.recordName);
-
+        UserProfile usertemp = db.getUserAt(voice_record.get__userId());
+        int size = usertemp.getRecordings().size() +1;
+        String name = usertemp.get_firstName();
+        recordName.setText(name + " Rec " +Integer.toString(size), TextView.BufferType.EDITABLE );
         //Build the dialog
         final AlertDialog.Builder dialog = new AlertDialog.Builder(
                 RecordingActivity.this,
@@ -135,25 +202,23 @@ public class RecordingActivity extends AppCompatActivity {
                 recID++;
                 if(recordName.getText().toString().equals(""))
                 {
-                    recordName.setText(defaultName + recID);
+
                 }
                 //latestRecFile.renameTo()
                 //recordName.getText().toString(),latestRecFile.toString(),duration,time,precentage;
                 voice_record.set_recordName(recordName.getText().toString());
-                voice_record.set_path(latestRecFile.toString());
+                voice_record.set_path(lastestFile.toString());
                 voice_record.set_length(duration);
                 voice_record.set_time(time);
                 voice_record.set_prediction(precentage);
-
-                long recid = utils.saveRecord(voice_record);
-                db.UpdateGson(voice_record.get__userId(),recid);
+                makePopupFeedback();
                 dialog.dismiss();
             }
         });
 
         dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                latestRecFile.delete();
+                lastestFile.delete();
                 dialog.dismiss();
             }
         });
@@ -161,6 +226,8 @@ public class RecordingActivity extends AppCompatActivity {
         dialog.create();
         dialog.show();
     }
+
+
     void makePopupList(){
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(RecordingActivity.this);
         builderSingle.setIcon(R.drawable.baseline_person_add_black_18dp);
@@ -179,45 +246,112 @@ public class RecordingActivity extends AppCompatActivity {
             usertemp.set_status(mCursor.getInt(mCursor.getColumnIndex("status")));
             usertemp.set_joinDate(mCursor.getString(mCursor.getColumnIndex("join_date")));
             users.add(usertemp);
-            arrayAdapter.add(usertemp.get_firstName()+ " " + usertemp.get_lastName());
+            arrayAdapter.add(usertemp.get_firstName());
         }
 
-
-        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
 
         builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String strName = arrayAdapter.getItem(which);
                 AlertDialog.Builder builderInner = new AlertDialog.Builder(RecordingActivity.this);
-                builderInner.setMessage(strName);
                 builderInner.setTitle("Your Selected Item is");
+                builderInner.setMessage(strName);
                 builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog,int which) {
+                        makePopup();
+                        dialog.dismiss();
+                    }
+                });
+
+                builderInner.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
                 String arr[] = strName.split(" ", 2);
 
-                String firstWord = arr[0];   //the
-                String theRest = arr[1];     //quick brown fox
+
                 for(int i = 0 ;i <users.size();i++){
-                    if(firstWord.equals(users.get(i).get_firstName()) && theRest.equals(users.get(i).get_lastName())){
+
+                    String name = users.get(i).get_firstName();
+                    if(strName.equals(name)){
                         voice_record.set__userId(users.get(i).get_userId());
+                        break;
                     }
                 }
-
+                builderInner.create();
                 builderInner.show();
-                makePopup();
             }
         });
+
         builderSingle.show();
+    }
+
+    void makePopupFeedback(){
+        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+        final View myDialogView = inflater.inflate(R.layout.rename_feedback_dialogue, null);
+        final String time = Utils.getTimeSave();
+        final String defaultName = "Default name - ";
+        //Get Audio duration time
+        final int duration = utils.getDuration(lastestFile);
+
+        like = myDialogView.findViewById(R.id.like);
+        dislike = myDialogView.findViewById((R.id.dislike));
+
+        //Build the dialog
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(
+                RecordingActivity.this,
+                R.style.MyDialogTheme
+        );
+        dialog.setTitle("Prediction feedback");
+        dialog.setView(myDialogView);
+        like.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                like.setBackgroundResource(R.drawable.event_page_background3);
+                like.setPressed(true);
+                return true;
+            }
+        });
+        dislike.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                dislike.setBackgroundResource(R.drawable.event_page_background3);
+                dislike.setPressed(true);
+                return true;
+            }
+        });
+        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                if(dislike.isPressed())
+                    voice_record.setPrediction_feedback(0);
+                else if(like.isPressed())
+                    voice_record.setPrediction_feedback(1);
+                //latestRecFile.renameTo()
+                //recordName.getText().toString(),latestRecFile.toString(),duration,time,precentage;
+                long recid = utils.saveRecord(voice_record);
+                db.UpdateGson(voice_record.get__userId(),recid);
+                dialog.dismiss();
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_OK,returnIntent);
+                finish();
+            }
+        });
+
+        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                long recid = utils.saveRecord(voice_record);
+                db.UpdateGson(voice_record.get__userId(),recid);
+                lastestFile.delete();
+                dialog.dismiss();
+            }
+        });
+        //   dialog.setNegativeButton("Cancel", null);
+        dialog.create();
+        dialog.show();
     }
 
 
@@ -251,29 +385,51 @@ public class RecordingActivity extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.btnRecord: {
                     if (recState == NOT_RECORDING_NOW) {
-                        recState = RECORDING_NOW;
 
-                        //   titleText.setVisibility(View.INVISIBLE);
-                        //   titleText.setText("Press the MIC to stop and see results");
+                        if(db.getUserCount()==0){
+                            Toast.makeText(RecordingActivity.this, "No users detected! create a user first.",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            recState = RECORDING_NOW;
+                            general = v;
 
-                        chronometer.setVisibility(View.VISIBLE);
-                        startChronometer(v);
-                        enableButtons(true);
+                            //   titleText.setVisibility(View.INVISIBLE);
+                            //   titleText.setText("Press the MIC to stop and see results");
 
-                        v.setBackgroundResource(R.drawable.icons8_pause_button_96);
+                            chronometer.setVisibility(View.VISIBLE);
+                            startChronometer(v);
+                            enableButtons(true);
+
+                            v.setBackgroundResource(R.drawable.ic_microphone_live);
+
+                            Time time = new Time();
+                            time.setToNow();
+                            audioFilePath = time.format("%Y%m%d%H%M%S");
+                            setupRecorder();
+                            recorder.startRecording();
+                            resultsText.setText("Recording...");
+                            resultsText.setVisibility(View.VISIBLE);
+
+
+                            //////////////////////////////////recordWavMaster = new RecordWavMaster();
+                            ////////////////////////////////int sessionId = recordWavMaster.getSession();
+
+                            //visualizerManager = new NierVisualizerManager();
+
+                            //circleVisual.setRawAudioBytes(getBytes());
 
 
 
+                            //visualizerManager = getInstanceInit();
+                            //////////////////////////////////recordWavMaster.startRecording();
+                            //visualizerManager.start(surface, new IRenderer[]{new ColumnarType1Renderer()});
 
-                        resultsText.setText("Recording...");
-                        resultsText.setVisibility(View.VISIBLE);
-                        recordWavMaster = new RecordWavMaster();
-                        int sessionId = recordWavMaster.getSession();
 
-                        recordWavMaster.startRecording();
-                        lineBarVisualizer.setPlayer(sessionId);
-                        //mVisualizer.setAudioSessionId(0);
-                        //mVisualizer.setDrawLine(true);
+                            //mVisualizer.setAudioSessionId(0);
+                            //mVisualizer.setDrawLine(true);
+                        }
+
                         break;
                     } else {          //Now recording, needs to stop
                         recState = NOT_RECORDING_NOW;
@@ -282,16 +438,32 @@ public class RecordingActivity extends AppCompatActivity {
                         pauseChronometer(v);
 
                         titleText.setText("Record for at least 10 second for prediction");
-                        v.setBackgroundResource(R.drawable.icons8_record_96);
+                        v.setBackgroundResource(R.drawable.ic_microphone);
+                        try {
+                            recorder.stopRecording();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        v.post(new Runnable() {
+                            @Override public void run() {
+                                animateVoice(0);
+                            }
+                        });
+                        ////////////////////////////////////////////recordWavMaster.stopRecording();
+                        //circleVisual.hide();
 
-                        recordWavMaster.stopRecording();
-                        latestRecFile = recordWavMaster.latestRecFile;
-                        recordWavMaster.releaseRecord();
-                        if(utils.getDuration(latestRecFile)<TEN_SECONDS)
+
+                        //visualizerManager.stop();
+                        //visualizerManager.release();
+
+
+                       //////////////////////////////latestRecFile = recordWavMaster.latestRecFile;
+                        //////////////////////////////recordWavMaster.releaseRecord();
+                        if(utils.getDuration(lastestFile)<TEN_SECONDS)
                         {
                             Toast.makeText(RecordingActivity.this, "Record was too short, no prediction was made",
                                     Toast.LENGTH_LONG).show();
-                            latestRecFile.delete();
+                            lastestFile.delete();
                             returnBeginning();
                             return;
                         }
@@ -301,21 +473,23 @@ public class RecordingActivity extends AppCompatActivity {
                         btnDelete.setVisibility(View.INVISIBLE);
 
                         VoiceAnalysisAsyncTask runner = new VoiceAnalysisAsyncTask();
-                        runner.execute(latestRecFile);
+                        runner.execute(lastestFile);
 
                         break;
                     }
                 }
                 case R.id.btnDelete:{
-                    latestRecFile.delete();
+                    lastestFile.delete();
                     returnBeginning();
                     break;
                 }
                 case R.id.btnSave:{
                     makePopupList();
+
+
                     //opens the UI name input and saves the record to the Database
-                    findViewById(R.id.txtTitle).setVisibility(View.INVISIBLE);
-                    returnBeginning();
+                    //findViewById(R.id.txtTitle).setVisibility(View.INVISIBLE);
+                    //returnBeginning();
                     break;
                 }
             }
@@ -420,4 +594,39 @@ public class RecordingActivity extends AppCompatActivity {
         }
     }
 
+
+
+
+
+
+
+
+
+
+    private void setupRecorder() {
+        recorder = OmRecorder.wav(
+                new PullTransport.Default(mic(), new PullTransport.OnAudioChunkPulledListener() {
+                    @Override public void onAudioChunkPulled(AudioChunk audioChunk) {
+                        animateVoice((float) (audioChunk.maxAmplitude() / 200.0));
+                    }
+                }), file());
+    }
+    private void animateVoice(final float maxPeak) {
+        recordButton.animate().scaleX(1 + maxPeak).scaleY(1 + maxPeak).setDuration(10).start();
+    }
+    private PullableSource mic() {
+        return new PullableSource.Default(
+                new AudioRecordConfig.Default(
+                        MediaRecorder.AudioSource.MIC, AudioFormat.ENCODING_PCM_16BIT,
+                        AudioFormat.CHANNEL_IN_MONO, 44100
+                )
+        );
+    }
+    @NonNull
+    private File file() {
+        //String x = Environment.getExternalStorageDirectory() + File.separator + "AudioRecord";
+        //String x = Environment.getExternalStorageDirectory();
+        lastestFile = new File(RECORD_WAV_PATH, audioFilePath + ".wav");
+        return lastestFile;
+}
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4a939c"
+    android:background="@drawable/capture"
     tools:context=".UserPageActivity">
 
 
@@ -63,19 +63,18 @@
                             android:layout_gravity="center"
                             android:orientation="horizontal">
                             <ImageView
-                                android:id="@+id/event_pic"
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
-                                android:background="@drawable/man_icon"
-                                android:paddingBottom="20dp"
-                                android:paddingTop="10dp" />
+
+                                android:id="@+id/user_pic"
+                                android:layout_width="140dp"
+                                android:layout_height="140dp"
+                                android:background="@drawable/ic_circle_icon_man"
+                                android:paddingBottom="10dp"
+                                android:paddingTop="1dp" />
 
 
                         </LinearLayout>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp" />
+
 
                         <TextView
                             android:id="@+id/name_and_last_name"
@@ -89,14 +88,9 @@
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="20dp" />
+                            android:layout_height="10dp" />
 
-                        <View
-                            android:layout_width="240dp"
-                            android:layout_height="1dp"
-                            android:layout_gravity="center"
-                            android:background="#303030"
-                            android:paddingTop="2dp" />
+
 
 
                         <LinearLayout
@@ -108,7 +102,7 @@
                                 android:id="@+id/event_date"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:paddingBottom="3dp"
+                                android:paddingBottom="10dp"
                                 android:paddingRight="10dp"
                                 android:text="Phone:"
                                 android:textColor="@android:color/black"
@@ -118,35 +112,78 @@
                                 android:id="@+id/phone_num_user"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:paddingBottom="3dp"
+                                android:paddingBottom="10dp"
                                 android:text="0524217111"
                                 android:textColor="@android:color/black"
                                 android:textSize="20sp" />
 
 
                         </LinearLayout>
-                        <TextView
-                            android:id="@+id/user_email"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:paddingBottom="10dp"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:paddingTop="10dp"
-                            android:text="Status: depressed"
-                            android:textColor="@android:color/black"
-                            android:textSize="15sp" />
+
                         <Button
                             android:id="@+id/change"
                             android:layout_width="wrap_content"
-                            android:layout_height="35dp"
+                            android:layout_height="33dp"
                             android:layout_gravity="center"
                             android:background="@drawable/curve_edges_button_login"
                             android:text="Edit"
                             android:textAllCaps="false"
                             android:textColor="@android:color/white" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp" />
+                        <View
+                            android:layout_width="240dp"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center"
+                            android:background="#303030"
+                            android:paddingTop="2dp" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp" />
+                        <LinearLayout
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical"
+                            android:background="@drawable/event_page_background2">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:paddingBottom="10dp"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:paddingTop="10dp"
+                                android:text="Status:"
+                                android:textColor="@android:color/black"
+                                android:textSize="15sp" />
+                            <ImageView
+
+                                android:id="@+id/status_icon"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/ic_confused"
+                                android:paddingBottom="10dp"
+                                android:paddingTop="1dp" />
+                            <TextView
+                                android:id="@+id/status_user"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:paddingBottom="10dp"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:paddingTop="10dp"
+                                android:text="depressed"
+                                android:textColor="@android:color/black"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+
 
                         <View
                             android:layout_width="match_parent"

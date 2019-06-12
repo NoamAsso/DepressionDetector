@@ -40,7 +40,7 @@ public class SplashActivity extends AppCompatActivity {
         utils = new Utils(this);
         context = this;
         Activity thisActivity = this;
-
+        RandomForestClassifier lgbm = new RandomForestClassifier();
         TextView appName = findViewById(R.id.appName);
         Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Highest.ttf");
         appName.setTypeface(custom_font);
@@ -74,7 +74,8 @@ public class SplashActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.RECORD_AUDIO,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE,
                             Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.MODIFY_AUDIO_SETTINGS},
+                            Manifest.permission.MODIFY_AUDIO_SETTINGS,
+                            Manifest.permission.READ_CONTACTS},
                     PERMISSIONS_REQUEST_RECORD_AND_STORAGE);
               /*  ActivityCompat.requestPermissions(thisActivity,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},

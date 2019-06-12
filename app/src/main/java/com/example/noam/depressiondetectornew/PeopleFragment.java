@@ -1,15 +1,19 @@
 package com.example.noam.depressiondetectornew;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.daimajia.swipe.util.Attributes;
@@ -34,7 +38,6 @@ public class PeopleFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_people, container, false);
 
 
-
         db = Utils.getDB();
         utils = new Utils(getActivity());
         Cursor mCursor = db.getAllRowsUser();
@@ -43,6 +46,7 @@ public class PeopleFragment extends Fragment {
             // The Cursor is now set to the right position
             UserProfile usertemp = new UserProfile();
             usertemp.set_userId(mCursor.getInt(mCursor.getColumnIndex("_id")));
+            usertemp.set_gender(mCursor.getString(mCursor.getColumnIndex("gender")));
             usertemp.set_firstName(mCursor.getString(mCursor.getColumnIndex("first_name")));
             usertemp.set_lastName(mCursor.getString(mCursor.getColumnIndex("last_name")));
             usertemp.set_phoneNumber(mCursor.getString(mCursor.getColumnIndex("phone_number")));
@@ -69,6 +73,17 @@ public class PeopleFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
             }
+        });
+
+        Button fab2 = (Button) v.findViewById(R.id.fab2);
+        fab2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), RegisterActivity.class);
+                getActivity().startActivityForResult(i, 2);
+            }
+
         });
         return v;
     }

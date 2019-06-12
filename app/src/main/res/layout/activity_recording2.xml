@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/capture"
     tools:context=".RecordingActivity">
 
 
@@ -33,21 +34,7 @@
             android:id="@+id/btnRecord"
             android:layout_width="120dip"
             android:layout_height="120dip"
-            android:background="@drawable/microphone"
-            />
-
-        <com.chibde.visualizer.LineBarVisualizer
-            android:id="@+id/visualizer"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"/>
-
-        <Chronometer android:layout_marginTop = "10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/chronometer"
-            android:layout_gravity="center"
-            android:text="00:00"
-            android:textSize="25sp"
+            android:background="@drawable/ic_microphone"
             />
         <LinearLayout
             android:layout_width="wrap_content"
@@ -56,7 +43,14 @@
             android:orientation="vertical">
 
 
-
+            <Chronometer android:layout_marginTop = "10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/chronometer"
+                android:layout_gravity="center"
+                android:text="00:00"
+                android:textSize="25sp"
+                />
 
             <TextView android:layout_marginTop = "10dp"
                 android:layout_width="wrap_content"
@@ -118,7 +112,7 @@
                 android:layout_marginRight="@dimen/spacing_xlarge"
                 android:layout_marginLeft="115dp"
                 android:background="@drawable/curve_edges_button_save"
-                android:text="Cancle"
+                android:text="Cancel"
                 android:textColor="@android:color/white" />
 
 

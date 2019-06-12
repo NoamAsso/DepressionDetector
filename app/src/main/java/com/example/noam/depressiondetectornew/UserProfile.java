@@ -15,8 +15,18 @@ public class UserProfile {
     private int _status;
     private ArrayList<Long> recordings;
     private String _joinDate;//check how to save date
-    private String _image;//check how to save image
+    private String _gender;//check how to save image
     private static long currentUserId;
+    private boolean isClicked;
+
+
+    public boolean isClicked() {
+        return isClicked;
+    }
+
+    public void setClicked(boolean clicked) {
+        isClicked = clicked;
+    }
 
     public static long getcurrentUserId() {
         return currentUserId;
@@ -76,12 +86,12 @@ public class UserProfile {
     public String get_joinDate() {
         return _joinDate;
     }
-    public String get_image() {
-        return _image;
+    public String get_gender() {
+        return _gender;
     }
 
-    public void set_image(String _image) {
-        this._image = _image;
+    public void set_gender(String _image) {
+        this._gender = _image;
     }
     public void set_phoneNumber(String _phoneNumber) {
         this._phoneNumber = _phoneNumber;
@@ -100,6 +110,8 @@ public class UserProfile {
     }
 
     public ArrayList<Long> getRecordings() {
+        if(recordings == null)
+            recordings = new ArrayList<Long>();
         return recordings;
     }
 

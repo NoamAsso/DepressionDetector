@@ -81,8 +81,15 @@ public class Utils {
             j++;
         }
         //most_important = [439,440,54,21,39,933,775,224,420,390,49,47,391]
-        double most_important[] = {features[439],features[440],features[54],features[21],features[39],features[933],features[775]
-                ,features[224],features[420],features[390],features[49],features[47],features[391]};
+
+        //most_important = [54,21,39,933,775,224,420,390,49,47,391,383,72]
+        String x= "0,984,477,470,461,480,458,5,24,965,504,10,2,501,500,509,14,7,502,508,511,900,512,510,513,956,17,15,503,505,18,6,19,16,843,9,938,786,8,881,11,496,767,495,520,805,862,292,497,824,406,1,3,919,976,710,789,311,766,387,844,349,672,880,888,368,787,808,691,434,901,899,26,903,576,596,842,539,558,748,330,653,884,785,770,615,519,595,273,425,788,729,634,823,922,846,235,941,890,577,882,861,929,796,804,795,893,870,444,926,854,930,908,102,937,927,775,931,83,790";
+        String[] parts = x.split(",");
+        double most_important[] = new double[parts.length];
+        for(int i = 0; i<parts.length;i++)
+            most_important[i] = features[Integer.valueOf(parts[i])];
+       ////////// double most_important[] = {features[54],features[21],features[39],features[933],features[775],features[224],features[420]
+             ////////////////   ,features[390],features[49],features[47],features[391],features[383],features[72]};
         //final int numOfDepTrees = pred1.score(most_important);
         //final int numOfNotDepTrees = 200-numOfDepTrees;
         //final int depression_thr = 139;
@@ -145,14 +152,14 @@ public class Utils {
 
     public static String getTime() {
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy 'at' h:mm a");
         Date date = new Date();
         return dateFormat.format(date);
     }
     public static String getTimeSave() {
 
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("EEEE, MMMM d, yyyy 'at' h:mm a");
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy 'at' h:mm a");
         String date = format.format(calendar.getTime());
         return date;
     }

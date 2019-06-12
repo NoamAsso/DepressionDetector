@@ -5,42 +5,25 @@
     android:id="@+id/swipe"
     app:leftEdgeSwipeOffset="0dp"
     app:rightEdgeSwipeOffset="0dp"
+
     android:layout_height="wrap_content">
 
 
     <LinearLayout
         android:id="@+id/bottom_wraper"
-        android:layout_width="240dp"
+        android:layout_width="100dp"
         android:weightSum="3"
         android:orientation="horizontal"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/Edit"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#0076a5"
-            android:gravity="center"
-            android:text="Edit"
-            android:textColor="#ffffff"/>
 
-        <TextView
-            android:id="@+id/Share"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#2cbb00"
-            android:gravity="center"
-            android:text="Share"
-            android:textColor="#ffffff" />
 
         <TextView
             android:id="@+id/Delete"
-            android:layout_width="1dp"
+            android:layout_width="90dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#ff0000"
+            android:background="@drawable/delete_backgoundd"
             android:gravity="center"
             android:text="Delete"
             android:textColor="#ffffff"/>
@@ -66,9 +49,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="8dp"
+        android:paddingBottom="4dp"
         android:paddingRight="8dp"
-        android:paddingLeft="8dp">
+        android:paddingLeft="8dp"
+        android:paddingTop="4dp">
 
 
         <LinearLayout
@@ -83,13 +67,16 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/image_rec"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="3dp"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="7dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:src="@drawable/record_512" />
+                    android:src="@drawable/ic_record" />
 
 
 
@@ -155,6 +142,14 @@
                             android:paddingBottom="2dp"
                             android:textColor="@android:color/black"
                             android:textSize="15sp"/>
+                        <ImageView
+                            android:id="@+id/image_feedbackk"
+                            android:layout_width="30dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:paddingBottom="5dp"
+                            android:paddingTop="5dp"
+                            android:src="@drawable/ic_dislike" />
                     </LinearLayout>
 
 
@@ -168,10 +163,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="bottom"
-                app:next_icon_color="#00ffffff"
-                app:previous_icon_color="#00ffffff"
-                app:random_icon_color="#00ffffff"
-                app:repeat_icon_color="#00ffffff"
+                app:next_icon_color="#5bffffff"
+                app:previous_icon_color="#5bffffff"
+                app:random_icon_color="#5bffffff"
+                app:repeat_icon_color="#5bffffff"
                 app:play_icon_color= "#FF212373"
                 app:pause_icon_color="@color/colorPrimary"
                 app:seek_bar_color= "#3f43c9"

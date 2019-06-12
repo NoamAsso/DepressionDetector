@@ -5,8 +5,14 @@ import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.media.audiofx.AcousticEchoCanceler;
+import android.media.audiofx.AudioEffect;
+import android.media.audiofx.AutomaticGainControl;
+import android.media.audiofx.LoudnessEnhancer;
+import android.media.audiofx.NoiseSuppressor;
 import android.media.audiofx.Visualizer;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.text.format.Time;
 import android.util.Log;
 
@@ -22,13 +28,17 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import me.bogerchan.niervisualizer.NierVisualizerManager;
+
 public class RecordWavMaster {
     private static final int samplingRates[] = {8000, 6000, 5000, 4000, 3000,2000,1000,500};
     public static int SAMPLE_RATE = 16000;
     private AudioRecord mRecorder;
+    public static byte[] bytes;
     private File mRecording;
     private short[] mBuffer;
     private String audioFilePath;
+    public static NierVisualizerManager visualizerManager;
     private boolean mIsRecording = false;
   //  private String RECORD_WAV_PATH = MainActivity.getFilesDirPath() + File.separator + "AudioRecord";;//Environment.getExternalStorageDirectory() + File.separator + "AudioRecord";
     public static File latestRecFile;
@@ -85,6 +95,66 @@ public class RecordWavMaster {
         mRecorder = null;
     }
 
+    /*
+    public static byte[] getBytes(){
+        byte b[] = new byte[];
+        return mBuffer;
+    }
+    */
+
+    public static NierVisualizerManager getInstanceInit(){
+
+
+        visualizerManager = new NierVisualizerManager();
+
+        visualizerManager.init(new NierVisualizerManager.NVDataSource() {
+
+            // skip some code...
+
+            /**
+             * Tell the manager about the data sampling interval.
+             * @return the data sampling interval which is millisecond of unit.
+             */
+            @Override
+            public long getDataSamplingInterval() {
+                return 0L;
+            }
+
+            /**
+             * Tell the manager about the data length of fft data or wave data.
+             * @return the data length of fft data or wave data.
+             */
+            @Override
+            public int getDataLength() {
+                return bytes.length;
+            }
+
+            /**
+             * The manager will fetch fft data by it.
+             * @return the fft data, null will be ignored by the manager.
+             */
+            @Nullable
+            @Override
+            public byte[] fetchFftData() {
+                return null;
+            }
+
+            /**
+             * The manager will fetch wave data by it.
+             * @return the wave data, null will be ignored by the manager.
+             */
+            @Nullable
+            @Override
+            public byte[] fetchWaveData() {
+                // skip some code...
+                return bytes;
+            }
+        });
+
+        return visualizerManager;
+
+    }
+
     /* Initializing AudioRecording MIC */
     private void initRecorder() {
         SAMPLE_RATE = getValidSampleRates();
@@ -93,21 +163,84 @@ public class RecordWavMaster {
         mBuffer = new short[bufferSize];
         mRecorder = new AudioRecord(MediaRecorder.AudioSource.DEFAULT, SAMPLE_RATE, AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT, bufferSize);
+        bytes = new byte[bufferSize * 2];
+        //AudioEffect.Descriptor[] d = NoiseSuppressor.queryEffects();
+        if(AutomaticGainControl.isAvailable())
+        {
+            AutomaticGainControl agc =AutomaticGainControl.create(mRecorder.getAudioSessionId());
+            //agc.g
+            Log.d("AudioRecord", "AGC is " + (agc.getEnabled()?"enabled":"disabled"));
+            agc.setEnabled(true);
+            Log.d("AudioRecord", "AGC is " + (agc.getEnabled()?"enabled":"disabled" +" after trying to enable"));
+        }else
+        {
+            Log.d("AudioRecord", "AGC is unavailable");
+        }
+
+        if(NoiseSuppressor.isAvailable()){
+
+            NoiseSuppressor ns = NoiseSuppressor.create(mRecorder.getAudioSessionId());
+            Log.d("AudioRecord", "NS is " + (ns.getEnabled()?"enabled":"disabled"));
+            ns.setEnabled(true);
+            Log.d("AudioRecord", "NS is " + (ns.getEnabled()?"enabled":"disabled" +" after trying to disable"));
+        }else
+        {
+            Log.d("AudioRecord", "NS is unavailable");
+        }
+        if(AcousticEchoCanceler.isAvailable()){
+
+            AcousticEchoCanceler aec = AcousticEchoCanceler.create(mRecorder.getAudioSessionId());
+            Log.d("AudioRecord", "AEC is " + (aec.getEnabled()?"enabled":"disabled"));
+            aec.setEnabled(true);
+            Log.d("AudioRecord", "AEC is " + (aec.getEnabled()?"enabled":"disabled" +" after trying to disable"));
+
+        }else
+        {
+            Log.d("AudioRecord", "aec is unavailable");
+        }
+        if(AcousticEchoCanceler.isAvailable()){
+
+            AcousticEchoCanceler aec = AcousticEchoCanceler.create(mRecorder.getAudioSessionId());
+            Log.d("AudioRecord", "AEC is " + (aec.getEnabled()?"enabled":"disabled"));
+            aec.setEnabled(true);
+            Log.d("AudioRecord", "AEC is " + (aec.getEnabled()?"enabled":"disabled" +" after trying to disable"));
+
+        }else
+        {
+            Log.d("AudioRecord", "aec is unavailable");
+        }
+        LoudnessEnhancer x = new LoudnessEnhancer(mRecorder.getAudioSessionId());
+        x.setTargetGain(0);
+
         new File(RECORD_WAV_PATH).mkdir();
     }
+    private byte[] short2byte(short[] sData) {
+        int shortArrsize = sData.length;
+        byte[] bytes = new byte[shortArrsize * 2];
+        for (int i = 0; i < shortArrsize; i++) {
+            bytes[i * 2] = (byte) (sData[i] & 0x00FF);
+            bytes[(i * 2) + 1] = (byte) (sData[i] >> 8);
+            sData[i] = 0;
+        }
+        return bytes;
 
+    }
     /* Writing RAW file */
     private void startBufferedWrite(final File file) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 DataOutputStream output = null;
+
                 try {
                     output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+
                     while (mIsRecording) {
                         double sum = 0;
                         int readSize = mRecorder.read(mBuffer, 0, mBuffer.length);
                         for (int i = 0; i < readSize; i++) {
+                            //bytes[i * 2] = (byte) (mBuffer[i] & 0x00FF);
+                            //bytes[(i * 2) + 1] = (byte) (mBuffer[i] >> 8);
                             output.writeShort(mBuffer[i]);
                             sum += mBuffer[i] * mBuffer[i];
                         }
@@ -191,6 +324,7 @@ public class RecordWavMaster {
         time.setToNow();
         audioFilePath = time.format("%Y%m%d%H%M%S");
         return new File(RECORD_WAV_PATH, time.format("%Y%m%d%H%M%S") + "." + suffix);
+
     }
 
     private void writeInt(final DataOutputStream output, final int value) throws IOException {

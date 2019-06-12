@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,9 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
     private ArrayList<RecordingProfile> studentList;
     MyDBmanager db;
     Utils utils;
+    ViewGroup parent1;
+    SimpleViewHolderRec prev;
+    RecordingProfile itemPrev;
     boolean flagOpen = false;
     public SwipeRecyclerViewAdapterRec(Context context, ArrayList<RecordingProfile> objects) {
         this.mContext = context;
@@ -31,6 +36,7 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
 
     @Override
     public SimpleViewHolderRec onCreateViewHolder(ViewGroup parent, int viewType) {
+        parent1 = parent;
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.swipe_layout_rec, parent, false);
         return new SimpleViewHolderRec(view);
     }
@@ -40,10 +46,14 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
         final RecordingProfile item = studentList.get(position);
 
         viewHolder.Name.setText(item.get_recordName());
-        viewHolder.Status.setText("Status: " + Double.toString(item.get_prediction()));
+        viewHolder.Status.setText("Status: " + String.format("%.2f", item.get_prediction()));
         viewHolder.ID.setText("Rec ID: " + item.get_recId());
+        if(item.getPrediction_feedback() == 0)
+            viewHolder.feedbackImage.setImageResource(R.drawable.ic_dislike);
+        else
+            viewHolder.feedbackImage.setImageResource(R.drawable.ic_like);
         viewHolder.Date.setText(item.get_time());
-        viewHolder.UserBelong.setText("User ID: " + item.get__userId());
+        viewHolder.UserBelong.setText("Feedback: " + item.get__userId());
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
 
         viewHolder.jcplayerView.setVisibility(View.GONE);
@@ -91,28 +101,42 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
         viewHolder.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, " Click : " + item.get__userId() + " \n" + item.get_recordName(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, " Click : " + item.get__userId() + " \n" + item.get_recordName(), Toast.LENGTH_SHORT).show();
+
+
+
                 if(item.isClicked()){
 
                     viewHolder.jcplayerView.setVisibility(View.GONE);
-
+                    viewHolder.recImage.setImageResource(R.drawable.ic_record);
                     viewHolder.jcplayerView.pause();
                     viewHolder.jcplayerView.kill();
+                    prev = viewHolder;
                     item.setClicked(false);
                     flagOpen = false;
                 }
                 else{
-                    if(!flagOpen){
-                        viewHolder.jcplayerView.setVisibility(View.VISIBLE);
-                        ArrayList<JcAudio> jcAudios = new ArrayList<>();
-                        JcAudio temp = JcAudio.createFromFilePath("Asset audio",item.get_path());
-                        jcAudios.add(temp);
-                        //viewHolder.jcplayerView.playAudio(temp);
-                        viewHolder.jcplayerView.initAnonPlaylist(jcAudios);
-                        item.setClicked(true);
-                        flagOpen = true;
+                    if(prev == null){
+                        prev = viewHolder;
+                        itemPrev = item;
                     }
-
+                    else{
+                        prev.jcplayerView.setVisibility(View.GONE);
+                        prev.recImage.setImageResource(R.drawable.ic_record);
+                        prev.jcplayerView.pause();
+                        prev.jcplayerView.kill();
+                        itemPrev.setClicked(false);
+                        prev = viewHolder;
+                        itemPrev = item;
+                    }
+                    viewHolder.jcplayerView.setVisibility(View.VISIBLE);
+                    viewHolder.recImage.setImageResource(R.drawable.ic_record_pressed);
+                    ArrayList<JcAudio> jcAudios = new ArrayList<>();
+                    JcAudio temp = JcAudio.createFromFilePath("Asset audio",item.get_path());
+                    jcAudios.add(temp);
+                    viewHolder.jcplayerView.initAnonPlaylist(jcAudios);
+                    item.setClicked(true);
+                    flagOpen = true;
                 }
 
 
@@ -127,27 +151,13 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
             }
         });
 
-        viewHolder.Share.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Toast.makeText(view.getContext(), "Clicked on Share " + viewHolder.Name.getText().toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        viewHolder.Edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Toast.makeText(view.getContext(), "Clicked on Edit  " + viewHolder.Name.getText().toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
 
         viewHolder.Delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mItemManger.removeShownLayouts(viewHolder.swipeLayout);
                 db = Utils.getDB();
+                db.UpdateDelGson(item.get__userId(),item.get_recId());
                 db.removeRecWithId(studentList.get(position).get_recId());
                 studentList.remove(position);
                 notifyItemRemoved(position);
@@ -180,6 +190,8 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
         public TextView ID;
         public TextView UserBelong;
         public TextView Delete;
+        public ImageView recImage;
+        public ImageView feedbackImage;
         public TextView Edit;
         public TextView Share;
         public JcPlayerView jcplayerView;
@@ -194,11 +206,9 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
             ID = (TextView) itemView.findViewById(R.id.id_and_more_rec);
             UserBelong = (TextView) itemView.findViewById(R.id.user_belong);
             jcplayerView = (JcPlayerView) itemView.findViewById(R.id.jcplayer);
-            //EmailId = (TextView) itemView.findViewById(R.id.EmailId);
-
+            recImage = (ImageView) itemView.findViewById(R.id.image_rec);
+            feedbackImage = (ImageView) itemView.findViewById(R.id.image_feedbackk);
             Delete = (TextView) itemView.findViewById(R.id.Delete);
-            Edit = (TextView) itemView.findViewById(R.id.Edit);
-            Share = (TextView) itemView.findViewById(R.id.Share);
             btnLocation = (ImageButton) itemView.findViewById(R.id.btnLocation);
         }
     }

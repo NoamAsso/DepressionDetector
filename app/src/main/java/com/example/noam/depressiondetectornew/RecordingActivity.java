@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 import com.gauravk.audiovisualizer.visualizer.BarVisualizer;
 import com.gauravk.audiovisualizer.visualizer.CircleLineVisualizer;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.io.File;
 import java.io.IOException;
@@ -106,7 +107,7 @@ public class RecordingActivity extends AppCompatActivity {
     Recorder recorder;
     ImageView recordButton;
     View general;
-
+    private AVLoadingIndicatorView avi;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,18 +143,19 @@ public class RecordingActivity extends AppCompatActivity {
         chronometer = findViewById(R.id.chronometer);
         chronometer.setFormat("%s");
         chronometer.setBase(SystemClock.elapsedRealtime());
-        chronometer.setVisibility(View.INVISIBLE);
+        chronometer.setVisibility(View.GONE);
+
         findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         recState = NOT_RECORDING_NOW;
         //mediaPlayer = new MediaPlayer();
         findViewById(R.id.btnSave).setVisibility(View.INVISIBLE);
         findViewById(R.id.btnDelete).setVisibility(View.INVISIBLE);
-
+        avi= (AVLoadingIndicatorView) findViewById(R.id.avi);
         startTime = System.currentTimeMillis();
         setFilesDirPath();
         setButtonHandlers();
         enableButtons(true);
-        findViewById(R.id.resultsText).setVisibility(View.INVISIBLE);
+        findViewById(R.id.resultsText).setVisibility(View.GONE);
         resultsText = findViewById(R.id.results);
         titleText = findViewById(R.id.txtTitle);
         // custom_font = Typeface.createFromAsset(getAssets(),  "fonts/EncodeSans-Bold.ttf");
@@ -164,7 +166,7 @@ public class RecordingActivity extends AppCompatActivity {
         btnSave.setOnClickListener(btnClick);
         btnDelete.setOnClickListener(btnClick);
 
-        resultsText.setVisibility(View.INVISIBLE);
+        resultsText.setVisibility(View.GONE);
 
         Log.d("STAM", "JUST TO CHECK");
     }
@@ -468,6 +470,7 @@ public class RecordingActivity extends AppCompatActivity {
                             return;
                         }
                         resultsText.setText("Calculating Prediction...");
+                        avi.show();
                         findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
                         btnSave.setVisibility(View.INVISIBLE);
                         btnDelete.setVisibility(View.INVISIBLE);
@@ -519,8 +522,8 @@ public class RecordingActivity extends AppCompatActivity {
     private void returnBeginning(){
         findViewById(R.id.btnSave).setVisibility(View.INVISIBLE);
         findViewById(R.id.btnDelete).setVisibility(View.INVISIBLE);
-        findViewById(R.id.resultsText).setVisibility(View.INVISIBLE);
-        findViewById(R.id.results).setVisibility(View.INVISIBLE);
+        findViewById(R.id.resultsText).setVisibility(View.GONE);
+        findViewById(R.id.results).setVisibility(View.GONE);
         findViewById(R.id.txtTitle).setVisibility(View.VISIBLE);
         enableButtons(true);
     }
@@ -559,6 +562,8 @@ public class RecordingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Double prediction) {
             DecimalFormat df2 = new DecimalFormat("#.##");
+            avi.hide();
+            avi.setVisibility(View.GONE);
             findViewById(R.id.loadingPanel).setVisibility(View.GONE);
             precentage = prediction;
             resultsText.setText(" " + df2.format(prediction) + "%");

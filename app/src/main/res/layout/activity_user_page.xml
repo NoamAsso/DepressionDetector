@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/wood_back"
+    android:background="@drawable/blur_back_back_back"
     tools:context=".UserPageActivity">
 
 
@@ -92,33 +92,7 @@
 
 
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center">
 
-                            <TextView
-                                android:id="@+id/event_date2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingBottom="10dp"
-
-                                android:text="Join date: "
-                                android:textColor="@android:color/black"
-                                android:textSize="11sp" />
-
-
-                            <TextView
-                                android:id="@+id/join_date"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingBottom="10dp"
-                                android:text="34"
-                                android:textColor="@android:color/black"
-                                android:textSize="11sp" />
-
-
-                        </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -183,10 +157,39 @@
                             android:background="@drawable/curve_edges_button_login"
                             android:text="Edit"
                             android:textAllCaps="false"
+                            android:textSize="13dp"
                             android:textColor="@android:color/white" />
+
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="20dp" />
+                            android:layout_height="10dp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center">
+
+                            <TextView
+                                android:id="@+id/event_date2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="10dp"
+
+                                android:text="Join date: "
+                                android:textColor="#474F5F"
+                                android:textSize="11sp" />
+
+
+                            <TextView
+                                android:id="@+id/join_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="10dp"
+                                android:text="34"
+                                android:textColor="#858585"
+                                android:textSize="11sp" />
+
+
+                        </LinearLayout>
                         <View
                             android:layout_width="240dp"
                             android:layout_height="1dp"

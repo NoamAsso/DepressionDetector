@@ -250,11 +250,7 @@ public class MainActivity extends AppCompatActivity
             importAudioFile();
 
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
         } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
             Intent i = new Intent(getApplicationContext(), AboutActivity.class);
             startActivity(i);
         } else if (id == R.id.nav_share) {
@@ -356,7 +352,8 @@ public class MainActivity extends AppCompatActivity
             case IMPORT_WAV:
                 if (resultCode == RESULT_OK || resultCode == 0){
                     flag = 3;
-                    importwav(data);
+                    if(data != null)
+                        importwav(data);
                 }
 
         }

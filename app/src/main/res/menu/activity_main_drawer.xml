@@ -9,17 +9,9 @@
             android:icon="@drawable/baseline_arrow_downward_black_18dp"
             android:title="Import new recording" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/baseline_settings_black_18dp"
-            android:title="Settings" />
-        <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/baseline_info_black_18dp"
             android:title="About" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/baseline_help_black_18dp"
-            android:title="Help" />
     </group>
 
     <item android:title="Communicate">

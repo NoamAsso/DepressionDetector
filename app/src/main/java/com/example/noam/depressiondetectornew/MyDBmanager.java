@@ -117,8 +117,8 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
                 MyDBManagerItem.COLUMN_NAME_TIME_ADDED,
                 MyDBManagerItem.COLUMN_NAME_PREDICTION
         };
-        Cursor c1= db.rawQuery("select * from " + TABLE_NAME_REC + " where " + _ID + "='" + position + "'" , null);
-        Cursor c = db.query(TABLE_NAME_REC, projection, null, null, null, null, null);
+        Cursor c= db.rawQuery("select * from " + TABLE_NAME_REC + " where " + _ID + "='" + position + "'" , null);
+        Cursor c1 = db.query(TABLE_NAME_REC, projection, null, null, null, null, null);
         int pos = (int)position;
         if (c.moveToFirst()) {
             RecordingProfile item = new RecordingProfile();

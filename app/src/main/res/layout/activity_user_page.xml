@@ -175,7 +175,7 @@
                                 android:paddingBottom="10dp"
 
                                 android:text="Join date: "
-                                android:textColor="#474F5F"
+                                android:textColor="#858585"
                                 android:textSize="11sp" />
 
 

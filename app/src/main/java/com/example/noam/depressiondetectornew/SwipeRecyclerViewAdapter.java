@@ -51,9 +51,11 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
         else{
             long idx = item.getRecordings().get(item.getRecordings().size()-1);
             RecordingProfile rec = db.getRecordingAt(idx);
-            viewHolder.Status.setText("Last prediction: " + String.format("%.2f", rec.get_prediction())+"%");
-            //viewHolder.ID.setText("UserId: " + item.get_userId() + " - Row Position " + position);
-            viewHolder.Date.setText("At: " + rec.get_time());
+            if(rec != null){
+                viewHolder.Status.setText("Last prediction: " + String.format("%.2f", rec.get_prediction())+"%");
+                //viewHolder.ID.setText("UserId: " + item.get_userId() + " - Row Position " + position);
+                viewHolder.Date.setText("At: " + rec.get_time());
+            }
         }
         if (item.get_gender() != null) {
             if(item.get_gender().matches("Female")){

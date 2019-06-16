@@ -44,7 +44,7 @@
                     android:id="@+id/search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/event_page_background3"/>
+                    android:background="@drawable/event_page_background2"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/recoding_list_layout"

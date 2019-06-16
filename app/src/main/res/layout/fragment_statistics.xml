@@ -51,13 +51,14 @@
                         android:id="@+id/piechart"
                         android:layout_width="match_parent"
                         android:layout_height="300dp" />
-                    <ImageView
-                        android:layout_width="70dp"
-                        android:layout_height="80dp"
-                        android:paddingTop="30dp"
-                        android:paddingBottom="30dp"
-                        android:src="@drawable/circle_dot"
-                        android:layout_gravity="center"/>
+                    <View
+                        android:layout_width="240dp"
+                        android:layout_height="1dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="30dp"
+                        android:background="#303030" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -90,18 +91,18 @@
                             android:src="@drawable/ic_dislike" />
 
                     </LinearLayout>
-                    <ImageView
-                        android:layout_width="70dp"
-                        android:layout_height="80dp"
-                        android:paddingTop="30dp"
-                        android:paddingBottom="30dp"
-                        android:src="@drawable/circle_dot"
-                        android:layout_gravity="center"/>
+                    <View
+                        android:layout_width="240dp"
+                        android:layout_height="1dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="30dp"
+                        android:background="#303030" />
 
                     <ImageView
                         android:layout_width="70dp"
                         android:layout_height="80dp"
-                        android:paddingTop="30dp"
+                        android:paddingTop="10dp"
                         android:src="@drawable/ic_line_graphic"
                         android:layout_gravity="center"/>
                     <TextView
@@ -122,12 +123,35 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="30dp" />
+                    <View
+                        android:layout_width="240dp"
+                        android:layout_height="1dp"
+                        android:layout_gravity="center"
+                        android:background="#303030"
+                        android:paddingTop="2dp" />
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="80dp"
                         android:paddingTop="30dp"
-                        android:src="@drawable/mp_android_chart"
+                        android:src="@drawable/ic_depression"
                         android:layout_gravity="center"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="1dp"
+                        android:text="DepDetector™ 2019"
+                        android:layout_gravity="center"
+                        android:singleLine="false"
+                        android:gravity="center"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="1dp"
+                        android:text="©All rights reserved"
+                        android:layout_gravity="center"
+                        android:textSize="8dp"
+                        android:singleLine="false"
+                        android:gravity="center"/>
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="30dp" />

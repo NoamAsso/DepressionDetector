@@ -39,7 +39,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/event_page_background2"
+                        android:background="@drawable/event_page_background55"
                         android:orientation="vertical">
 
 
@@ -92,6 +92,60 @@
 
 
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center">
+
+                            <TextView
+                                android:id="@+id/event_date2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="10dp"
+
+                                android:text="Join date: "
+                                android:textColor="@android:color/black"
+                                android:textSize="11sp" />
+
+
+                            <TextView
+                                android:id="@+id/join_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="10dp"
+                                android:text="34"
+                                android:textColor="@android:color/black"
+                                android:textSize="11sp" />
+
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center">
+
+                            <TextView
+                        android:id="@+id/event_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="10dp"
+                        android:paddingRight="10dp"
+                        android:text="Phone:"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+
+                        <TextView
+                            android:id="@+id/phone_num_user"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="10dp"
+                            android:text="0524217111"
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+
+
+                    </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -99,21 +153,22 @@
                             android:gravity="center">
 
                             <TextView
-                                android:id="@+id/event_date"
+                                android:id="@+id/event_date1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingBottom="10dp"
                                 android:paddingRight="10dp"
-                                android:text="Phone:"
+                                android:text="Age:"
                                 android:textColor="@android:color/black"
                                 android:textSize="20sp" />
 
+
                             <TextView
-                                android:id="@+id/phone_num_user"
+                                android:id="@+id/age"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingBottom="10dp"
-                                android:text="0524217111"
+                                android:text="34"
                                 android:textColor="@android:color/black"
                                 android:textSize="20sp" />
 

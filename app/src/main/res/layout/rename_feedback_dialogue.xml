@@ -16,6 +16,10 @@
             android:id="@+id/like"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:paddingTop="20dp"
+            android:paddingLeft="20dp"
+            android:paddingBottom="20dp"
+            android:paddingRight="20dp"
             android:scaleType="centerCrop"
             android:background="#00FFFFFF"
             android:src="@drawable/ic_like"/>
@@ -26,8 +30,12 @@
             android:id="@+id/dislike"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:paddingTop="20dp"
+            android:paddingLeft="20dp"
+            android:paddingBottom="20dp"
+            android:paddingRight="20dp"
             android:scaleType="fitCenter"
-            android:background="#00FFFFFF"
+            android:background="#00363636"
             android:src="@drawable/ic_dislike" />
     </LinearLayout>
 </LinearLayout>

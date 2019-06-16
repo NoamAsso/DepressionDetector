@@ -7,6 +7,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import com.example.noam.depressiondetectornew.OnDatabaseChangedListener;
 import com.google.gson.Gson;
@@ -17,6 +18,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
 import static android.provider.BaseColumns._ID;
 import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.COLUMN_NAME_JOIN_DATE;
 import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.COLUMN_NAME_TIME_ADDED;
@@ -115,9 +117,10 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
                 MyDBManagerItem.COLUMN_NAME_TIME_ADDED,
                 MyDBManagerItem.COLUMN_NAME_PREDICTION
         };
+        Cursor c1= db.rawQuery("select * from " + TABLE_NAME_REC + " where " + _ID + "='" + position + "'" , null);
         Cursor c = db.query(TABLE_NAME_REC, projection, null, null, null, null, null);
         int pos = (int)position;
-        if (c.moveToPosition(pos-1)) {
+        if (c.moveToFirst()) {
             RecordingProfile item = new RecordingProfile();
             item.set_recId(c.getInt(c.getColumnIndex(MyDBManagerItem._ID)));
             item.set__userId(c.getInt(c.getColumnIndex(MyDBManagerItem.USER_ID)));
@@ -322,6 +325,16 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
         Cursor cursor = db.rawQuery("select * from " + TABLE_NAME_REC + " where "
                 + MyDBManagerItem.COLUMN_NAME_RECORDING_NAME + " like " + "'%"+s+"%'",null);
         //db.rawQuery("UPDATE " +TABLE_NAME_USER + " SET " + MyDBManagerItem.COLUMN_NAME_FIRST_NAME + " = '" + user.get_firstName() + "'" + " WHERE " + _ID + " = " + id,null);
+        return cursor;
+    }
+
+    public Cursor getXrecs(int from, int to) {
+
+        String selectQuery = "SELECT  * FROM " + TABLE_NAME_REC
+                + " ORDER BY " + _ID + " DESC LIMIT " + from + ", " + to;
+        Log.d(TAG, "getXArticle SQL: " + selectQuery);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
         return cursor;
     }
 }

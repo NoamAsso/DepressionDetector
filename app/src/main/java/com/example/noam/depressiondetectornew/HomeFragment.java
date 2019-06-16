@@ -91,6 +91,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                         super.onScrollStateChanged(recyclerView, newState);
+
                         Log.e("RecyclerView", "onScrollStateChanged");
                     }
                     @Override

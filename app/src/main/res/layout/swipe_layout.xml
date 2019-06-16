@@ -149,8 +149,9 @@
                 android:layout_height="35dp"
                 android:layout_gravity="center"
                 android:background="@drawable/curve_edges_button_details"
-                android:text="Details"
+                android:text="    Details    "
                 android:textAllCaps="false"
+                android:textSize="13dp"
                 android:textColor="@android:color/white" />
             <View
                 android:layout_width="match_parent"

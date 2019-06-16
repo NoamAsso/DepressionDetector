@@ -91,7 +91,7 @@ public class GraphAdapter extends RecyclerSwipeAdapter<GraphAdapter.SimpleViewHo
                 yValues.add(new Entry((float) i, (float) mDataSet.get(i).get_prediction()));
 
             }
-            UserPageActivity.setit(Xnew);
+            MyMarkerView.setit(Xnew);
             ValueFormatter xAxisFormatter = new FooFormatter(reference_timestamp);
             XAxis xAxis = viewHolder.mChart.getXAxis();
             xAxis.setValueFormatter(xAxisFormatter);
@@ -113,7 +113,7 @@ public class GraphAdapter extends RecyclerSwipeAdapter<GraphAdapter.SimpleViewHo
             yAxis.setAxisMinimum(0f);
             viewHolder.mChart.setMarker(myMarkerView);
             viewHolder.mChart.setData(data);
-            viewHolder.mChart.animateY(2000);
+            //viewHolder.mChart.animateY(2000);
         } else{
             yAxis = viewHolder.mChart.getAxisLeft();
             yAxis.setAxisMaximum(100f);

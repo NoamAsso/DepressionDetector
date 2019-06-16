@@ -60,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
         lastnameWrapper = (EditText) findViewById(R.id.input_last_name);
         phoneWrapper = (EditText) findViewById(R.id.input_phone_number);
         registerButton = (Button) findViewById(R.id.btn_signup);
-        //contactsButton = (Button) findViewById(R.id.btn_signup_contacts);
+        contactsButton = (Button) findViewById(R.id.btn_signup_contacts);
 
         final Spinner spinnerGender = (Spinner) findViewById(R.id.spinner_gender);
         String[] items = new String[] {"Male", "Female"};

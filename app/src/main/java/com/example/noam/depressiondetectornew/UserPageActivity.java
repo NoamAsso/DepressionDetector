@@ -47,19 +47,19 @@ public class UserPageActivity extends AppCompatActivity {
     MyDBmanager db;
     Utils utils;
     TextView Name;
-    TextView LastName;
+    TextView Age;
     TextView Phone;
     TextView uId;
     TextView status;
     ImageView statusImage;
     Button editUserBtn;
-    TextView Date;
+    TextView Dateu;
     TextView ID;
     ImageView image;
     LineChart mChart;
     YAxis yAxis;
     Long reference_timestamp;
-    static long Xnew[];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +75,8 @@ public class UserPageActivity extends AppCompatActivity {
         editUserBtn = (Button) findViewById(R.id.change);
         mChart = (LineChart) findViewById(R.id.line_chart);
         uId = (TextView) findViewById(R.id.user_id);
-
+        Dateu = (TextView) findViewById(R.id.join_date);
+        Age = (TextView) findViewById(R.id.age);
         //mChart.setOnChartGestureListener(UserPageActivity.this);
         //mChart.setOnChartValueSelectedListener(UserPageActivity.this);
 
@@ -85,6 +86,9 @@ public class UserPageActivity extends AppCompatActivity {
         Name.setText(currentUser.get_firstName() + " " + currentUser.get_lastName());
         Phone.setText(currentUser.get_phoneNumber());
         uId.setText("Patient id: "+ String.format("%d", currentUser.get_userId()));
+        Dateu.setText(currentUser.get_joinDate());
+        Age.setText(currentUser.get_lastName());
+
 
         if(currentUser.get_gender()!=null){
             if(currentUser.get_gender().matches("Female")){
@@ -105,6 +109,7 @@ public class UserPageActivity extends AppCompatActivity {
             status.setText( "No predictions detected");
         }
         else {
+
             double pred = mDataSet.get(mDataSet.size() - 1).get_prediction();
             status.setText(String.format("%.4f", pred) +"%" +" depressed");
             if(pred > 66f)
@@ -154,7 +159,7 @@ public class UserPageActivity extends AppCompatActivity {
                 yValues.add(new Entry((float) i, (float) mDataSet.get(i).get_prediction()));
 
             }
-            setit(xXnew);
+            MyMarkerView.setit(xXnew);
             ValueFormatter xAxisFormatter = new FooFormatter(reference_timestamp);
             XAxis xAxis = mChart.getXAxis();
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -216,12 +221,7 @@ public class UserPageActivity extends AppCompatActivity {
         });
 
     }
-    public static void setit(long xnnew[]){
-        Xnew = xnnew;
-    }
-    public static long[] getit(){
-        return Xnew;
-    }
+
     @Override
     public void onResume(){
         super.onResume();
@@ -279,7 +279,13 @@ class MyMarkerView extends MarkerView {
     private DateFormat mDataFormat;
     private Date mDate;
     private MPPointF mOffset = new MPPointF();
-
+    static long Xnew[];
+    public static void setit(long xnnew[]){
+        Xnew = new long[300];
+    }
+    public static long[] getit(){
+        return Xnew;
+    }
     public MyMarkerView (Context context, int layoutResource, long referenceTimestamp) {
         super(context, layoutResource);
         // this markerview only displays a textview
@@ -293,7 +299,7 @@ class MyMarkerView extends MarkerView {
     // content (user-interface)
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        long currentTimestamp = UserPageActivity.getit()[(int)e.getX()] + referenceTimestamp;
+        long currentTimestamp = getit()[(int)e.getX()] + referenceTimestamp;
 
         tvContent.setText(String.format("%.02f", e.getY()) + "% \n" + getTimedate(currentTimestamp)); // set the entry-value as the display text
     }

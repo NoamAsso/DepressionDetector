@@ -82,9 +82,10 @@ public class StatisticsFragment extends Fragment {
             rectemp.set_time(mCursor1.getString(mCursor1.getColumnIndex("time_added")));
             rectemp.set_length(mCursor1.getInt(mCursor1.getColumnIndex("length")));
             rectemp.set_path(mCursor1.getString(mCursor1.getColumnIndex("file_path")));
+            rectemp.setPrediction_feedback(mCursor1.getInt(mCursor1.getColumnIndex("prediction_feedback")));
             mDataSet1.add(rectemp);
         }
-        int depressed = 0, middle = 0, happy = 0;
+        int depressed = 0, middle = 0, happy = 0, bad = 0, good = 0;
         for(int i=0; i < mDataSet1.size(); i++){
             if (mDataSet1.get(i).get_prediction()>66f)
                 depressed++;
@@ -92,6 +93,10 @@ public class StatisticsFragment extends Fragment {
                 happy++;
             else
                 middle++;
+            if(mDataSet1.get(i).getPrediction_feedback()==0)
+                bad++;
+            else
+                good++;
         }
 
         pieChart = (PieChart) v.findViewById(R.id.piechart);
@@ -108,14 +113,16 @@ public class StatisticsFragment extends Fragment {
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
 
-        yValues.add(new PieEntry(34,"Depressed"));
-        yValues.add(new PieEntry(10,"Not depressed"));
-        yValues.add(new PieEntry(10,"Middle area"));
+        yValues.add(new PieEntry(depressed,"Depressed"));
+        yValues.add(new PieEntry(happy,"Not depressed"));
+        yValues.add(new PieEntry(middle,"Middle area"));
+
+
 
         PieDataSet dataSet = new PieDataSet(yValues,"");
         dataSet.setSliceSpace(3f);
         dataSet.setSelectionShift(5f);
-        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+        dataSet.setColors(JOYFUL_COLORS2);
 
         PieData data = new PieData(dataSet);
         data.setValueTextSize(18f);
@@ -159,8 +166,8 @@ public class StatisticsFragment extends Fragment {
         rightAxis.setAxisMinimum(0f);
         ArrayList<BarEntry> entries = new ArrayList<>();
 
-        entries.add(new BarEntry(0f, 30f));
-        entries.add(new BarEntry(1f, 50f));
+        entries.add(new BarEntry(0f, bad));
+        entries.add(new BarEntry(1f, good));
 
 
         BarDataSet set = new BarDataSet(entries, "");
@@ -168,8 +175,8 @@ public class StatisticsFragment extends Fragment {
         set.setValueTextSize(12f);
         BarData data2 = new BarData(  set);
         ArrayList<String> labels = new ArrayList<>();
-        labels.add("Good");
-        labels.add("Bad");
+        labels.add(" ");
+        //labels.add("Bad");
         barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
         data2.setBarWidth(0.9f); // set custom bar width;
 
@@ -257,7 +264,10 @@ public class StatisticsFragment extends Fragment {
         return v;
     }
 
-
+    public static final int[] JOYFUL_COLORS2 = {
+            Color.rgb(217, 80, 138), Color.rgb(254, 149, 7), Color.rgb(189, 189, 189),
+            Color.rgb(106, 167, 134), Color.rgb(53, 194, 209)
+    };
     public class LabelFormatter implements IAxisValueFormatter {
         private final String[] mLabels;
 

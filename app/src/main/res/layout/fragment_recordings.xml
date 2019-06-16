@@ -42,6 +42,7 @@
                 android:layout_height="match_parent"
                 android:elevation="2dp"
                 android:layout_weight="1"
+                android:paddingBottom="40dp"
                 android:scrollbars="vertical" />
 
 

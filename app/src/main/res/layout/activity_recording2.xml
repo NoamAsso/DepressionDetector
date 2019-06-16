@@ -37,7 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Record for at least 10 seconds for prediction"
+            android:text="Record for at least 10 seconds"
+            android:textColor="#000000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -48,6 +49,8 @@
             android:id="@+id/btnRecord"
             android:layout_width="120dip"
             android:layout_height="120dip"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center"
             android:background="@drawable/ic_microphone"
             />
@@ -73,20 +76,23 @@
                     app:indicatorColor="#9AFFFFFF"
                     />
             </RelativeLayout>
-            <Chronometer android:layout_marginTop = "10dp"
+
+            <Chronometer
+                android:id="@+id/chronometer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/chronometer"
+                android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 android:text="00:00"
-                android:textSize="25sp"
-                />
+                android:textSize="25sp" />
 
             <TextView android:layout_marginTop = "10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/resultsText"
                 android:layout_gravity="center"
+                android:textColor="#000000"
                 android:text="Results "
                 android:textSize="20dp"
                 />
@@ -96,6 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="#000000"
                 android:text="Loading..."
                 android:textSize="25dp" />
 
@@ -117,11 +124,13 @@
                 android:id="@+id/btnSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/spacing_xlarge"
-                android:layout_marginLeft="@dimen/spacing_xlarge"
+                android:paddingLeft="22dp"
+                android:layout_marginRight="@dimen/spacing_large"
+                android:layout_marginLeft="@dimen/spacing_large"
+                android:drawableLeft="@drawable/ic_baseline_arrow_downward_24px"
                 android:background="@drawable/curve_edges_button_login"
-                android:padding="2dp"
-                android:text="Save"
+                android:padding="5dp"
+                android:text=" Save  "
                 android:textColor="@android:color/white" />
 
             <!-- Signup Button -->
@@ -130,10 +139,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:layout_marginRight="@dimen/spacing_xlarge"
-                android:layout_marginLeft="115dp"
+                android:layout_marginRight="@dimen/spacing_large"
+                android:layout_marginLeft="@dimen/spacing_xlarge"
+                android:drawableLeft="@drawable/ic_baseline_clear_24px"
                 android:background="@drawable/curve_edges_button_save"
-                android:text="Cancel"
+                android:padding="5dp"
+                android:text="Cancel  "
                 android:textColor="@android:color/white" />
 
 

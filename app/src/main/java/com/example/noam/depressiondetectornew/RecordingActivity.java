@@ -314,7 +314,9 @@ public class RecordingActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 like.setBackgroundResource(R.drawable.event_page_background3);
+                dislike.setBackgroundResource(0);
                 like.setPressed(true);
+                dislike.setPressed(false);
                 return true;
             }
         });
@@ -322,7 +324,9 @@ public class RecordingActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 dislike.setBackgroundResource(R.drawable.event_page_background3);
+                like.setBackgroundResource(0);
                 dislike.setPressed(true);
+                like.setPressed(false);
                 return true;
             }
         });
@@ -395,7 +399,7 @@ public class RecordingActivity extends AppCompatActivity {
                         else{
                             recState = RECORDING_NOW;
                             general = v;
-
+                            resultsText.setTypeface(resultsText.getTypeface(), Typeface.NORMAL);
                             //   titleText.setVisibility(View.INVISIBLE);
                             //   titleText.setText("Press the MIC to stop and see results");
 
@@ -435,7 +439,7 @@ public class RecordingActivity extends AppCompatActivity {
                         break;
                     } else {          //Now recording, needs to stop
                         recState = NOT_RECORDING_NOW;
-                        chronometer.setVisibility(View.INVISIBLE);
+                        chronometer.setVisibility(View.GONE);
                         resetChronometer(v);
                         pauseChronometer(v);
 
@@ -566,6 +570,7 @@ public class RecordingActivity extends AppCompatActivity {
             avi.setVisibility(View.GONE);
             findViewById(R.id.loadingPanel).setVisibility(View.GONE);
             precentage = prediction;
+            resultsText.setTypeface(resultsText.getTypeface(), Typeface.BOLD);
             resultsText.setText(" " + df2.format(prediction) + "%");
             resultsText.append(" Depressed");
             findViewById(R.id.resultsText).setVisibility(View.VISIBLE);

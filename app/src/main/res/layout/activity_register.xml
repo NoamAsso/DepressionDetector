@@ -79,11 +79,13 @@
                     android:layout_weight="0.27"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp">
-                    <EditText android:id="@+id/input_last_name"
+
+                    <EditText
+                        android:id="@+id/input_last_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:hint="Age" />
+                        android:hint="Age"
+                        android:inputType="number" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
             <!--  Name Label -->

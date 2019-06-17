@@ -21,6 +21,7 @@ import java.util.List;
 import static android.content.ContentValues.TAG;
 import static android.provider.BaseColumns._ID;
 import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.COLUMN_NAME_JOIN_DATE;
+import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.COLUMN_NAME_PREDICTION;
 import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.COLUMN_NAME_TIME_ADDED;
 import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.COLUMN_RECORDINGS_GSON;
 import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.TABLE_NAME_REC;
@@ -197,7 +198,7 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
                 COLUMN_NAME_JOIN_DATE,
         };
         Cursor c1= db.rawQuery("select * from " + TABLE_NAME_USER + " where " + _ID + "='" + position + "'" , null);
-        Cursor c = db.query(TABLE_NAME_USER, projection, null, null, null, null, null);
+        //Cursor c = db.query(TABLE_NAME_USER, projection, null, null, null, null, null);
         int pos = (int)position;
         if (c1.moveToFirst()) {
             UserProfile item = new UserProfile();
@@ -337,4 +338,27 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
         Cursor cursor = db.rawQuery(selectQuery, null);
         return cursor;
     }
+
+
+
+
+
+    public Cursor getLikeAt() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c1= db.rawQuery("select * from " + TABLE_NAME_REC + " where " + MyDBManagerItem.COLUMN_NAME_FEEDBACK + "='" + 1 + "'" , null);
+        c1.moveToFirst();
+        return c1;
+    }
+
+    public Cursor getDisLikeAt() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c1= db.rawQuery("select * from " + TABLE_NAME_REC + " where " + MyDBManagerItem.COLUMN_NAME_FEEDBACK + "='" + 0 + "'" , null);
+        c1.moveToFirst();
+        return c1;
+    }
+
+
+
+
+
 }

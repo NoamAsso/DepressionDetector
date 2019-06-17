@@ -259,23 +259,6 @@ public class RecordingActivity extends AppCompatActivity {
                 AlertDialog.Builder builderInner = new AlertDialog.Builder(RecordingActivity.this);
                 builderInner.setTitle("Your Selected Item is");
                 builderInner.setMessage(strName);
-                builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog,int which) {
-                        makePopup();
-                        dialog.dismiss();
-                    }
-                });
-
-                builderInner.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                String arr[] = strName.split(" ", 2);
-
-
                 for(int i = 0 ;i <users.size();i++){
 
                     String name = users.get(i).get_firstName();
@@ -284,8 +267,7 @@ public class RecordingActivity extends AppCompatActivity {
                         break;
                     }
                 }
-                builderInner.create();
-                builderInner.show();
+                makePopup();
             }
         });
 
@@ -469,6 +451,7 @@ public class RecordingActivity extends AppCompatActivity {
                         {
                             Toast.makeText(RecordingActivity.this, "Record was too short, no prediction was made",
                                     Toast.LENGTH_LONG).show();
+
                             lastestFile.delete();
                             returnBeginning();
                             return;

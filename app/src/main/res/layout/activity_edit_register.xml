@@ -82,7 +82,7 @@
                     <EditText android:id="@+id/input_last_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:hint="Age" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>

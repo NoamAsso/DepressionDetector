@@ -43,7 +43,7 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
     public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
         final UserProfile item = studentList.get(position);
         db = utils.getDB();
-        viewHolder.Name.setText(item.get_firstName()+" "+item.get_lastName());
+        viewHolder.Name.setText(item.get_firstName());
         //viewHolder.LastName.setText(item.get_lastName());
         viewHolder.Phone.setText("Phone Number: " + item.get_phoneNumber());
         if(item.getRecordings().size() == 0)

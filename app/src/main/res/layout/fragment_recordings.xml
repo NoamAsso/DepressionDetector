@@ -34,7 +34,44 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingRight="25dp"
+                android:paddingLeft="25dp"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/like_button"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:background="#00FFFFFF"
+                    android:src="@drawable/ic_like"/>
 
+                <TextView
+                    android:id="@+id/all_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/event_page_background3"
+                    android:text="All"
+                    android:textColor="#ffffff"
+                    android:textSize="20dp" />
+
+                <ImageButton
+                    android:id="@+id/dislike_button"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="#00FFFFFF"
+                    android:src="@drawable/ic_dislike" />
+            </LinearLayout>
             <!-- TODO: Update blank fragment layout -->
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/my_recycler_view_rec"
@@ -42,8 +79,24 @@
                 android:layout_height="match_parent"
                 android:elevation="2dp"
                 android:layout_weight="1"
-                android:paddingBottom="40dp"
+
                 android:scrollbars="vertical" />
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/circle_dot"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"/>
+            <TextView
+                android:id="@+id/num_recordings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:paddingBottom="40dp"
+                android:textColor="#B4FFFFFF"
+                android:text="0 Recordings"/>
 
 
 

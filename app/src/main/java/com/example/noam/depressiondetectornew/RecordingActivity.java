@@ -620,6 +620,28 @@ public class RecordingActivity extends AppCompatActivity {
         //String x = Environment.getExternalStorageDirectory() + File.separator + "AudioRecord";
         //String x = Environment.getExternalStorageDirectory();
         lastestFile = new File(RECORD_WAV_PATH, audioFilePath + ".wav");
+        if(!lastestFile.exists()){
+            try {
+
+                // returns pathnames for files and directory
+                File directory = new File(RECORD_WAV_PATH);
+
+                // create directories
+                boolean bool = directory.mkdirs();
+
+                // print
+                System.out.print("Directory created? "+bool);
+
+            } catch(Exception e) {
+                // if any error occurs
+                Log.e("ERORRRRRRRRRRRR","dkdkdkkdkdkdkkdkdkdkdkdkddkdkdkddkdkdkdkdkd");
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            Log.i("all gssssood","file existsssssssssssssssssssss");
+        }
         return lastestFile;
 }
 }

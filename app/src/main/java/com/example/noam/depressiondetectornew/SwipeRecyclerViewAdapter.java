@@ -1,12 +1,15 @@
 package com.example.noam.depressiondetectornew;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +19,7 @@ import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.example.jean.jcplayer.model.JcAudio;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecyclerViewAdapter.SimpleViewHolder> {
@@ -27,6 +31,8 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
     boolean flagOpen = false;
     UserProfile itemPrev;
     Utils utils;
+    UserProfile itemCurr;
+    int positiontmp;
     public SwipeRecyclerViewAdapter(Context context, ArrayList<UserProfile> objects) {
         this.mContext = context;
         this.studentList = objects;
@@ -158,14 +164,12 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
         viewHolder.Delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mItemManger.removeShownLayouts(viewHolder.swipeLayout);
-                db = Utils.getDB();
-                db.removeUserWithId(item.get_userId());
-                studentList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, studentList.size());
-                mItemManger.closeAllItems();
-                Toast.makeText(v.getContext(), "Deleted " + viewHolder.Name.getText().toString(), Toast.LENGTH_SHORT).show();
+                positiontmp = position;
+                itemCurr = item;
+                makePopup(viewHolder,v);
+
+
+
             }
         });
 
@@ -215,5 +219,46 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
             Delete = (TextView) itemView.findViewById(R.id.Delete);
             btnLocation = (ImageButton) itemView.findViewById(R.id.btnLocation);
         }
+    }
+
+    void makePopup(final SwipeRecyclerViewAdapter.SimpleViewHolder viewHolder, final View v) {
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        final View myDialogView = inflater.inflate(R.layout.delete_patient_dialogue, null);
+        final String time = Utils.getTimeSave();
+        final String defaultName = "Delete Patient";
+        //Get Audio duration time
+        //Build the dialog
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(
+                mContext,
+                R.style.MyDialogTheme
+        );
+        dialog.setTitle("Delete Patient");
+        dialog.setView(myDialogView);
+        final CheckBox chkAndroid = (CheckBox) myDialogView.findViewById(R.id.chkIoss);
+        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                mItemManger.removeShownLayouts(viewHolder.swipeLayout);
+                db = Utils.getDB();
+                if(chkAndroid.isChecked())
+                    db.removeUserWithId(itemCurr.get_userId(),true);
+                else
+                    db.removeUserWithId(itemCurr.get_userId(),false);
+                studentList.remove(positiontmp);
+                notifyItemRemoved(positiontmp);
+                notifyItemRangeChanged(positiontmp, studentList.size());
+                mItemManger.closeAllItems();
+                Toast.makeText(v.getContext(), viewHolder.Name.getText().toString() + "Deleted ", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+            }
+        });
+        //   dialog.setNegativeButton("Cancel", null);
+        dialog.create();
+        dialog.show();
     }
 }

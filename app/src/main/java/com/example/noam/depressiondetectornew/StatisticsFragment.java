@@ -166,8 +166,8 @@ public class StatisticsFragment extends Fragment {
         rightAxis.setAxisMinimum(0f);
         ArrayList<BarEntry> entries = new ArrayList<>();
 
-        entries.add(new BarEntry(0f, bad));
-        entries.add(new BarEntry(1f, good));
+        entries.add(new BarEntry(0f, good));
+        entries.add(new BarEntry(1f, bad));
 
 
         BarDataSet set = new BarDataSet(entries, "");

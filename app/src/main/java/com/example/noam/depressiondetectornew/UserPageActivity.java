@@ -83,7 +83,7 @@ public class UserPageActivity extends AppCompatActivity {
         long currentUserIdtemp = UserProfile.getcurrentUserId();
         UserProfile currentUser = db.getUserAt(currentUserIdtemp);
 
-        Name.setText(currentUser.get_firstName() + " " + currentUser.get_lastName());
+        Name.setText(currentUser.get_firstName());
         Phone.setText(currentUser.get_phoneNumber());
         uId.setText("Patient id: "+ String.format("%d", currentUser.get_userId()));
         Dateu.setText(currentUser.get_joinDate());
@@ -111,7 +111,7 @@ public class UserPageActivity extends AppCompatActivity {
         else {
 
             double pred = mDataSet.get(mDataSet.size() - 1).get_prediction();
-            status.setText(String.format("%.4f", pred) +"%" +" depressed");
+            status.setText(String.format("%.2f", pred) +"%" +" depressed");
             if(pred > 66f)
                 statusImage.setBackgroundResource(R.drawable.ic_sad);
             else if(pred < 33f)
@@ -159,13 +159,13 @@ public class UserPageActivity extends AppCompatActivity {
                 yValues.add(new Entry((float) i, (float) mDataSet.get(i).get_prediction()));
 
             }
-            MyMarkerView.setit(xXnew);
+            MyMarkerView.setit(xXnew,1);
             ValueFormatter xAxisFormatter = new FooFormatter(reference_timestamp);
             XAxis xAxis = mChart.getXAxis();
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
             xAxis.setValueFormatter(xAxisFormatter);
 
-            LineDataSet set1 = new LineDataSet(yValues, "data set 1");
+            LineDataSet set1 = new LineDataSet(yValues, "Prediction data");
 
             set1.setFillAlpha(110);
             set1.setColor(Color.BLUE);
@@ -193,6 +193,7 @@ public class UserPageActivity extends AppCompatActivity {
             //mChart.setAutofillHints("No predictions was made");
             //mchart.set
         }
+
 
         ///////////////////////////////////////////////
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_user_page);
@@ -254,10 +255,10 @@ class FooFormatter extends ValueFormatter {
     @Override
     public String getFormattedValue(float value) {
         // convertedTimestamp = originalTimestamp - referenceTimestamp
-        long convertedTimestamp = (long) value;
+        int convertedTimestamp = (int) value;
 
         // Retrieve original timestamp
-        long originalTimestamp = referenceTimestamp + convertedTimestamp;
+        long originalTimestamp = referenceTimestamp + MyMarkerView.getit()[convertedTimestamp];
 
         // Convert timestamp to hour:minute
         return getDateString(originalTimestamp);
@@ -280,8 +281,11 @@ class MyMarkerView extends MarkerView {
     private Date mDate;
     private MPPointF mOffset = new MPPointF();
     static long Xnew[];
-    public static void setit(long xnnew[]){
-        Xnew = new long[300];
+    public static void setit(long xnnew[], int tell){
+        if(tell == 1)
+            Xnew = xnnew;
+        else
+            Xnew = new long[300];
     }
     public static long[] getit(){
         return Xnew;
@@ -291,7 +295,7 @@ class MyMarkerView extends MarkerView {
         // this markerview only displays a textview
         tvContent = (TextView) findViewById(R.id.tvContent);
         this.referenceTimestamp = referenceTimestamp;
-        this.mDataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
+        this.mDataFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.ENGLISH);
         this.mDate = new Date();
     }
 

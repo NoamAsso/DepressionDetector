@@ -86,7 +86,7 @@ public class RecordingActivity extends AppCompatActivity {
     private static boolean firstTimeFlag = true;
     private double precentage;
     long startTime;
-    static int TEN_SECONDS = 100000;
+    static int TEN_SECONDS = 860000;
     TextView resultsText;
     TextView titleText;
     ImageButton like;
@@ -220,7 +220,7 @@ public class RecordingActivity extends AppCompatActivity {
 
         dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                lastestFile.delete();
+                //lastestFile.delete();
                 dialog.dismiss();
             }
         });
@@ -233,7 +233,7 @@ public class RecordingActivity extends AppCompatActivity {
     void makePopupList(){
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(RecordingActivity.this);
         builderSingle.setIcon(R.drawable.baseline_person_add_black_18dp);
-        builderSingle.setTitle("Select One Name:-");
+        builderSingle.setTitle("Attach recording to patient");
 
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(RecordingActivity.this, android.R.layout.select_dialog_singlechoice);
         Cursor mCursor = db.getAllRowsUser();
@@ -279,6 +279,8 @@ public class RecordingActivity extends AppCompatActivity {
         final View myDialogView = inflater.inflate(R.layout.rename_feedback_dialogue, null);
         final String time = Utils.getTimeSave();
         final String defaultName = "Default name - ";
+        TextView predDialog = (TextView) myDialogView.findViewById(R.id.pred_dialog);
+        predDialog.setText(String.format("%.2f", voice_record.get_prediction())+"% depressed");
         //Get Audio duration time
         final int duration = utils.getDuration(lastestFile);
 
@@ -292,6 +294,9 @@ public class RecordingActivity extends AppCompatActivity {
         );
         dialog.setTitle("Prediction feedback");
         dialog.setView(myDialogView);
+        like.setPressed(true);
+        like.setBackgroundResource(R.drawable.event_page_background3);
+        dislike.setPressed(false);
         like.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -312,28 +317,33 @@ public class RecordingActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+
         dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                if(dislike.isPressed())
-                    voice_record.setPrediction_feedback(0);
-                else if(like.isPressed())
-                    voice_record.setPrediction_feedback(1);
-                //latestRecFile.renameTo()
-                //recordName.getText().toString(),latestRecFile.toString(),duration,time,precentage;
-                long recid = utils.saveRecord(voice_record);
-                db.UpdateGson(voice_record.get__userId(),recid);
-                dialog.dismiss();
-                Intent returnIntent = new Intent();
-                setResult(Activity.RESULT_OK,returnIntent);
-                finish();
-            }
+
+                    if(dislike.isPressed())
+                        voice_record.setPrediction_feedback(0);
+                    else if(like.isPressed())
+                        voice_record.setPrediction_feedback(1);
+                    //latestRecFile.renameTo()
+                    //recordName.getText().toString(),latestRecFile.toString(),duration,time,precentage;
+                    long recid = utils.saveRecord(voice_record);
+                    db.UpdateGson(voice_record.get__userId(),recid);
+                    dialog.dismiss();
+                    Intent returnIntent = new Intent();
+                    setResult(Activity.RESULT_OK,returnIntent);
+                    finish();
+                }
+
+
         });
 
         dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                long recid = utils.saveRecord(voice_record);
-                db.UpdateGson(voice_record.get__userId(),recid);
-                lastestFile.delete();
+                //long recid = utils.saveRecord(voice_record);
+                //db.UpdateGson(voice_record.get__userId(),recid);
+                //lastestFile.delete();
                 dialog.dismiss();
             }
         });
@@ -357,6 +367,7 @@ public class RecordingActivity extends AppCompatActivity {
             findViewById(id).setAlpha(1f);
         }
         findViewById(id).setEnabled(isEnable);
+
     }
 
 
@@ -398,34 +409,17 @@ public class RecordingActivity extends AppCompatActivity {
                             recorder.startRecording();
                             resultsText.setText("Recording...");
                             resultsText.setVisibility(View.VISIBLE);
-
-
-                            //////////////////////////////////recordWavMaster = new RecordWavMaster();
-                            ////////////////////////////////int sessionId = recordWavMaster.getSession();
-
-                            //visualizerManager = new NierVisualizerManager();
-
-                            //circleVisual.setRawAudioBytes(getBytes());
-
-
-
-                            //visualizerManager = getInstanceInit();
-                            //////////////////////////////////recordWavMaster.startRecording();
-                            //visualizerManager.start(surface, new IRenderer[]{new ColumnarType1Renderer()});
-
-
-                            //mVisualizer.setAudioSessionId(0);
-                            //mVisualizer.setDrawLine(true);
                         }
 
                         break;
                     } else {          //Now recording, needs to stop
                         recState = NOT_RECORDING_NOW;
+                        findViewById(R.id.btnRecord).setEnabled(false);
                         chronometer.setVisibility(View.GONE);
                         resetChronometer(v);
                         pauseChronometer(v);
 
-                        titleText.setText("Record for at least 10 second for prediction");
+                        titleText.setText("Please record for at least 10 seconds");
                         v.setBackgroundResource(R.drawable.ic_microphone);
                         try {
                             recorder.stopRecording();
@@ -437,17 +431,8 @@ public class RecordingActivity extends AppCompatActivity {
                                 animateVoice(0);
                             }
                         });
-                        ////////////////////////////////////////////recordWavMaster.stopRecording();
-                        //circleVisual.hide();
-
-
-                        //visualizerManager.stop();
-                        //visualizerManager.release();
-
-
-                       //////////////////////////////latestRecFile = recordWavMaster.latestRecFile;
-                        //////////////////////////////recordWavMaster.releaseRecord();
-                        if(utils.getDuration(lastestFile)<TEN_SECONDS)
+                        int duration = utils.getDuration(lastestFile);
+                        if(duration<TEN_SECONDS)
                         {
                             Toast.makeText(RecordingActivity.this, "Record was too short, no prediction was made",
                                     Toast.LENGTH_LONG).show();
@@ -620,6 +605,28 @@ public class RecordingActivity extends AppCompatActivity {
         //String x = Environment.getExternalStorageDirectory() + File.separator + "AudioRecord";
         //String x = Environment.getExternalStorageDirectory();
         lastestFile = new File(RECORD_WAV_PATH, audioFilePath + ".wav");
+        if(!lastestFile.exists()){
+            try {
+
+                // returns pathnames for files and directory
+                File directory = new File(RECORD_WAV_PATH);
+
+                // create directories
+                boolean bool = directory.mkdirs();
+
+                // print
+                System.out.print("Directory created? "+bool);
+
+            } catch(Exception e) {
+                // if any error occurs
+                Log.e("ERORRRRRRRRRRRR","dkdkdkkdkdkdkkdkdkdkdkdkddkdkdkddkdkdkdkdkd");
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            Log.i("all gssssood","file existsssssssssssssssssssss");
+        }
         return lastestFile;
 }
 }

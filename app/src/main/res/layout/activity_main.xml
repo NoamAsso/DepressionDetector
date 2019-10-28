@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 app:space_background_color="#474F5F"
-                app:centre_button_icon="@drawable/baseline_mic_white_18dp"
+                app:centre_button_icon="@drawable/ic_round_mic_24px"
                 app:centre_button_color="#CA0000"
                 app:layout_behavior="com.luseen.spacenavigation.SpaceNavigationViewBehavior" />
 

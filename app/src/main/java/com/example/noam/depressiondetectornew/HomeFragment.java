@@ -16,9 +16,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.daimajia.swipe.util.Attributes;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import static com.example.noam.depressiondetectornew.MyDBmanager.MyDBManagerItem.COLUMN_RECORDINGS_GSON;
 
 
 public class HomeFragment extends Fragment {
@@ -69,12 +73,16 @@ public class HomeFragment extends Fragment {
                     // The Cursor is now set to the right position
                     flag= true;
                     UserProfile usertemp = new UserProfile();
+                    Gson gson = new Gson();
                     usertemp.set_userId(mCursor.getInt(mCursor.getColumnIndex("_id")));
                     usertemp.set_firstName(mCursor.getString(mCursor.getColumnIndex("first_name")));
                     usertemp.set_lastName(mCursor.getString(mCursor.getColumnIndex("last_name")));
                     usertemp.set_phoneNumber(mCursor.getString(mCursor.getColumnIndex("phone_number")));
                     usertemp.set_status(mCursor.getInt(mCursor.getColumnIndex("status")));
                     usertemp.set_joinDate(mCursor.getString(mCursor.getColumnIndex("join_date")));
+                    String recordings = (mCursor.getString(mCursor.getColumnIndex(COLUMN_RECORDINGS_GSON)));
+                    ArrayList<Long> recordlist = gson.fromJson(recordings,new TypeToken<List<Long>>(){}.getType());
+                    usertemp.setRecordings(recordlist);
                     mDataSet.add(usertemp);
                 }
                 if(flag)
@@ -111,7 +119,7 @@ public class HomeFragment extends Fragment {
                     rectemp.set_recId(mCursor2.getInt(mCursor2.getColumnIndex("_id")));
                     rectemp.set__userId(mCursor2.getInt(mCursor2.getColumnIndex("user_id")));
                     rectemp.set_recordName(mCursor2.getString(mCursor2.getColumnIndex("recording_name")));
-                    rectemp.set_prediction(mCursor2.getInt(mCursor2.getColumnIndex("prediction")));
+                    rectemp.set_prediction(mCursor2.getDouble(mCursor2.getColumnIndex("prediction")));
                     rectemp.set_time(mCursor2.getString(mCursor2.getColumnIndex("time_added")));
                     rectemp.set_length(mCursor2.getInt(mCursor2.getColumnIndex("length")));
                     rectemp.set_path(mCursor2.getString(mCursor2.getColumnIndex("file_path")));

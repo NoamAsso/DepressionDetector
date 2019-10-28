@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.daimajia.swipe.util.Attributes;
 import com.google.gson.Gson;
@@ -32,6 +33,7 @@ public class PeopleFragment extends Fragment {
     private ArrayList<UserProfile> mDataSet;
     SwipeRecyclerViewAdapter adapter;
     MyDBmanager db;
+    TextView numPatient;
     Utils utils;
 
 
@@ -46,6 +48,7 @@ public class PeopleFragment extends Fragment {
         utils = new Utils(getActivity());
         Cursor mCursor = db.getAllRowsUser();
         mDataSet = new ArrayList<UserProfile>();
+        numPatient = (TextView) v.findViewById(R.id.num_patients);
         for(mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
             // The Cursor is now set to the right position
             UserProfile usertemp = new UserProfile();
@@ -93,6 +96,7 @@ public class PeopleFragment extends Fragment {
             }
 
         });
+        numPatient.setText(String.format("%d",mDataSet.size()) + " Patients");
         return v;
     }
 

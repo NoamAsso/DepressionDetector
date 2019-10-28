@@ -1,10 +1,14 @@
 package com.example.noam.depressiondetectornew;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -16,6 +20,7 @@ import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.example.jean.jcplayer.model.JcAudio;
 import com.example.jean.jcplayer.view.JcPlayerView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyclerViewAdapterRec.SimpleViewHolderRec> {
@@ -27,7 +32,10 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
     ViewGroup parent1;
     SimpleViewHolderRec prev;
     RecordingProfile itemPrev;
+    RecordingProfile itemCurr;
+    int positiontmp;
     boolean flagOpen = false;
+
     public SwipeRecyclerViewAdapterRec(Context context, ArrayList<RecordingProfile> objects) {
         this.mContext = context;
         this.studentList = objects;
@@ -46,14 +54,14 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
         final RecordingProfile item = studentList.get(position);
 
         viewHolder.Name.setText(item.get_recordName());
-        viewHolder.Status.setText("Prediction: " + String.format("%.2f", item.get_prediction()));
-        viewHolder.ID.setText("");
-        if(item.getPrediction_feedback() == 0)
+        viewHolder.Status.setText("Prediction: " + String.format("%.2f", item.get_prediction()) + "%");
+        viewHolder.ID.setText(Utils.getDB().getUserAt(item.get__userId()).get_firstName());
+        if (item.getPrediction_feedback() == 0)
             viewHolder.feedbackImage.setImageResource(R.drawable.ic_dislike);
         else
             viewHolder.feedbackImage.setImageResource(R.drawable.ic_like);
         viewHolder.Date.setText(item.get_time());
-        viewHolder.UserBelong.setText("Feedback: ");
+        //viewHolder.UserBelong.setText(" ");
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
 
         viewHolder.jcplayerView.setVisibility(View.GONE);
@@ -63,7 +71,6 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
 
         //dari kanan
         viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, viewHolder.swipeLayout.findViewById(R.id.bottom_wraper));
-
 
 
         viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
@@ -104,8 +111,7 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
                 //Toast.makeText(mContext, " Click : " + item.get__userId() + " \n" + item.get_recordName(), Toast.LENGTH_SHORT).show();
 
 
-
-                if(item.isClicked()){
+                if (item.isClicked()) {
 
                     viewHolder.jcplayerView.setVisibility(View.GONE);
                     viewHolder.recImage.setImageResource(R.drawable.ic_record);
@@ -114,13 +120,11 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
                     prev = viewHolder;
                     item.setClicked(false);
                     flagOpen = false;
-                }
-                else{
-                    if(prev == null){
+                } else {
+                    if (prev == null) {
                         prev = viewHolder;
                         itemPrev = item;
-                    }
-                    else{
+                    } else {
                         prev.jcplayerView.setVisibility(View.GONE);
                         prev.recImage.setImageResource(R.drawable.ic_record);
                         prev.jcplayerView.pause();
@@ -132,13 +136,12 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
                     viewHolder.jcplayerView.setVisibility(View.VISIBLE);
                     viewHolder.recImage.setImageResource(R.drawable.ic_record_pressed);
                     ArrayList<JcAudio> jcAudios = new ArrayList<>();
-                    JcAudio temp = JcAudio.createFromFilePath("Asset audio",item.get_path());
+                    JcAudio temp = JcAudio.createFromFilePath("Asset audio", item.get_path());
                     jcAudios.add(temp);
-                    viewHolder.jcplayerView.initWithTitlePlaylist(jcAudios,"Playing");
+                    viewHolder.jcplayerView.initWithTitlePlaylist(jcAudios, "Playing");
                     item.setClicked(true);
                     flagOpen = true;
                 }
-
 
 
             }
@@ -155,6 +158,11 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
         viewHolder.Delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                positiontmp = position;
+                itemCurr = item;
+                makePopup(viewHolder,v);
+                /*
                 mItemManger.removeShownLayouts(viewHolder.swipeLayout);
                 db = Utils.getDB();
                 db.UpdateDelGson(item.get__userId(),item.get_recId());
@@ -163,7 +171,7 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, studentList.size());
                 mItemManger.closeAllItems();
-                Toast.makeText(v.getContext(), "Deleted " + viewHolder.Name.getText().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "Deleted " + viewHolder.Name.getText().toString(), Toast.LENGTH_SHORT).show();*/
             }
         });
 
@@ -180,7 +188,7 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
         return R.id.swipe;
     }
 
-    public static class SimpleViewHolderRec extends RecyclerView.ViewHolder{
+    public static class SimpleViewHolderRec extends RecyclerView.ViewHolder {
         public SwipeLayout swipeLayout;
         public TextView Name;
         public TextView LastName;
@@ -196,6 +204,7 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
         public TextView Share;
         public JcPlayerView jcplayerView;
         public ImageButton btnLocation;
+
         public SimpleViewHolderRec(View itemView) {
             super(itemView);
 
@@ -204,12 +213,61 @@ public class SwipeRecyclerViewAdapterRec extends RecyclerSwipeAdapter<SwipeRecyc
             Status = (TextView) itemView.findViewById(R.id.status_rec);
             Date = (TextView) itemView.findViewById(R.id.date_rec);
             ID = (TextView) itemView.findViewById(R.id.id_and_more_rec);
-            UserBelong = (TextView) itemView.findViewById(R.id.user_belong);
+            //UserBelong = (TextView) itemView.findViewById(R.id.user_belong);
             jcplayerView = (JcPlayerView) itemView.findViewById(R.id.jcplayer);
             recImage = (ImageView) itemView.findViewById(R.id.image_rec);
             feedbackImage = (ImageView) itemView.findViewById(R.id.image_feedbackk);
             Delete = (TextView) itemView.findViewById(R.id.Delete);
             btnLocation = (ImageButton) itemView.findViewById(R.id.btnLocation);
         }
+    }
+
+    void makePopup(final SimpleViewHolderRec viewHolder,final View v) {
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        final View myDialogView = inflater.inflate(R.layout.delete_dialogue, null);
+        final String time = Utils.getTimeSave();
+        final String defaultName = "Delete recording";
+        //Get Audio duration time
+        //Build the dialog
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(
+                mContext,
+                R.style.MyDialogTheme
+        );
+        dialog.setTitle("Delete recording");
+        dialog.setView(myDialogView);
+        final CheckBox chkAndroid = (CheckBox) myDialogView.findViewById(R.id.chkIos);
+        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                mItemManger.removeShownLayouts(viewHolder.swipeLayout);
+                db = Utils.getDB();
+
+                db.UpdateDelGson(itemCurr.get__userId(), itemCurr.get_recId());
+                db.removeRecWithId(studentList.get(positiontmp).get_recId());
+                studentList.remove(positiontmp);
+                notifyItemRemoved(positiontmp);
+                notifyItemRangeChanged(positiontmp, studentList.size());
+                mItemManger.closeAllItems();
+                dialog.dismiss();
+                if(chkAndroid.isChecked()){
+                    File file = new File(itemCurr.get_path());
+                    boolean deleted = file.delete();
+                    Toast.makeText(v.getContext(),  viewHolder.Name.getText().toString() + " Deleted from storage", Toast.LENGTH_SHORT).show();
+
+                }
+                else{
+                    Toast.makeText(v.getContext(),  viewHolder.Name.getText().toString() + " Successfully Deleted", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+            }
+        });
+        //   dialog.setNegativeButton("Cancel", null);
+        dialog.create();
+        dialog.show();
     }
 }

@@ -21,7 +21,8 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup, android:supportsRtl">
-        <activity android:name=".AboutActivity"></activity>
+        <activity android:name=".FAQActivity"></activity>
+        <activity android:name=".AboutActivity" />
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait"
@@ -55,7 +56,9 @@
         <activity
             android:name=".RecordingActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".UserPageActivity" />
+        <activity
+            android:name=".UserPageActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".EditRegisterActivity" />
     </application>
 

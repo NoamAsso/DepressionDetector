@@ -13,6 +13,7 @@ import com.example.noam.depressiondetectornew.OnDatabaseChangedListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -228,12 +229,17 @@ public class MyDBmanager extends SQLiteOpenHelper implements Serializable {
         String[] whereArgs = { String.valueOf(id) };
         db.delete(TABLE_NAME_REC, "_ID=?", whereArgs);
     }
-    public void removeUserWithId(long id) {
+    public void removeUserWithId(long id,boolean hard) {
         SQLiteDatabase db = getWritableDatabase();
         UserProfile temp = getUserAt(id);
         if(getUserAt(id).getRecordings()!=null){
             ArrayList<Long> rectemp = getUserAt(id).getRecordings();
             for(int i=0 ; i < rectemp.size(); i++  ){
+                if(hard){
+                    RecordingProfile tmp = this.getRecordingAt(rectemp.get(i));
+                    File file = new File(tmp.get_path());
+                    boolean deleted = file.delete();
+                }
                 removeRecWithId(rectemp.get(i));
             }
         }

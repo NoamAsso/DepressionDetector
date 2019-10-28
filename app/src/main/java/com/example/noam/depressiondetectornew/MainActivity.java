@@ -54,6 +54,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity
     private double precentage;
     RecordingProfile voice_record;
     File wavFile;
+    int flaging;
     ImageButton like;
     ImageButton dislike;
     File currentDB;
@@ -123,13 +126,15 @@ public class MainActivity extends AppCompatActivity
 
         spaceNavigationView = (SpaceNavigationView) findViewById(R.id.space);
         spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
-        spaceNavigationView.addSpaceItem(new SpaceItem("papa", R.drawable.baseline_account_circle_black_18dp));
-        spaceNavigationView.addSpaceItem(new SpaceItem(null, R.drawable.baseline_record_voice_over_black_18dp));
-        spaceNavigationView.addSpaceItem(new SpaceItem(null, R.drawable.ic_baseline_search_24px));
-        spaceNavigationView.addSpaceItem(new SpaceItem(null, R.drawable.ic_baseline_bar_chart_24px));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Patients", R.drawable.ic_round_account_circle_24px));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Recordings", R.drawable.ic_baseline_record_voice_over_24px));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Search", R.drawable.ic_baseline_search_24px));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Statistics", R.drawable.ic_baseline_bar_chart_24px));
         //spaceNavigationView.shouldShowFullBadgeText(true);
         spaceNavigationView.setCentreButtonIconColorFilterEnabled(false);
         spaceNavigationView.showIconOnly();
+        //spaceNavigationView.animate();
+        spaceNavigationView.setFocusable(true);
         spaceNavigationView.setSpaceItemIconSizeInOnlyIconMode(70);
 
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
@@ -198,12 +203,12 @@ public class MainActivity extends AppCompatActivity
         spaceNavigationView.setSpaceOnLongClickListener(new SpaceOnLongClickListener() {
             @Override
             public void onCentreButtonLongClick() {
-                Toast.makeText(MainActivity.this, "onCentreButtonLongClick", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Record", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onItemLongClick(int itemIndex, String itemName) {
-                Toast.makeText(MainActivity.this, itemIndex + " " + itemName, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this,itemName, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -234,6 +239,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Toast.makeText(this,"Settings will be available soon.",Toast.LENGTH_LONG).show();
             return true;
         }
 
@@ -254,7 +260,9 @@ public class MainActivity extends AppCompatActivity
             Intent i = new Intent(getApplicationContext(), AboutActivity.class);
             startActivity(i);
         } else if (id == R.id.nav_share) {
-
+            Intent i = new Intent(getApplicationContext(), FAQActivity.class);
+            startActivity(i);
+            //Toast.makeText(this,"FAQ will be available soon.",Toast.LENGTH_LONG).show();
         } else if (id == R.id.nav_send) {
             exportDB();
             sendEmail();
@@ -372,23 +380,37 @@ public class MainActivity extends AppCompatActivity
 
     private void importwav(Intent data){
         final String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+        //Path p = Paths.get(filePath);
+        //final String fileName = data.getStringExtra(FilePickerActivity);
         String filenameArray[] = filePath.split("\\.");
         String extension = filenameArray[filenameArray.length-1];
-        voice_record = new RecordingProfile();
-        if(extension.equals("wav")) { //User imported a wav file
-            wavFile = new File(filePath);
-            VoiceAnalysisAsyncTask runner = new VoiceAnalysisAsyncTask();
-            runner.execute(wavFile);
+        flaging = 0;
 
-            final String time = Utils.getTime();
-            final int duration = utils.getDuration(wavFile);
-            final String defaultName = "Default name - ";
-            makePopupList();
+        if(extension.equals("wav")) { //User imported a wav file
+            if(Utils.getDB().getUserCount()!=0){
+                wavFile = new File(filePath);
+                System.out.println(wavFile.getName());
+                VoiceAnalysisAsyncTask runner = new VoiceAnalysisAsyncTask();
+                runner.execute(wavFile);
+
+                final String time = Utils.getTime();
+                final int duration = utils.getDuration(wavFile);
+                final String defaultName = "Default name - ";
+                //while(flaging==0);
+                voice_record = new RecordingProfile();
+
+            }
+            else{
+                Toast.makeText(this,"No user detected! create a user before importing",Toast.LENGTH_LONG).show();
+                return;
+            }
         }
         else {
             Toast.makeText(this,"Wrong file type! please choose a WAV file",Toast.LENGTH_LONG).show();
             return;
         }
+
+
     }
 
     void makePopup(){
@@ -402,7 +424,7 @@ public class MainActivity extends AppCompatActivity
         UserProfile usertemp = db.getUserAt(voice_record.get__userId());
         int size = usertemp.getRecordings().size() +1;
         String name = usertemp.get_firstName();
-        recordName.setText(name + " Rec " +Integer.toString(size), TextView.BufferType.EDITABLE );
+        recordName.setText(wavFile.getName() + " Rec " +Integer.toString(size), TextView.BufferType.EDITABLE );
         //Build the dialog
         final AlertDialog.Builder dialog = new AlertDialog.Builder(
                 MainActivity.this,
@@ -418,6 +440,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 //latestRecFile.renameTo()
                 //recordName.getText().toString(),latestRecFile.toString(),duration,time,precentage;
+
                 voice_record.set_recordName(recordName.getText().toString());
                 voice_record.set_path(wavFile.toString());
                 voice_record.set_length(duration);
@@ -443,7 +466,7 @@ public class MainActivity extends AppCompatActivity
     void makePopupList(){
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(MainActivity.this);
         builderSingle.setIcon(R.drawable.baseline_person_add_black_18dp);
-        builderSingle.setTitle("Select One Name:-");
+        builderSingle.setTitle("Attach recording to patient");
 
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.select_dialog_singlechoice);
         Cursor mCursor = db.getAllRowsUser();
@@ -469,21 +492,6 @@ public class MainActivity extends AppCompatActivity
                 AlertDialog.Builder builderInner = new AlertDialog.Builder(MainActivity.this);
                 builderInner.setTitle("Your Selected Item is");
                 builderInner.setMessage(strName);
-                builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog,int which) {
-                        makePopup();
-                        dialog.dismiss();
-                    }
-                });
-
-                builderInner.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                String arr[] = strName.split(" ", 2);
 
 
                 for(int i = 0 ;i <users.size();i++){
@@ -494,8 +502,7 @@ public class MainActivity extends AppCompatActivity
                         break;
                     }
                 }
-                builderInner.create();
-                builderInner.show();
+                makePopup();
             }
         });
 
@@ -507,6 +514,8 @@ public class MainActivity extends AppCompatActivity
         final View myDialogView = inflater.inflate(R.layout.rename_feedback_dialogue, null);
         final String time = Utils.getTimeSave();
         final String defaultName = "Default name - ";
+        TextView predDialog = (TextView) myDialogView.findViewById(R.id.pred_dialog);
+        predDialog.setText(String.format("%.2f", voice_record.get_prediction())+"% depressed");
         //Get Audio duration time
         final int duration = utils.getDuration(wavFile);
 
@@ -518,12 +527,17 @@ public class MainActivity extends AppCompatActivity
                 MainActivity.this,
                 R.style.MyDialogTheme
         );
+        like.setPressed(true);
+        dislike.setPressed(false);
         dialog.setTitle("Prediction feedback");
+        like.setBackgroundResource(R.drawable.event_page_background3);
         dialog.setView(myDialogView);
         like.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 like.setBackgroundResource(R.drawable.event_page_background3);
+                dislike.setBackgroundResource(0);
+                dislike.setPressed(false);
                 like.setPressed(true);
                 return true;
             }
@@ -532,23 +546,29 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 dislike.setBackgroundResource(R.drawable.event_page_background3);
+                like.setBackgroundResource(0);
+                like.setPressed(false);
                 dislike.setPressed(true);
                 return true;
             }
         });
         dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                if(dislike.isPressed())
-                    voice_record.setPrediction_feedback(0);
-                else if(like.isPressed())
-                    voice_record.setPrediction_feedback(1);
-                //latestRecFile.renameTo()
-                //recordName.getText().toString(),latestRecFile.toString(),duration,time,precentage;
-                long recid = utils.saveRecord(voice_record);
-                db.UpdateGson(voice_record.get__userId(),recid);
-                dialog.dismiss();
-                Intent returnIntent = new Intent();
-                setResult(Activity.RESULT_OK,returnIntent);
+                if(dislike.isPressed() == true || like.isPressed() == true){
+                    if(dislike.isPressed())
+                        voice_record.setPrediction_feedback(0);
+                    else if(like.isPressed())
+                        voice_record.setPrediction_feedback(1);
+                    //latestRecFile.renameTo()
+                    //recordName.getText().toString(),latestRecFile.toString(),duration,time,precentage;
+                    long recid = utils.saveRecord(voice_record);
+                    db.UpdateGson(voice_record.get__userId(),recid);
+                    reloadFragment(new RecordingsFragment());
+                    dialog.dismiss();
+                    //Intent returnIntent = new Intent();
+                    //setResult(Activity.RESULT_OK,returnIntent);
+                }
+
             }
         });
 
@@ -558,11 +578,14 @@ public class MainActivity extends AppCompatActivity
                 db.UpdateGson(voice_record.get__userId(),recid);
                 wavFile.delete();
                 dialog.dismiss();
+                reloadFragment(new RecordingsFragment());
+
             }
         });
         //   dialog.setNegativeButton("Cancel", null);
         dialog.create();
         dialog.show();
+        //dialog.getWindow().setBackgroundDrawableResource(android.R.color.background_dark);
     }
 
 
@@ -584,13 +607,15 @@ public class MainActivity extends AppCompatActivity
             }
             String csv = utils.MakeCSV();
             voice_record.set_csv(csv);
-
+            flaging = 1;
             return utils.predictDepression(csv);
+
         }
 
         @Override
         protected void onPostExecute(Double prediction) {
             precentage = prediction;
+            makePopupList();
         }
 
         @Override

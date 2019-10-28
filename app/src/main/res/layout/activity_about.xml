@@ -44,16 +44,6 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="20dp" />
-                        <TextView
-                            android:id="@+id/user_id"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:paddingRight="20dp"
-
-                            android:text="User Id: -1"
-                            android:textColor="@android:color/black"
-                            android:textSize="12sp"
                             />
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -99,14 +89,126 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="20dp" />
+
+
+
+
                         <TextView
-                            android:id="@+id/words"
-                            android:layout_width="wrap_content"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="Created by: Noam Assouline and Yuval Peled \n\nThis app is a depression detector via voice.\n you can create patients, record them and analize their healing proccess \n\nbla bla bla\n\nThis app is a depression detector via voice.\n you can create patients, record them and analize their healing proccess \n\nbla bla bla\n\nThis app is a depression detector via voice.\n you can create patients, record them and analize their healing proccess \n\nbla bla bla\n\nThis app is a depression detector via voice.\n you can create patients, record them and analize their healing proccess \n\nbla bla bla\n\n"
+                            android:gravity="center"
+
+                            android:text="Overview"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/black"
+                            android:textSize="15sp"/>
+                        <TextView
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="DepDetector is an app created for professional Psychiatrists, to give them a simple, free and user-friendly application for a quick first diagnosis of clinical depression via voice record.\n•••\n
+The app provides management tools with a user-friendly and intuitive UI, to easily follow your depressed patient’s progress and statistics. Please visit the FAQ page for more details about the app's features.\n•••\n"
                             android:textColor="@android:color/black"
                             android:textSize="12sp"/>
+                        <TextView
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="7dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="How we do this?"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp"/>
+
+
+
+                        <TextView
+                            android:id="@+id/words"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="
+Using a Machine-Learning algorithm, the app analyzes the audio of a patient's voice and gives a prediction of his/her depression level - all this in a matter of seconds.
+The app uses 'OpenSMILE' - an open-source software for automatic extraction of features from audio signals and for classification of speech.\n the app does not recognize nor analize the words that are being said while recording. predictions are based solely on voice's tones, characteristics and friquencies. \n
+"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <View
+                            android:layout_width="240dp"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center"
+                            android:background="#B4000000"
+                            android:layout_marginBottom="9dp"
+                            android:paddingTop="2dp" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:layout_marginBottom="10dp"
+                            android:src="@drawable/bguuuuuuuuuuuuuuuuuuuuuuuuu"/>
+                        <TextView
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="DepDetector was created by Noam Assouline and Yuval Peled with guidance of Dr. Dan Vilenchik as a final project for Ben Gurion University, Communication Systems Engineering department.\n
+"
+
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+
+
+                        <TextView
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="Contact the developers"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <TextView
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="\n
+Noam assouline – assoulinenoam.gmail.com\n
+Yuval Peled – yuval05261@gmail.com\n
+"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <TextView
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="App version 0.41"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+
 
                         <View
                             android:layout_width="match_parent"

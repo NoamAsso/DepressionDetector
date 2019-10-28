@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -15,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +34,19 @@ public class SplashActivity extends AppCompatActivity {
     private final String SMILEXTRACT_PATH = "";
     private Utils utils;
     private Context context;
-
+    String[] bankPathss;
+    String[] names = {
+        "Depressed girl",
+        "Depressed girl 2",
+        "Depressed man",
+        "Not depressed girl",
+        "Not depressed girl 2 ",
+        "Not depressed man"};
+    File currentFile;
+    RecordingProfile voice_record;
+    int number = 0;
+    private ProgressBar pgsBar;
+    TextView appName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,22 +55,23 @@ public class SplashActivity extends AppCompatActivity {
         context = this;
         Activity thisActivity = this;
         RandomForestClassifier lgbm = new RandomForestClassifier();
-        TextView appName = findViewById(R.id.appName);
-        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Highest.ttf");
-        appName.setTypeface(custom_font);
+        appName = findViewById(R.id.appName);
 
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Highest.ttf");
+        //appName.setTypeface(custom_font);
+        pgsBar = findViewById(R.id.pBar3);
         //Run One Time - Insert the openSmile necessary files to the phone:
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (!prefs.getBoolean("firstTime", false)) {
 
             //putInDevice("SMILExtract", R.raw.smilextract);
             putInDevice("emobase.conf", R.raw.emobase);
-            putInDevice("girl_notdep2.wav",R.raw.girl_notdep2);
-            putInDevice("man_notdep1.wav",R.raw.man_notdep1);
-            putInDevice("girl_dep.wav",R.raw.girl_dep);
-            putInDevice("man_dep1.wav",R.raw.man_dep1);
-            putInDevice("man_dep2.wav",R.raw.man_dep2);
-            putInDevice("girl_notdep1.wav",R.raw.girl_notdep1);
+            putInDevice("depressed_girl_from_youtube.wav",R.raw.depressed_girl_from_youtube);
+            putInDevice("depressed_girl_from_youtube_2.wav",R.raw.depressed_girl_from_youtube_2);
+            putInDevice("depressed_man_from_youtube.wav",R.raw.depressed_man_from_youtube);
+            putInDevice("not_depressed_girl.wav",R.raw.not_depressed_girl);
+            putInDevice("not_depressed_girl_2.wav",R.raw.not_depressed_girl_2);
+            putInDevice("not_depressed_man.wav",R.raw.not_depressed_man);
             // mark first time has runned.
 
         }
@@ -120,19 +135,16 @@ public class SplashActivity extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     // For Project-Day - insert recordings bank. TO BE DELETED!
-                    /*
+
                         try {
                             insertRecordingBankToDB();
                         } catch (ExecutionException e) {
                             e.printStackTrace();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
-                        }*/
+                        }
+                    appName.setText("Initializing...");
 
-                        Intent intent = new Intent(getApplicationContext(),
-                                MainActivity.class);
-                        startActivity(intent);
-                        finish();
 
                 } else {
                     Toast.makeText(context, "Permission to record denied",
@@ -149,25 +161,34 @@ public class SplashActivity extends AppCompatActivity {
         String filesDirPath = utils.getFilesDirPath(context) + "/";
 
         String[] bankPaths = {
-                filesDirPath + "girl_dep.wav",
-                filesDirPath + "man_dep1.wav",
-                filesDirPath + "man_dep2.wav",
-                filesDirPath + "girl_notdep1.wav",
-                filesDirPath + "girl_notdep2.wav",
-                filesDirPath + "man_notdep1.wav",
+                filesDirPath + "depressed_girl_from_youtube.wav",
+                filesDirPath + "depressed_girl_from_youtube_2.wav",
+                filesDirPath + "depressed_man_from_youtube.wav",
+                filesDirPath + "not_depressed_girl.wav",
+                filesDirPath + "not_depressed_girl_2.wav",
+                filesDirPath + "not_depressed_man.wav",
         };
+        bankPathss = bankPaths;
         String recordName;
         double prediction;
-        File currentFile;
+        //File currentFile;
         String tempName;
-
+        UserProfile patient = new UserProfile();
+        patient.set_gender("Male");
+        patient.set_firstName("Patient Example");
+        patient.set_phoneNumber("123-456-789");
+        patient.set_lastName("25");
+        patient.set_joinDate(Utils.getTime());
+        utils.saveUser(patient);
+        currentFile = new File(bankPaths[0]);
+        voice_record = new RecordingProfile();
+        VoiceAnalysisAsyncTask runner = new VoiceAnalysisAsyncTask();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            prediction = runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFile).get();
+        else
+            prediction = runner.execute(currentFile).get();
+        /*
         for (int i=0;i < 6;i++){
-            currentFile = new File(bankPaths[i]);
-            VoiceAnalysisAsyncTask runner = new VoiceAnalysisAsyncTask();
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                prediction = runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFile).get();
-            else
-                prediction = runner.execute(currentFile).get();
 
             //runInBackground(currentFile);
             tempName = bankPaths[i].substring(bankPaths[i].indexOf("/") + 1);
@@ -176,9 +197,15 @@ public class SplashActivity extends AppCompatActivity {
             }
             recordName = tempName.substring(0,tempName.indexOf("."));
 
-            //RecordingActivity voice_record = new RecordingActivity(recordName, bankPaths[i], prediction, Utils.getTime(), utils.getDuration(currentFile));
-            //utils.saveRecord(voice_record);
-        }
+            RecordingProfile voice_record = new RecordingProfile();
+            voice_record.set_path( bankPaths[i]);
+            voice_record.set_recordName(recordName);
+            voice_record.set_time(Utils.getTime());
+            voice_record.set__userId(1);
+            voice_record.set_length(utils.getDuration(currentFile));
+            voice_record.set_prediction(prediction);
+            utils.saveRecord(voice_record);
+        }*/
     }
 
     private class VoiceAnalysisAsyncTask extends AsyncTask<File, Void, Double> {
@@ -197,13 +224,62 @@ public class SplashActivity extends AppCompatActivity {
             if (openSmileExitValue != 0) {
                 Log.e("Opensmile", "openSMILE failed with error code " + openSmileExitValue);
             }
-            return 1.1;
+            String csv = utils.MakeCSV();
+            voice_record.set_csv(csv);
+            return utils.predictDepression(csv);
         }
 
 
         @Override
         protected void onPostExecute(Double prediction) {
+            if(number < 6){
+                String recordName;
+                //double prediction;
+                MyDBmanager db;
 
+                String tempName;
+                //runInBackground(currentFile);
+                tempName = bankPathss[number].substring(bankPathss[number].indexOf("/") + 1);
+                for(int j=0;j<5;j++){
+                    tempName=tempName.substring(tempName.indexOf("/")+1);
+                }
+                recordName = tempName.substring(0,tempName.indexOf("."));
+                if(number == 1)
+                    appName.setText("Initializing...");
+                if(number == 3)
+                    appName.setText("Just a moment...");
+                if(number == 5)
+                    appName.setText("Preparing data...");
+                if(number != 0)
+                    voice_record = new RecordingProfile();
+                voice_record.set_path( bankPathss[number]);
+                voice_record.set_recordName(names[number]);
+                voice_record.set_time(Utils.getTime());
+                voice_record.set__userId(1);
+                voice_record.setPrediction_feedback(1);
+                voice_record.set_length(utils.getDuration(currentFile));
+                voice_record.set_prediction(prediction);
+                //utils.saveRecord(voice_record);
+                long recid = utils.saveRecord(voice_record);
+                db = Utils.getDB();
+                db.UpdateGson(1,recid);
+                number++;
+                if(number==6){
+                    Intent intent = new Intent(getApplicationContext(),
+                            MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else{
+                    currentFile = new File(bankPathss[number]);
+                    VoiceAnalysisAsyncTask runner = new VoiceAnalysisAsyncTask();
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                        runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFile);
+                    else
+                        runner.execute(currentFile);
+                }
+
+            }
         }
 
         @Override

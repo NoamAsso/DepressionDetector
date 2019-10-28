@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/blur_back_back_back"
+    tools:context=".FAQActivity">
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp">
+
+                <RelativeLayout
+                    android:layout_width="0dip"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="0.03"></RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dip"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="0.94">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#7CFFFFFF"
+                        android:orientation="vertical">
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp" />
+                        />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/name_and_last_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="FAQ"
+                            android:textColor="@android:color/black"
+                            android:textSize="30sp"
+                            android:textStyle="bold" />
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:paddingTop="30dp"
+                            android:src="@drawable/ic_depression"
+                            android:layout_gravity="center"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="1dp"
+                            android:text="DepDetector™ 2019"
+                            android:layout_gravity="center"
+                            android:singleLine="false"
+                            android:gravity="center"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="1dp"
+                            android:text="©All rights reserved"
+                            android:layout_gravity="center"
+                            android:textSize="8dp"
+                            android:singleLine="false"
+                            android:gravity="center"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp" />
+
+
+
+
+
+
+
+
+
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textStyle="bold"
+                            android:text="1. Getting started guide"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp"/>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+
+                            android:text="First, create new patient by clicking on 'Add new patient'."
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/fab2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_gravity="center"
+                            android:padding="10dp"
+                            android:textSize="14dp"
+                            android:drawableLeft="@drawable/ic_baseline_person_add_24px"
+                            android:background="@drawable/curve_edges_button_menu"
+                            android:textAllCaps="false"
+                            android:text="  Add new Patient"
+                            android:textColor="@android:color/white"/>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+
+                            android:text="After creating at least one patient, you can create new recordings by clicking on the 'Record' button!"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/bottombar"
+                            android:layout_gravity="center"/>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+
+                            android:text="Bottom navigation bar (from left to right):\n
+• Patients list\n
+• Recordings list\n
+• Search patients and recordings\n
+• Statistics overview"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp"
+
+                            android:text="finished recording? you will be able to see the results few moments later!"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="250dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/screenshot2" />
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+
+                            android:text="when prediction is presented, you can either discard the recording, or save it under one of the patient's profile."
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="\n•••\n"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textStyle="bold"
+                            android:text="2. What is 'Prediction Feedback'?"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_margin="10dp"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/ic_like"/>
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:src="@drawable/ic_dislike"/>
+                        </LinearLayout>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+
+                            android:text="Prediction feedback is an easy way to flag right/wrong predictions based on your professional point of view - if you think
+that the prediction is correct, flag it with the 'thumbs up' icon or a 'thumbs down' icon for a false prediction."
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="\n•••\n"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textStyle="bold"
+                            android:text="3. What is the patient's profile?"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp"/>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+
+                            android:text="The patient's profile gives an overview about the patient:
+basic info, list of patient's recordings and progression graph. to see a patient's
+ profile, click on selected patient and click on 'details'."
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="\n•••\n"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <TextView
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textStyle="bold"
+                        android:text="4. Can i import an audio file for prediction?"
+                        android:textColor="@android:color/black"
+                        android:textSize="14sp"/>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+
+                            android:text="Yes. you can import a new recording from the phone's storage by clicking the 'Side Menu' and selecting 'import new Recording. Note that all recordings must be in WAV audio format."
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="\n•••\n"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <TextView
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textStyle="bold"
+                        android:text="5. What does 'Send database for research' option means?"
+                        android:textColor="@android:color/black"
+                        android:textSize="14sp"/>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+
+                            android:text="This app is part of an ongoing and future research about depression recognition via voice using a machine-learning model. in order for us to improve and expand the database for better and more accurate predictions, users are able to send us their database."
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:text="Please note! the data being sent is completely anonymous. Personal names and audio files are NOT included!"
+                            android:textColor="#C53327"
+                            android:textSize="12sp" />
+                        <TextView
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="\n•••\n"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textStyle="bold"
+                            android:text="6. What's next?"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp"/>
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="20dp"
+                                android:text="We are planning to constantly improve our depression recognition machine-learning model and database to add new features - One of them is to be able to record the patient's voice directly from a live phone call. You can leave your feedback and suggestions by sending an Email to the developers."
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+
+
+                        <View
+                            android:layout_width="240dp"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center"
+                            android:background="#B4000000"
+                            android:layout_marginBottom="9dp"
+                            android:paddingTop="2dp" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:layout_marginBottom="10dp"
+                            android:src="@drawable/bguuuuuuuuuuuuuuuuuuuuuuuuu"/>
+                        <TextView
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="DepDetector was created by Noam Assouline and Yuval Peled with guidance of Dr. Dan Vilenchik as a final project for Ben Gurion University, Communication System Engineering department.\n
+"
+
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+
+
+                        <TextView
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="Contact the developers"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <TextView
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="\n
+Noam assouline – assoulinenoam.gmail.com\n
+Yuval Peled – yuval05261@gmail.com\n
+"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+                        <TextView
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="App version 0.41"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp"/>
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp" />
+
+
+
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dip"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="0.03"></RelativeLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <!-- Here you put the rest of your current view-->
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.constraint.ConstraintLayout>

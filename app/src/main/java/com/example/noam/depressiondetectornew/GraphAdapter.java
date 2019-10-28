@@ -91,7 +91,7 @@ public class GraphAdapter extends RecyclerSwipeAdapter<GraphAdapter.SimpleViewHo
                 yValues.add(new Entry((float) i, (float) mDataSet.get(i).get_prediction()));
 
             }
-            MyMarkerView.setit(Xnew);
+            MyMarkerView.setit(Xnew,0);
             ValueFormatter xAxisFormatter = new FooFormatter(reference_timestamp);
             XAxis xAxis = viewHolder.mChart.getXAxis();
             xAxis.setValueFormatter(xAxisFormatter);

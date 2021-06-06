@@ -1,4 +1,4 @@
-# DepressionDetectorNew
+# DepressionDetector
 Official Development App
 
 
